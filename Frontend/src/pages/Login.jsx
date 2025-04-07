@@ -3,53 +3,61 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [contact, setContact] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Function to validate email and password
-  const validateForm = () => {
-    const emailPattern = /\S+@\S+\.\S+/;
-    if (!email.trim()) {
-      setErrorMsg("Email field cannot be empty.");
-      return false;
+  const sendOtp = async () => {
+    if (!contact.trim() || contact.length !== 10) {
+      setErrorMsg("Please enter a valid 10-digit contact number.");
+      return;
     }
-    if (!emailPattern.test(email)) {
-      setErrorMsg("Please enter a valid email address.");
-      return false;
-    }
-    if (!password.trim()) {
-      setErrorMsg("Password field cannot be empty.");
-      return false;
-    }
-    if (password.length < 6) {
-      setErrorMsg("Password must be at least 6 characters long.");
-      return false;
-    }
-    setErrorMsg("");
-    return true;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
-        email,
-        password,
+      const res = await axios.post("http://127.0.0.1:8000/api/send-otp", {
+        contact,
       });
 
-      if (response.status === 200) {
-        alert("Login Successful!");
-        navigate("/dashboard"); // Redirect to Dashboard
+      if (res.data.success) {
+        setOtpSent(true);
+        setErrorMsg("");
+        alert("OTP sent successfully!");
       } else {
-        setErrorMsg("Invalid login credentials.");
+        setErrorMsg("Failed to send OTP.");
       }
     } catch (error) {
-      setErrorMsg("Login failed. Please check your email or password.");
+      setErrorMsg("Server error while sending OTP.");
+    }
+  };
+
+  const verifyOtp = async () => {
+    if (!otp.trim()) {
+      setErrorMsg("Please enter the OTP.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://127.0.0.1:8000/api/verify-otp", {
+        contact,
+        otp,
+      });
+
+      if (res.data.success) {
+        alert("Login successful!");
+
+        // Redirect based on user role
+        if (res.data.role === "driver") {
+          navigate("/driver-dashboard");
+        } else {
+          navigate("/user-dashboard");
+        }
+      } else {
+        setErrorMsg("Invalid OTP.");
+      }
+    } catch (error) {
+      setErrorMsg("OTP verification failed.");
     }
   };
 
@@ -57,40 +65,42 @@ const Login = () => {
     <div className="login-page">
       <div className="login-container">
         <h2 className="login-heading">Login</h2>
-
         {errorMsg && <p className="error-message">{errorMsg}</p>}
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={(e) => e.preventDefault()} className="login-form">
           <div className="form-group">
             <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Enter your contact number"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
               required
             />
           </div>
 
-          <div className="form-group">
-            <div className="password-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="toggle-password"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-          </div>
+          {!otpSent && (
+            <button type="button" className="login-btn" onClick={sendOtp}>
+              Send OTP
+            </button>
+          )}
 
-          <button type="submit" className="login-btn">Login</button>
+          {otpSent && (
+            <>
+              <div className="form-group">
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                />
+              </div>
+
+              <button type="button" className="login-btn" onClick={verifyOtp}>
+                Verify OTP
+              </button>
+            </>
+          )}
         </form>
       </div>
     </div>
