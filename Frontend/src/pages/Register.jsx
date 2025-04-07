@@ -47,7 +47,7 @@ function Register() {
         const response = await axios.post("http://localhost:8000/api/register", {
           name: formData.userName,
           email: formData.userEmail,
-          contact: formData.userContact,
+          phone: formData.userContact,
           location: formData.userLocation,
           role: formData.userType === "Driver" ? 1 : 0,  // Convert to number
           password: formData.userPassword,
