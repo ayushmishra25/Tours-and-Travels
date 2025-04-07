@@ -11,28 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        
-    Schema::create('users', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('email')->unique();
-        $table->string('contact', 10);
-        $table->string('location'); 
-        $table->tinyInteger('role')->default(1); // 0 = admin, 1 = user
-        $table->string('password');
-        $table->timestamps();
-    });
+        // Create users table
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique()->nullable(); // Optional if using phone-based login
+            $table->string('phone')->unique();
+            $table->string('otp')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
+            $table->string('location')->nullable(); // Mark as nullable if not always provided
+            $table->tinyInteger('role')->default(1); // 0 = admin, 1 = user
+            $table->string('password')->nullable(); // Nullable if OTP-based login only
+            $table->rememberToken(); // For Laravel auth (optional)
+            $table->timestamps();
+        });
 
-
+        // Create password reset tokens table
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('email')->index();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
+        // Create sessions table
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -45,8 +49,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

@@ -9,7 +9,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Function to validate email and password
   const validateForm = () => {
     const emailPattern = /\S+@\S+\.\S+/;
     if (!email.trim()) {
@@ -24,10 +23,6 @@ const Login = () => {
       setErrorMsg("Password field cannot be empty.");
       return false;
     }
-    if (password.length < 6) {
-      setErrorMsg("Password must be at least 6 characters long.");
-      return false;
-    }
     setErrorMsg("");
     return true;
   };
@@ -37,19 +32,32 @@ const Login = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+      const response = await axios.post("http://localhost:8000/api/login", {
         email,
         password,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      if (response.status === 200) {
+      console.log("API response:", response.data);
+
+      if (response.status === 200 && response.data.token) {
+        // Save token & user to localStorage (or context/store if using one)
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
         alert("Login Successful!");
-        navigate("/dashboard"); // Redirect to Dashboard
+        navigate("/dashboard"); // Redirect to dashboard
       } else {
-        setErrorMsg("Invalid login credentials.");
+        setErrorMsg(response.data.message || "Invalid login credentials.");
       }
     } catch (error) {
-      setErrorMsg("Login failed. Please check your email or password.");
+      console.error("Login error:", error);
+      setErrorMsg(
+        error.response?.data?.message || "Login failed. Please check your email or password."
+      );
     }
   };
 
