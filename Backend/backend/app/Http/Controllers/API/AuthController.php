@@ -50,71 +50,37 @@ class AuthController extends Controller
     }
 
     /**
-     * Send OTP to user
+     * Send login 
+     */
+     /**
+     * Login user and create token
      */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|string',
+            'email' => 'required|string|email',
+            'password' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::where('phone', $request->phone)->first();
-
-        if (!$user) {
-            return response()->json(['message' => 'Phone number not registered'], 404);
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $otp = rand(100000, 999999);
-        $user->otp = $otp;
-        $user->otp_expires_at = Carbon::now()->addMinutes(5);
-        $user->save();
-
-        // Log OTP (You should integrate SMS gateway here)
-        \Log::info("OTP for {$user->phone} is {$otp}");
-
-        return response()->json(['message' => 'OTP sent successfully to your phone number.']);
-    }
-
-    /**
-     * Verify OTP
-     */
-    public function verifyOtp(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required|string',
-            'otp' => 'required|digits:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = User::where('phone', $request->phone)
-            ->where('otp', $request->otp)
-            ->where('otp_expires_at', '>', Carbon::now())
-            ->first();
-
-        if (!$user) {
-            return response()->json(['message' => 'Invalid or expired OTP'], 401);
-        }
-
-        Auth::login($user);
-        $user->otp = null;
-        $user->otp_expires_at = null;
-        $user->save();
-
+        $user = Auth::user();
         $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
-            'message' => 'OTP verified successfully',
             'token' => $token,
-            'user' => $user
+            'user' => $user,
+            'role' => $user->role,  // Return the role value
+            'redirect' => $user->role == 0 ? 'user' : 'driver'  // Optional: for redirection logic
         ]);
     }
+
 
     /**
      * Logout user

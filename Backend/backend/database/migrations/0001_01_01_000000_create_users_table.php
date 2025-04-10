@@ -17,11 +17,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique()->nullable(); // Optional if using phone-based login
             $table->string('phone')->unique();
-            $table->string('otp')->nullable();
-            $table->timestamp('otp_expires_at')->nullable();
             $table->string('location')->nullable(); // Mark as nullable if not always provided
             $table->tinyInteger('role')->default(1); // 0 = admin, 1 = user
-            $table->string('password')->nullable(); // Nullable if OTP-based login only
+            $table->string('password')->nullable(); 
             $table->rememberToken(); // For Laravel auth (optional)
             $table->timestamps();
         });
