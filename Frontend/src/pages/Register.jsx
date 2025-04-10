@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,8 @@ function Register() {
   const [apiError, setApiError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const locations = ["Bangalore", "Delhi", "Faridabad", "Ghaziabad", "Noida"];
+  const locations = ["Bangalore", "Delhi", "Faridabad", "Ghaziabad", "Noida","Mumbai","Thane","Haydrabad","Greater noida"];
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -53,9 +55,20 @@ function Register() {
           password: formData.userPassword,
           confirm_password: formData.confirmPassword,   // Send confirm_password too
         });
+
+        const message = response.data.message;
+        console.log("Response:", message);
+
+        if(message === "user registered successfully"){
+          setSuccessMessage("Registration successful!");
+          setTimeout (() => {
+            navigate("login");
+          },1000);
+        }
+        else{
+          setApiError(message || "Registration Failed");
+        }
   
-        setSuccessMessage("Registration successful!");
-        console.log("Response:", response.data);
       } catch (error) {
         console.error("API Error:", error);
         setApiError(error.response?.data?.message || "Registration failed");
