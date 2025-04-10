@@ -59,7 +59,7 @@ function Register() {
         const message = response.data.message;
         console.log("Response:", message);
 
-        if(message === "user registered successfully"){
+        if(message === "User registered successfully"){
           setSuccessMessage("Registration successful!");
           setTimeout (() => {
             navigate("login");
@@ -75,7 +75,7 @@ function Register() {
       }
     }
   };
-  
+
   return (
     <div className="register-container">
       <h2>Register Now</h2>
