@@ -107,14 +107,10 @@ const DriverDetailsUpload = () => {
         </div>
         
         <div className="form-group">
-          <label>Upload Driving License (Front Side):</label>
+          <label>Upload Driving License (Both Side):</label>
           <input type="file" name="licenseFront" accept="image/*" onChange={handleFileChange} />
         </div>
         
-        <div className="form-group">
-          <label>Upload Driving License (Back Side):</label>
-          <input type="file" name="licenseBack" accept="image/*" onChange={handleFileChange} />
-        </div>
         
         <div className="form-group">
           <label>Type of Driving License:</label>
@@ -129,13 +125,8 @@ const DriverDetailsUpload = () => {
         </div>
         
         <div className="form-group">
-          <label>Upload Aadhar Card (Front Side):</label>
+          <label>Upload Aadhar Card (Both Side):</label>
           <input type="file" name="aadharFront" accept="image/*" onChange={handleFileChange} />
-        </div>
-        
-        <div className="form-group">
-          <label>Upload Aadhar Card (Back Side):</label>
-          <input type="file" name="aadharBack" accept="image/*" onChange={handleFileChange} />
         </div>
         
         <div className="form-group">
