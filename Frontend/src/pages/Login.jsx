@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+  
     try {
       const response = await axios.post("http://localhost:8000/api/login", {
         email,
@@ -40,16 +40,20 @@ const Login = () => {
           "Content-Type": "application/json",
         },
       });
-
+  
       console.log("API response:", response.data);
-
+  
       if (response.status === 200 && response.data.token) {
-        // Save token & user to localStorage (or context/store if using one)
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-
+        const { token, user, role } = response.data;
+  
+        // Store token and user details
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", user.id); // Store user ID separately
+        localStorage.setItem("user", JSON.stringify(user)); // Full user object
+        localStorage.setItem("userRole", role); // Optional role store
+  
         alert("Login Successful!");
-        navigate("/dashboard"); // Redirect to dashboard
+        navigate("/dashboard"); // Navigate after login
       } else {
         setErrorMsg(response.data.message || "Invalid login credentials.");
       }
@@ -60,6 +64,7 @@ const Login = () => {
       );
     }
   };
+  
 
   return (
     <div className="login-page">

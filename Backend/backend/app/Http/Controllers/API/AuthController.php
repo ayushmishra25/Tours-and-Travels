@@ -90,4 +90,24 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out successfully']);
     }
+
+    /**
+     * Get the authenticated user's profile
+     */
+    public function getUserProfile($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'user' => $user
+        ], 200);
+    }
+
+
 }

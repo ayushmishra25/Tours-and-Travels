@@ -47,15 +47,55 @@ const DriverDetailsUpload = () => {
     }));
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here, you would typically send formData and files to your backend API.
-    console.log("Form Data: ", formData);
-    console.log("Files: ", files);
-    alert("Driver details submitted successfully!");
-    // Navigate to next page if needed:
-    navigate("/driver-dashboard");
+  
+    const form = new FormData();
+  
+    // Append text fields
+    form.append("education", formData.education);
+    form.append("age", formData.age);
+    form.append("exact_location", formData.location);
+    form.append("pincode", formData.pincode);
+    form.append("zone", formData.zone);
+    form.append("driving_experience", formData.drivingExperienceYears);
+    form.append("car_driving_experience", formData.drivingExperienceType); // assuming string type
+    form.append("type_of_driving_licence", formData.licenseType);
+    form.append("account_number", formData.accountNumber);
+    form.append("bank_name", formData.bankName);
+    form.append("ifsc_code", formData.ifsc);
+    form.append("account_holder_name", formData.accountHolderName);
+  
+    // Append file fields if available
+    if (files.photo) form.append("photo", files.photo);
+    if (files.licenseFront) form.append("driving_licence_front", files.licenseFront);
+    if (files.licenseBack) form.append("driving_licence_back", files.licenseBack);
+    if (files.aadharFront) form.append("aadhar_card_front", files.aadharFront);
+    if (files.aadharBack) form.append("aadhar_card_back", files.aadharBack);
+    if (files.passbook) form.append("passbook_front", files.passbook);
+  
+    try {
+      const response = await fetch("http://localhost:8000/api/driver-details", {
+        method: "POST",
+        body: form,
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        alert("Driver details submitted successfully!");
+        console.log("Response from API:", result);
+        navigate("/driver-dashboard");  // ✅ Corrected here
+      } else {
+        const errorData = await response.json();
+        console.error("API Error:", errorData);
+        alert("Failed to submit. Please check the form and try again.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
   };
+  
   
   return (
     <div className="driver-details-container">
