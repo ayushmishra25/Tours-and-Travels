@@ -62,7 +62,7 @@ function Register() {
         if(message === "User registered successfully"){
           setSuccessMessage("Registration successful!");
           setTimeout (() => {
-            navigate("login");
+            navigate("/login");
           },1000);
         }
         else{
