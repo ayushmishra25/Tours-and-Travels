@@ -54,7 +54,11 @@ const Login = () => {
   
         alert("Login Successful!");
 
-        if (role === 1){
+        const numericRole = parseInt(role, 10);
+
+        console.log("Navigating to:", numericRole === 1 ? "/driverjobdetails" : "/dashboard");
+
+        if (numericRole === 1){
           navigate("/driverjobdetails");
         } else {
           navigate("/dashboard");
