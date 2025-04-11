@@ -53,8 +53,13 @@ const Login = () => {
         localStorage.setItem("userRole", role); // Optional role store
   
         alert("Login Successful!");
-        navigate("/dashboard"); // Navigate after login
-      } else {
+
+        if (role === 1){
+          navigate("/driverjobdetails");
+        } else {
+          navigate("/dashboard");
+        }
+      } else{
         setErrorMsg(response.data.message || "Invalid login credentials.");
       }
     } catch (error) {
