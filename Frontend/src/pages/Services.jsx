@@ -5,12 +5,7 @@ function Services() {
   const navigate = useNavigate();
 
   const handleDriverServiceClick = () => {
-    const isLoggedIn = localStorage.getItem('token'); // Assuming token is stored on login
-    if (isLoggedIn) {
-      navigate('/booking'); // Redirect to booking page
-    } else {
-      alert('Please register and log in first to book a service.');
-    }
+    navigate('/dashboard');
     };
 
   return (
