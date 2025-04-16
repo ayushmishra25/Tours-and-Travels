@@ -19,6 +19,7 @@ import DriverJobDetails from './pages/DriverJobDetails';
 import DriverNavbar from './components/DriverNavbar';
 import DriverDashboard from './pages/DriverDashboard';
 import DriverDetailsUpload from './pages/DriverDetailsUpload';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -43,16 +44,16 @@ const MainContent = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard/*" element={<UserDashboard />} />
+        <Route path="/dashboard/*" element={<ProtectedRoute requiredRole="user"> <UserDashboard /></ProtectedRoute>} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/hourly-driver" element={<HourlyDriver />} />
         <Route path="/monthly-driver" element={<MonthlyDriver />} />
         <Route path="/weekly-driver" element={<WeeklyDriver />} />
         <Route path="/ondemand-driver" element={<OndemandDriver />} />
-        <Route path="/driverjobdetails" element={<DriverJobDetails />} />
+        <Route path="/driverjobdetails" element={<ProtectedRoute requiredRole="driver"> <DriverJobDetails /> </ProtectedRoute>} />
         <Route path="/driver-navbar" element={<DriverNavbar />} />
-        <Route path="/driver-dashboard" element={<DriverDashboard />} />
-        <Route path="/driver-details-upload" element={<DriverDetailsUpload />} />
+        <Route path="/driver-dashboard" element={<ProtectedRoute requiredRole="driver"> <DriverDashboard /> </ProtectedRoute>} />
+        <Route path="/driver-details-upload" element={<ProtectedRoute requiredRole="driver"> <DriverDetailsUpload /> </ProtectedRoute>} />
       </Routes>
 
       {!isDashboard && <Footer />}  {/* Hide Footer on Dashboard */}

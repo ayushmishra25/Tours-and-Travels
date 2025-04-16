@@ -12,6 +12,7 @@ function Services() {
     
       <section className="services">
         <h1>Our Services</h1>
+        <h2>Book Now Pay Later</h2>
         <div className="service-cards">
           <div className="service-card" onClick={handleDriverServiceClick} style={{ cursor: 'pointer' }}>
             <img src="/taxi_image.jpg" alt="Driver Services" />

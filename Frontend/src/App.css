@@ -90,7 +90,7 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 15px 30px;
   z-index: 1000;
 }
 
@@ -129,25 +129,8 @@ input:focus, textarea:focus, select:focus {
   cursor: pointer;
 }
 
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 1rem;
-}
 
-.logo-container h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  color: white;
-}
 
-.tagline {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #f0f0f0;
-  font-style: italic;
-}
 
 @media (max-width: 768px) {
   .hamburger {

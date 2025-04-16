@@ -11,7 +11,6 @@ function Navbar() {
   return (
     <header className="header">
       <h1>SAHYOG FORCE</h1>
-      <p className="tagline">Book Now Pay Later</p>
       {/* Hamburger Menu Button */}
       <div className="hamburger" onClick={toggleMenu}>
         ☰
