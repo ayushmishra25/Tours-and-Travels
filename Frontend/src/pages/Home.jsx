@@ -1,5 +1,6 @@
 import React from 'react';
 import Services from './Services';
+import HowToUse from '../components/HowToUse';
 
 
 function Home() {
@@ -8,6 +9,9 @@ function Home() {
       
       {/* Services Section */}
       <Services />
+
+      {/* Hoe to use section */ }
+      <HowToUse />
     </div>
   );
 }
