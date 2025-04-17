@@ -1,7 +1,6 @@
 // src/admin/pages/AdminLogin.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./AdminLogin.css"; // Specific styling for admin login
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +22,7 @@ const AdminLogin = () => {
   return (
     <div className="admin-login-container">
       <h2>Admin Login</h2>
+      console.log("admin login....");
       {errorMsg && <p className="error-message">{errorMsg}</p>}
       <form onSubmit={handleSubmit} className="admin-login-form">
         <div className="form-group">

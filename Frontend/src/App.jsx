@@ -20,6 +20,7 @@ import DriverNavbar from './components/DriverNavbar';
 import DriverDashboard from './pages/DriverDashboard';
 import DriverDetailsUpload from './pages/DriverDetailsUpload';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminApp from './admin/AdminApp';
 
 function App() {
   return (
@@ -39,21 +40,27 @@ const MainContent = () => {
       {isDashboard && <DashboardNavbar />}  {/* Show Dashboard Navbar only on Dashboard */}
       
       <Routes>
+        {/* All admin-related routes */}
+        <Route path="/admin/*" element={<AdminApp />} />
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard/*" element={<ProtectedRoute requiredRole="user"> <UserDashboard /></ProtectedRoute>} />
+        {/* <Route path="/dashboard/*" element={<ProtectedRoute requiredRole="user"> <UserDashboard /></ProtectedRoute>} /> */}
+        <Route path="/dashboard/*" element={ <UserDashboard />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/hourly-driver" element={<HourlyDriver />} />
         <Route path="/monthly-driver" element={<MonthlyDriver />} />
         <Route path="/weekly-driver" element={<WeeklyDriver />} />
         <Route path="/ondemand-driver" element={<OndemandDriver />} />
-        <Route path="/driverjobdetails" element={<ProtectedRoute requiredRole="driver"> <DriverJobDetails /> </ProtectedRoute>} />
+        {/* <Route path="/driverjobdetails" element={<ProtectedRoute requiredRole="driver"> <DriverJobDetails /> </ProtectedRoute>} /> */}
+        <Route path="/driverjobdetails" element={<DriverJobDetails /> } />
         <Route path="/driver-navbar" element={<DriverNavbar />} />
-        <Route path="/driver-dashboard" element={<ProtectedRoute requiredRole="driver"> <DriverDashboard /> </ProtectedRoute>} />
-        <Route path="/driver-details-upload" element={<ProtectedRoute requiredRole="driver"> <DriverDetailsUpload /> </ProtectedRoute>} />
+        {/* <Route path="/driver-dashboard" element={<ProtectedRoute requiredRole="driver"> <DriverDashboard /> </ProtectedRoute>} /> */}
+        <Route path="/driver-dashboard" element={<DriverDashboard /> } />
+        {/* <Route path="/driver-details-upload" element={<ProtectedRoute requiredRole="driver"> <DriverDetailsUpload /> </ProtectedRoute>} /> */}
+        <Route path="/driver-details-upload" element={ <DriverDetailsUpload /> } />
       </Routes>
 
       {!isDashboard && <Footer />}  {/* Hide Footer on Dashboard */}

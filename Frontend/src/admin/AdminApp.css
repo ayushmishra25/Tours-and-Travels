@@ -1,0 +1,513 @@
+/* Global Variables */
+/* AdminApp.css - Global Admin CSS */
+
+/* Global Variables */
+:root {
+    --primary-color: #002855;
+    --secondary-color: #004a99;
+    --accent-color: #ffd700;
+    --white: #ffffff;
+    --background-color: #f9f9f9;
+    --font-base: 16px;
+    --transition: all 0.3s ease-in-out;
+  }
+  
+  /* Global Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    background-color: var(--background-color);
+    font-size: var(--font-base);
+    line-height: 1.6;
+  }
+  
+  /* Utility Classes (if needed) */
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* AdminLogin.css - Admin Login Page Styles */
+
+.admin-login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .admin-login-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .admin-login-form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .admin-login-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .admin-login-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .admin-login-btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 480px) {
+    .admin-login-container {
+      margin: 50px auto;
+      padding: 15px;
+    }
+    .admin-login-form input {
+      font-size: 14px;
+      padding: 8px;
+    }
+    .admin-login-btn {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  
+  /* AdminDashboard.css - Admin Dashboard Page Styles */
+
+.admin-dashboard-container {
+    margin: 100px auto 20px; /* leave space for the fixed navbar */
+    padding: 20px;
+    max-width: 1200px;
+    background-color: var(--background-color);
+  }
+  
+  .admin-dashboard-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+  }
+  
+  .dashboard-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .card h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard-cards {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .card {
+      width: 90%;
+    }
+  }
+
+  /* ManageUsers.css - Manage Users Page Styles */
+
+.manage-users-container {
+    margin: 80px auto 20px;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: var(--background-color);
+  }
+  
+  .manage-users-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  .users-table th,
+  .users-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .users-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .users-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .users-table th,
+    .users-table td {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
+
+  /* ManageDrivers.css - Manage Drivers Page Styles */
+
+.manage-drivers-container {
+    margin: 80px auto 20px;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: var(--background-color);
+  }
+  
+  .manage-drivers-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .drivers-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .drivers-table th,
+  .drivers-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .drivers-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .drivers-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .drivers-table th,
+    .drivers-table td {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
+/* BookingManagement.css - Booking Management Page Styles */
+
+.booking-management-container {
+    margin: 80px auto 20px;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: var(--background-color);
+  }
+  
+  .booking-management-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .bookings-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bookings-table th,
+  .bookings-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .bookings-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .bookings-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .bookings-table th,
+    .bookings-table td {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
+
+  /* PaymentManagement.css - Payment Management Page Styles */
+
+.payment-management-container {
+    margin: 80px auto 20px;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: var(--background-color);
+  }
+  
+  .payment-management-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .payments-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .payments-table th,
+  .payments-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .payments-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .payments-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .payments-table th,
+    .payments-table td {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
+  
+  /* Reports.css - Reports Page Styles */
+
+.reports-container {
+    margin: 80px auto 20px;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+  }
+  
+  .reports-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .reports-container p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .reports-container ul {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .reports-container ul li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .reports-container p,
+    .reports-container ul li {
+      font-size: 14px;
+    }
+  }
+/* AdminSettings.css - Admin Settings Page Styles */
+
+.admin-settings-container {
+    margin: 80px auto 20px;
+    padding: 20px;
+    max-width: 600px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-settings-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+  }
+  
+  .settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .settings-form .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .settings-form .form-group label {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .settings-form .form-group input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .settings-submit-btn {
+    padding: 12px;
+    font-size: 16px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 15px;
+  }
+  
+  .settings-submit-btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-settings-container {
+      padding: 15px;
+    }
+    .settings-form .form-group input {
+      font-size: 14px;
+      padding: 8px;
+    }
+    .settings-submit-btn {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  /* Admin navbar css */
+  .admin-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color, #002855);
+    color: var(--white, #fff);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    z-index: 1000;
+  }
+  
+  .admin-navbar h1 {
+    font-size: 24px;
+  }
+  
+  .admin-navbar nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .admin-navbar nav ul li a {
+    color: var(--white, #fff);
+    text-decoration: none;
+    font-size: 16px;
+    transition: var(--transition, all 0.3s ease-in-out);
+  }
+  
+  .admin-navbar nav ul li a:hover {
+    color: var(--accent-color, #ffd700);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .admin-navbar nav ul {
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  }
+  
