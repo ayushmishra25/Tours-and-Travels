@@ -8,7 +8,9 @@ const ManageUsers = () => {
     // Populate with dummy user data
     setUsers([
       { id: 1, name: "John Doe", email: "john@example.com", phone: "1234567890" },
-      { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "0987654321" },
+      { id: 2, name: "John Doe", email: "john@example.com", phone: "1234567890" },
+      { id: 3, name: "John Doe", email: "john@example.com", phone: "1234567890" },
+      { id: 4, name: "Jane Smith", email: "jane@example.com", phone: "0987654321" },
       // Add more dummy users as needed
     ]);
   }, []);

@@ -9,6 +9,7 @@ const PaymentManagement = () => {
     setPayments([
       { id: 1, driver: "Alice Brown", amount: 1000, date: "2025-04-10", status: "Paid" },
       { id: 2, driver: "Bob Green", amount: 1200, date: "2025-04-11", status: "Pending" },
+      { id: 3, driver: "Bob Green", amount: 1200, date: "2025-04-11", status: "Pending" },
       // Add more dummy payment entries as needed
     ]);
   }, []);

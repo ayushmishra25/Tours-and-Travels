@@ -8,6 +8,7 @@ const BookingManagement = () => {
     // Dummy booking data
     setBookings([
       { id: 1, user: "John Doe", driver: "Alice Brown", date: "2025-04-12", amount: 500 },
+      { id: 3, user: "John Doe", driver: "Alice Brown", date: "2025-04-12", amount: 500 },
       { id: 2, user: "Jane Smith", driver: "Bob Green", date: "2025-04-13", amount: 650 },
       // Add more dummy booking entries as needed
     ]);

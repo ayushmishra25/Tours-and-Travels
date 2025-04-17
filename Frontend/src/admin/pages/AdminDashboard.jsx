@@ -8,6 +8,7 @@ const AdminDashboard = () => {
     totalDrivers: 350,
     totalBookings: 800,
     totalRevenue: 1000000,
+    totalAdmins: 50,
   });
 
   useEffect(() => {
@@ -34,6 +35,10 @@ const AdminDashboard = () => {
         <div className="card">
           <h3>Total Revenue</h3>
           <p>₹ {summary.totalRevenue}</p>
+        </div>
+        <div className="card">
+          <h3>Total Admins</h3>
+          <p> {summary.totalAdmins}</p>
         </div>
       </div>
     </div>

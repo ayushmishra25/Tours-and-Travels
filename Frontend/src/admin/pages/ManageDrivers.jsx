@@ -9,6 +9,8 @@ const ManageDrivers = () => {
     setDrivers([
       { id: 1, name: "Alice Brown", email: "alice@example.com", status: "Active" },
       { id: 2, name: "Bob Green", email: "bob@example.com", status: "Pending" },
+      { id: 3, name: "Bob Green", email: "bob@example.com", status: "Pending" },
+      { id: 4, name: "Bob Green", email: "bob@example.com", status: "Pending" },
       // Add more dummy drivers as needed
     ]);
   }, []);

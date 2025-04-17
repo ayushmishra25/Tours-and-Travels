@@ -463,51 +463,87 @@
     }
   }
   /* Admin navbar css */
-  .admin-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--primary-color, #002855);
-    color: var(--white, #fff);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    z-index: 1000;
+  /* AdminNavbar.css */
+
+.admin-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--primary-color);
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  z-index: 1000;
+}
+
+.admin-navbar h1 {
+  font-size: 24px;
+}
+
+/* Desktop menu */
+.nav-menu ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-menu ul li a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+.nav-menu ul li a:hover {
+  color: var(--accent-color);
+}
+
+/* Hamburger (hidden on desktop) */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--white);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  /* Show hamburger */
+  .hamburger {
+    display: block;
   }
-  
-  .admin-navbar h1 {
-    font-size: 24px;
+
+  /* Hide nav by default */
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: var(--primary-color);
+    border-radius: 5px;
+    width: 200px;
   }
-  
-  .admin-navbar nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
+
+  /* Show when open */
+  .nav-menu.open {
+    display: block;
   }
-  
-  .admin-navbar nav ul li a {
-    color: var(--white, #fff);
-    text-decoration: none;
-    font-size: 16px;
-    transition: var(--transition, all 0.3s ease-in-out);
+
+  /* Vertical list */
+  .nav-menu ul {
+    flex-direction: column;
+    padding: 10px 0;
   }
-  
-  .admin-navbar nav ul li a:hover {
-    color: var(--accent-color, #ffd700);
+
+  .nav-menu ul li {
+    margin: 0;
   }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .admin-navbar {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .admin-navbar nav ul {
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
+
+  .nav-menu ul li a {
+    display: block;
+    padding: 10px 20px;
   }
-  
+}
