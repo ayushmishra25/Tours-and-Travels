@@ -15,7 +15,8 @@ const DashboardNavbar = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userRole");
     // Optionally, you can clear all storage: localStorage.clear();
-
+    // 2. Close the mobile menu (optional)
+    setIsOpen(false);
     // Redirect to login page
     navigate("/login");
   };
@@ -38,10 +39,8 @@ const DashboardNavbar = () => {
             <Link to="/dashboard/bookings" onClick={toggleMenu}>My Bookings</Link>
           </li>
           <li>
-            {/* ✅ Use logout handler instead of simple link */}
-            <button className="logout-btn" onClick={() => { toggleMenu(); handleLogout(); }}>
-              Logout
-            </button>
+            {/* ✅ Logout link that triggers handleLogout */}
+            <Link to="#" onClick={handleLogout}>Logout</Link>
           </li>
         </ul>
       </nav>
