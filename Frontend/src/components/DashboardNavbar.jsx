@@ -7,6 +7,19 @@ const DashboardNavbar = () => {
     setIsOpen(!isOpen);
   };
 
+  //clear auth and redirect to login
+  const handleLogout = () => {
+    // Remove authentication tokens and user data
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userRole");
+    // Optionally, you can clear all storage: localStorage.clear();
+
+    // Redirect to login page
+    navigate("/login");
+  };
+
   return (
     <header className="dashboard-header">
       <h1>Dashboard</h1>
@@ -25,7 +38,10 @@ const DashboardNavbar = () => {
             <Link to="/dashboard/bookings" onClick={toggleMenu}>My Bookings</Link>
           </li>
           <li>
-            <Link to="/" onClick={toggleMenu}>Logout</Link>
+            {/* ✅ Use logout handler instead of simple link */}
+            <button className="logout-btn" onClick={() => { toggleMenu(); handleLogout(); }}>
+              Logout
+            </button>
           </li>
         </ul>
       </nav>
