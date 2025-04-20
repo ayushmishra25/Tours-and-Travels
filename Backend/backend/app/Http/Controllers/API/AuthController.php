@@ -73,13 +73,21 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('authToken')->plainTextToken;
 
+        // Determine redirect path based on role
+        $redirect = match ($user->role) {
+            0 => 'user',
+            1 => 'driver',
+            2 => 'admin',
+        };
+
         return response()->json([
             'token' => $token,
             'user' => $user,
-            'role' => $user->role,  // Return the role value
-            'redirect' => $user->role == 0 ? 'user' : 'driver'  // Optional: for redirection logic
+            'role' => $user->role,
+            'redirect' => $redirect
         ]);
     }
+
 
 
     /**
@@ -108,6 +116,16 @@ class AuthController extends Controller
             'user' => $user
         ], 200);
     }
+
+    public function listUsers()
+    {
+        $users = User::all(); // or use pagination: User::paginate(10);
+
+        return response()->json([
+            'users' => $users
+        ], 200);
+    }
+
 
 
 }

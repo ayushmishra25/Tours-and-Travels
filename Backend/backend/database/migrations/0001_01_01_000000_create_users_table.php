@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable(); // Optional if using phone-based login
             $table->string('phone')->unique();
             $table->string('location')->nullable(); // Mark as nullable if not always provided
-            $table->tinyInteger('role')->default(1); // 0 = admin, 1 = user
+            $table->tinyInteger('role')->default(1); // 0 = admin, 1 = user, 2 = admin
             $table->string('password')->nullable(); 
             $table->rememberToken(); // For Laravel auth (optional)
             $table->timestamps();

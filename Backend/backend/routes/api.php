@@ -9,13 +9,15 @@ use App\Http\Controllers\API\BookingController;
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/booking', [BookingController::class, 'store']); 
-Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
+Route::get('/listUsers', [AuthController::class, 'listUsers']); 
+
+
+// Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/booking', [BookingController::class, 'store']); 
-    Route::get('/profile', [AuthController::class, 'profile']);
+    Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('driver-details', DriverDetailsUploadController::class);
 });
