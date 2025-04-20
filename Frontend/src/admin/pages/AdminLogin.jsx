@@ -13,7 +13,7 @@ const AdminLogin = () => {
     // Dummy check – in production, call your admin login API
     if (email === "admin@company.com" && password === "admin123") {
       localStorage.setItem("adminToken", "dummyAdminToken");
-      navigate("/admin/dashboard");
+      /* navigate("/admin/dashboard"); */
     } else {
       setErrorMsg("Invalid admin credentials.");
     }
