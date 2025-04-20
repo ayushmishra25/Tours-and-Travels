@@ -63,6 +63,8 @@ const Login = () => {
         if (numericRole === 1) {
           navigate("/driverjobdetails");
         } else if (numericRole === 2) {
+          //mark this session as Admin
+          localStorage.setItem("adminToken", token);
           navigate("/admin/dashboard");
         } else {
           navigate("/dashboard"); // Default user dashboard
