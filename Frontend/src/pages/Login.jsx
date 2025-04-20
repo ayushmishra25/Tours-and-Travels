@@ -44,26 +44,30 @@ const Login = () => {
       console.log("API response:", response.data);
   
       if (response.status === 200 && response.data.token) {
-        const { token, user, role } = response.data;
+        const { token, user, role, redirect } = response.data;
   
         // Store token and user details
         localStorage.setItem("token", token);
-        localStorage.setItem("userId", user.id); // Store user ID separately
-        localStorage.setItem("user", JSON.stringify(user)); // Full user object
-        localStorage.setItem("userRole", role); // Optional role store
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("userRole", role);
   
         alert("Login Successful!");
-
+  
         const numericRole = parseInt(role, 10);
-
-        console.log("Navigating to:", numericRole === 1 ? "/driverjobdetails" : "/dashboard");
-
-        if (numericRole === 1){
+  
+        // Log redirect information
+        console.log("Navigating to:", redirect);
+  
+        // Redirect based on role
+        if (numericRole === 1) {
           navigate("/driverjobdetails");
+        } else if (numericRole === 2) {
+          navigate("/admin/dashboard");
         } else {
-          navigate("/dashboard");
+          navigate("/dashboard"); // Default user dashboard
         }
-      } else{
+      } else {
         setErrorMsg(response.data.message || "Invalid login credentials.");
       }
     } catch (error) {
@@ -73,6 +77,7 @@ const Login = () => {
       );
     }
   };
+  
   
 
   return (
