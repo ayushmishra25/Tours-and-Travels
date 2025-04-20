@@ -6,18 +6,16 @@ const DashboardNavbar = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  //clear auth and redirect to login
+  
+  // ✅ New logout handler
   const handleLogout = () => {
-    // Remove authentication tokens and user data
+    // Clear all stored auth/session data
     localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("user");
     localStorage.removeItem("userRole");
-    // Optionally, you can clear all storage: localStorage.clear();
-    // 2. Close the mobile menu (optional)
-    setIsOpen(false);
-    // Redirect to login page
+    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("adminToken");
+    // Redirect to the login page
     navigate("/login");
   };
 
@@ -39,8 +37,7 @@ const DashboardNavbar = () => {
             <Link to="/dashboard/bookings" onClick={toggleMenu}>My Bookings</Link>
           </li>
           <li>
-            {/* ✅ Logout link that triggers handleLogout */}
-            <Link to="#" onClick={handleLogout}>Logout</Link>
+          <Link to="/" onClick={() => { toggleMenu();handleLogout();}}>Logout</Link>
           </li>
         </ul>
       </nav>
