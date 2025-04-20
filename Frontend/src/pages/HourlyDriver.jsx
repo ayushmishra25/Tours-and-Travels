@@ -89,14 +89,6 @@ const HourlyDriver = () => {
     return 0;
   };
 
-  // Recalculate fare when relevant data changes
-  useEffect(() => {
-    if (pickup && destination) {
-      const fare = calculateFare();
-      setTotalAmount(fare);
-    }
-  }, [pickup, destination, tripType, hours, distance]);
-
   // Simulated reverse geocoding to fetch a complete formatted address
   const fetchCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -122,8 +114,40 @@ const HourlyDriver = () => {
     }
   };
 
-  
-  
+  // guard booking behind login
+  const handleBookNow = () => {
+    const token = localStorage.getItem("token");  
+    if (!token) {                                 
+      alert("Please register and log in first to book a driver."); 
+      return;                                     
+    }
+
+    // ✅ If logged in, proceed with booking submission logic:
+    const bookingDetails = {
+      pickup,
+      destination,
+      tripType,
+      hours,
+      distance,
+      date,
+      time,
+      totalAmount,
+    };
+    console.log("Booking:", bookingDetails);
+    // e.g. axios.post("/api/book", bookingDetails)...
+    alert(`Booking confirmed for ₹ ${totalAmount}`);
+    // Optionally navigate to confirmation
+    // navigate("/dashboard/bookings");
+  };
+
+  // Recalculate fare when relevant data changes
+  useEffect(() => {
+    if (pickup && destination) {
+      const fare = calculateFare();
+      setTotalAmount(fare);
+    }
+  }, [pickup, destination, tripType, hours, distance]);
+
 
   return (
     <>
@@ -193,7 +217,7 @@ const HourlyDriver = () => {
             <p>Name: {user.name}</p>
             <p>Phone: {user.phone}</p>
             <h2>₹ {totalAmount}</h2>
-            <button className="book-now-btn">Book Now</button>
+            <button className="book-now-btn" onClick={handleBookNow}> Book Now </button>
             <p className="price-note">
             For distances above 80 km, an additional charge of 10rs per km will be applied along with food, accommodation, and convenience charges. Night charges will be added if an overnight stay is required.
             </p>
