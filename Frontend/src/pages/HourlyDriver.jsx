@@ -42,6 +42,10 @@ const getCityFromAddress = (address) => {
 
 const HourlyDriver = () => {
   const navigate = useNavigate();
+  
+  // ★ NEW: grab token from localStorage
+  const isLoggedIn = Boolean(localStorage.getItem("token"));
+
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [tripType, setTripType] = useState("roundtrip");
@@ -51,7 +55,7 @@ const HourlyDriver = () => {
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // ✅ New state for showing inline auth message
+  // ★ NEW: state to hold inline auth error
   const [authError, setAuthError] = useState("");
 
   const user = { name: "John Doe", phone: "+91 9876543210" };
@@ -117,20 +121,16 @@ const HourlyDriver = () => {
     }
   };
 
-  // guard booking behind login
-  const handleBookNow = () => {
-    const token = localStorage.getItem("token");           
-    if (!token) {                                          
-      setAuthError("Please register and log in first to book a driver."); 
-      return;                                              
+   // ★ NEW: handle Book Now click
+   const handleBookNow = () => {
+    if (!isLoggedIn) {
+      setAuthError("Please register and login first to book a driver."); // ★
+      return;
     }
-    //  Clear any previous error
-    setAuthError("");
-    // Proceed with booking...
-    const bookingDetails = { pickup, destination, tripType, hours, distance, date, time, totalAmount };
-    console.log("Booking:", bookingDetails);
-    alert(`Booking confirmed for ₹ ${totalAmount}`);
-    // navigate("/dashboard/bookings");
+    // If logged in, clear any auth error and proceed
+    setAuthError(""); // ★
+    // ... your existing booking submission logic here ...
+    // e.g., navigate("/booking-confirmation", { state:{pickup,destination,...}});
   };
 
 
@@ -212,11 +212,12 @@ const HourlyDriver = () => {
             <p>Phone: {user.phone}</p>
             <h2>₹ {totalAmount}</h2>
 
-            {/* ✅ Inline auth error message */}
-          {authError && <p className="error-message">{authError}</p>}  {/* ✅ */}
+            {/* ★ Updated to use our new handler */}
+            <button className="book-now-btn" onClick={handleBookNow}>   Book Now </button>
 
-            {/* ✅ Disable button if not logged in */}
-            <button className="book-now-btn"  onClick={handleBookNow}  disabled={!localStorage.getItem("token")} >  Book Now </button>
+            {/* ★ Inline message if not authenticated */}
+            {authError && <p className="error-message">{authError}</p>} 
+            
             <p className="price-note">
             For distances above 80 km, an additional charge of 10rs per km will be applied along with food, accommodation, and convenience charges. Night charges will be added if an overnight stay is required.
             </p>
