@@ -9,29 +9,39 @@ const ProtectedRoute = ({ children, allowedRoles, step }) => {
   const driverAgreed  = localStorage.getItem('driverAgreed');
   const driverUploaded = localStorage.getItem('driverUploaded');
 
-  // 1️⃣ Registration → Login
-  if (step === 'login' && !registered) {
-    return <Navigate to="/register" replace />;
+  if (step === 'login') {
+    if (!registered) {
+      return <Navigate to="/register" replace />;
+    }
+    // If registered, show login (bypass token check)
+    return children;
   }
 
-  // 2️⃣ Login → JobDetails (must be logged in + role=driver)
+  // ── STEP 2: PROTECT driverjobdetails (must be logged in + correct role) ──
   if (step === 'jobdetails') {
-    if (!token || allowedRoles?.length === 0 || !allowedRoles.includes(role)) {
+    if (!token || !allowedRoles?.includes(role)) {
       return <Navigate to="/login" replace />;
     }
+    return children;
   }
 
-  // 3️⃣ JobDetails → Upload
-  if (step === 'upload' && !driverAgreed) {
-    return <Navigate to="/driverjobdetails" replace />;
+  // ── STEP 3: PROTECT details-upload (must have agreed) ──
+  if (step === 'upload') {
+    if (!driverAgreed) {
+      return <Navigate to="/driverjobdetails" replace />;
+    }
+    return children;
   }
 
-  // 4️⃣ Upload → Dashboard
-  if (step === 'dashboard' && !driverUploaded) {
-    return <Navigate to="/driver-details-upload" replace />;
+  // ── STEP 4: PROTECT driver-dashboard (must have uploaded) ──
+  if (step === 'dashboard') {
+    if (!driverUploaded) {
+      return <Navigate to="/driver-details-upload" replace />;
+    }
+    return children;
   }
 
-  // Fallback role check for any other protected route
+  // ── ANY OTHER protected route: require token & role ──
   if (!token) {
     return <Navigate to="/login" replace />;
   }

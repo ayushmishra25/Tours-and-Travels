@@ -59,7 +59,7 @@ function Register() {
         const message = response.data.message;
         console.log("Response:", message);
 
-        if(message === "User registered successfully"){
+        if (message.toLowerCase().includes("registerd successfully")) {
           localStorage.setItem("registered", "true");
           setSuccessMessage("Registration successful!");
           setTimeout (() => {
