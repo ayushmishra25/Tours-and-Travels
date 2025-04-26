@@ -53,8 +53,8 @@ const MainContent = () => {
         <Route path="/register" element={<Register />} />
 
         {/* Login only after registration */}
-        <Route path="/login" element={<Login /> }/>
-        {/* <Route path="/login" element={<ProtectedRoute step="login"><Login /></ProtectedRoute>  }/> */}
+        {/* <Route path="/login" element={<Login /> }/> */}
+        <Route path="/login" element={<ProtectedRoute step="login"><Login /></ProtectedRoute>  }/> 
         {/* User dashboard (you can wrap similarly if needed) */}
         <Route path="/dashboard/*" element={<UserDashboard />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
@@ -64,12 +64,12 @@ const MainContent = () => {
         <Route path="/monthly-driver" element={<MonthlyDriver />} />
         <Route path="/ondemand-driver" element={<OndemandDriver />} />
         {/* Driver-only flow */}
-        { /* <Route path="/driverjobdetails" element={ <ProtectedRoute allowedRoles={[1]} step="jobdetails">  <DriverJobDetails /></ProtectedRoute>} /> */}
-        <Route path="/driverjobdetails" element={<DriverJobDetails />}/>
-        <Route path="/driver-details-upload" element={ <DriverDetailsUpload /> }/>
-        {/* <Route path="/driver-details-upload" element={<ProtectedRoute allowedRoles={[1]} step="upload">  <DriverDetailsUpload /> </ProtectedRoute>}/> */}
-        {/* <Route path="/driver-dashboard"element={ <ProtectedRoute allowedRoles={[1]} step="dashboard"><DriverDashboard /></ProtectedRoute>} /> */}
-        <Route path="/driver-dashboard"element={ <DriverDashboard /> } />
+        <Route path="/driverjobdetails" element={ <ProtectedRoute allowedRoles={[1]} step="jobdetails">  <DriverJobDetails /></ProtectedRoute>} />
+        {/* <Route path="/driverjobdetails" element={<DriverJobDetails />}/> */}
+        {/* <Route path="/driver-details-upload" element={ <DriverDetailsUpload /> }/> */}
+        <Route path="/driver-details-upload" element={<ProtectedRoute allowedRoles={[1]} step="upload">  <DriverDetailsUpload /> </ProtectedRoute>}/> 
+        <Route path="/driver-dashboard"element={ <ProtectedRoute allowedRoles={[1]} step="dashboard"><DriverDashboard /></ProtectedRoute>} /> 
+        {/* <Route path="/driver-dashboard"element={ <DriverDashboard /> } /> */}
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
