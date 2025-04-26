@@ -6,6 +6,7 @@ const DriverJobDetails = () => {
 
   const handleAgree = () => {
     // If the driver agrees, navigate to the next page (e.g., driver dashboard)
+    localStorage.setItem("driverAgreed","true");
     navigate("/driver-details-upload");
   };
 

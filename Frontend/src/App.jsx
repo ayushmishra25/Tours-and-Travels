@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -19,6 +20,7 @@ import DriverJobDetails from './pages/DriverJobDetails';
 import DriverNavbar from './components/DriverNavbar';
 import DriverDashboard from './pages/DriverDashboard';
 import DriverDetailsUpload from './pages/DriverDetailsUpload';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
 
@@ -36,37 +38,41 @@ const MainContent = () => {
 
   return (
     <>
-      {!isDashboard && <Navbar />}   {/* Show Navbar only if not on Dashboard */}
-      {isDashboard && <DashboardNavbar />}  {/* Show Dashboard Navbar only on Dashboard */}
-      
+      {/* Public vs dashboard navbars */}
+      {!isDashboard && <Navbar />}
+      {isDashboard && <DashboardNavbar />}
+
       <Routes>
-        {/* All admin-related routes */}
+        {/* Admin panel */}
         <Route path="/admin/*" element={<AdminApp />} />
+
+        {/* Public pages */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        {/* <Route path="/dashboard/*" element={<ProtectedRoute requiredRole="user"> <UserDashboard /></ProtectedRoute>} /> */}
-        <Route path="/dashboard/*" element={ <UserDashboard />} />
-        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-        <Route path="/hourly-driver" element={<HourlyDriver />} />
-        <Route path="/monthly-driver" element={<MonthlyDriver />} />
-        <Route path="/weekly-driver" element={<WeeklyDriver />} />
-        <Route path="/ondemand-driver" element={<OndemandDriver />} />
-        {/* <Route path="/driverjobdetails" element={<ProtectedRoute requiredRole="driver"> <DriverJobDetails /> </ProtectedRoute>} /> */}
-        <Route path="/driverjobdetails" element={<DriverJobDetails /> } />
-        <Route path="/driver-navbar" element={<DriverNavbar />} />
-        {/* <Route path="/driver-dashboard" element={<ProtectedRoute requiredRole="driver"> <DriverDashboard /> </ProtectedRoute>} /> */}
-        <Route path="/driver-dashboard" element={<DriverDashboard /> } />
-        {/* <Route path="/driver-details-upload" element={<ProtectedRoute requiredRole="driver"> <DriverDetailsUpload /> </ProtectedRoute>} /> */}
-        <Route path="/driver-details-upload" element={ <DriverDetailsUpload /> } />
-      </Routes>
 
-      {!isDashboard && <Footer />}  {/* Hide Footer on Dashboard */}
+        {/* Login only after registration */}
+        <Route path="/login" element={<ProtectedRoute step="login"><Login /></ProtectedRoute>  }/>
+        {/* User dashboard (you can wrap similarly if needed) */}
+        <Route path="/dashboard/*" element={<UserDashboard />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        {/* Booking pages (public) */}
+        <Route path="/hourly-driver" element={<HourlyDriver />} />
+        <Route path="/weekly-driver" element={<WeeklyDriver />} />
+        <Route path="/monthly-driver" element={<MonthlyDriver />} />
+        <Route path="/ondemand-driver" element={<OndemandDriver />} />
+        {/* Driver-only flow */}
+        <Route path="/driverjobdetails" element={ <ProtectedRoute allowedRoles={[1]} step="jobdetails">  <DriverJobDetails /></ProtectedRoute>} />
+        <Route path="/driver-details-upload" element={<ProtectedRoute allowedRoles={[1]} step="upload">  <DriverDetailsUpload /> </ProtectedRoute>}/>
+        <Route path="/driver-dashboard"element={ <ProtectedRoute allowedRoles={[1]} step="dashboard"><DriverDashboard /></ProtectedRoute>} />
+        {/* Any unmatched goes home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      {/* Footer hidden on user-dashboard but shown everywhere else */}
+      {!isDashboard && <Footer />}
     </>
   );
 };
 
 export default App;
-

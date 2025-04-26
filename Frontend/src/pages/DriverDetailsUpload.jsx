@@ -84,6 +84,7 @@ const DriverDetailsUpload = () => {
         const result = await response.json();
         alert("Driver details submitted successfully!");
         console.log("Response from API:", result);
+        localStorage.setItem("driverUploaded", "true"); 
         navigate("/driver-dashboard");  // ✅ Corrected here
       } else {
         const errorData = await response.json();

@@ -60,6 +60,7 @@ function Register() {
         console.log("Response:", message);
 
         if(message === "User registered successfully"){
+          localStorage.setItem("registered", "true");
           setSuccessMessage("Registration successful!");
           setTimeout (() => {
             navigate("/login");
