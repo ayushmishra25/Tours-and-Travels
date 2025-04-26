@@ -1,48 +1,44 @@
+// src/components/ProtectedRoute.jsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
+const ProtectedRoute = ({ children, allowedRoles, step }) => {
+  const token    = localStorage.getItem('token');
+  const role     = parseInt(localStorage.getItem('userRole'), 10);
+  const registered    = localStorage.getItem('registered');
+  const driverAgreed  = localStorage.getItem('driverAgreed');
+  const driverUploaded = localStorage.getItem('driverUploaded');
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const token = localStorage.getItem('token');
-  const userRole = parseInt(localStorage.getItem('userRole')); // assuming roles are stored as numbers
-  const reg      = localStorage.getItem('registered');
-  const agreed   = localStorage.getItem('driverAgreed');
-  const uploaded = localStorage.getItem('driverUploaded');
-  
-
-  // 1. Registration → Login
-  if (step === 'login' && !reg) {
+  // 1️⃣ Registration → Login
+  if (step === 'login' && !registered) {
     return <Navigate to="/register" replace />;
   }
 
-  // 2. Login → Job Details
+  // 2️⃣ Login → JobDetails (must be logged in + role=driver)
   if (step === 'jobdetails') {
-    if (!token) return <Navigate to="/login" replace />;
-    if (allowedRoles && !allowedRoles.includes(role)) {
+    if (!token || allowedRoles?.length === 0 || !allowedRoles.includes(role)) {
       return <Navigate to="/login" replace />;
     }
   }
-  // 3. Job Details → Upload
-  if (step === 'upload' && !agreed) {
+
+  // 3️⃣ JobDetails → Upload
+  if (step === 'upload' && !driverAgreed) {
     return <Navigate to="/driverjobdetails" replace />;
   }
 
-  // 4. Upload → Dashboard
-  if (step === 'dashboard' && !uploaded) {
+  // 4️⃣ Upload → Dashboard
+  if (step === 'dashboard' && !driverUploaded) {
     return <Navigate to="/driver-details-upload" replace />;
   }
 
+  // Fallback role check for any other protected route
   if (!token) {
-    // Not logged in
+    return <Navigate to="/login" replace />;
+  }
+  if (allowedRoles && !allowedRoles.includes(role)) {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    // Logged in but role not allowed
-    return <Navigate to="/login" replace />;
-  }
-
-  // Logged in and role is allowed
   return children;
 };
 
