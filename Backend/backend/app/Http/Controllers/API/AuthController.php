@@ -117,14 +117,22 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function listUsers()
+    public function listUsers(Request $request)
     {
-        $users = User::all(); // or use pagination: User::paginate(10);
+    $role = $request->query('role'); 
 
-        return response()->json([
-            'users' => $users
-        ], 200);
+    if ($role == 0) {
+        $users = User::where('role', 0)->get();
+    } elseif ($role == 1) {
+        $users = User::where('role', 1)->get();
+    } else {
+        $users = User::all();
     }
+
+    return response()->json([
+        'users' => $users
+    ], 200);
+}
 
 
 

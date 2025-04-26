@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('source_location');
             $table->string('destination_location')->nullable();
             $table->integer('hours')->nullable(); // For hourly
-            $table->json('working_days')->nullable(); // For weekly/monthly
-            $table->integer('working_hours_per_day')->nullable(); // For monthly
-            $table->date('start_date')->nullable(); // For monthly
-            $table->dateTime('booking_datetime')->nullable(); // For hourly/on_demand/weekly
+            $table->json('working_days')->nullable(); 
+            $table->integer('working_hours_per_day')->nullable(); 
+            $table->date('start_date')->nullable(); 
+            $table->dateTime('booking_datetime')->nullable(); 
             $table->timestamps();
         });
     }
