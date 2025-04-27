@@ -78,6 +78,7 @@ const DriverDetailsUpload = () => {
     try {
       const response = await fetch("http://localhost:8000/api/driver-details", {
         method: "POST",
+        mode:"cors",
         headers: {
           Authorization: `Bearer ${token}`,
         },
