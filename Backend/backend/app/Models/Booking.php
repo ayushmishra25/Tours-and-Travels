@@ -13,11 +13,13 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'booking_type',
+        'trip_type',
         'source_location',
         'destination_location',
         'hours',
         'working_days',
         'working_hours_per_day',
+        'payment',
         'start_date',
         'booking_datetime',
     ];
