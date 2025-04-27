@@ -35,12 +35,14 @@ function App() {
 const MainContent = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
+  // Paths where we want to hide navbar/footer
+  const noShellPaths = ['/driverjobdetails'];
+  const hideShell = noShellPaths.includes(location.pathname);
 
   return (
     <>
-      {/* Public vs dashboard navbars */}
-      {!isDashboard && <Navbar />}
-      {isDashboard && <DashboardNavbar />}
+      {/* Conditionally render navbars: hide on specific paths */}
+      {!hideShell && (!isDashboard ? <Navbar /> : <DashboardNavbar />)}
 
       <Routes>
         {/* Admin panel */}
@@ -105,8 +107,8 @@ const MainContent = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* Footer hidden on user-dashboard but shown everywhere else */}
-      {!isDashboard && <Footer />}
+      {/* Conditionally render footer: hide on dashboard and specific paths */}
+      {!hideShell && !isDashboard && <Footer />}
     </>
   );
 };

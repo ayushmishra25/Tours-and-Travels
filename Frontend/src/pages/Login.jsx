@@ -52,7 +52,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("userRole", role);
   
-        alert("Login Successful!");
+        // alert("Login Successful!");
   
         const numericRole = parseInt(role, 10);
   
