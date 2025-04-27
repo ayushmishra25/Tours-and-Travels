@@ -24,11 +24,13 @@ class BookingController extends Controller
         $booking = Booking::create([
             'user_id' => Auth::id(), 
             'booking_type' => $request->booking_type,
+            'trip_type' => $request->trip_type,
             'source_location' => $request->source_location,
             'destination_location' => $request->destination_location,
             'hours' => $request->hours,
             'working_days' => $request->working_days ? json_encode($request->working_days) : null,
             'working_hours_per_day' => $request->working_hours_per_day,
+            'payment' => $request->payment,
             'start_date' => $request->start_date,
             'booking_datetime' => $request->booking_datetime,
         ]);

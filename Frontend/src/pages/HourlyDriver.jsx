@@ -92,16 +92,25 @@ const HourlyDriver = () => {
     }
     setAuthError("");
 
+    if (!date || !time) {
+      setAuthError("Please select both a date and a time.");
+      return;
+    }
+  
+    // Combine date and time into the format Y-m-d H:i:s
+    const booking_datetime = `${date} ${time}:00`;
+
     // Build payload
     const payload = {
-      user_id: parseInt(localStorage.getItem("userId"), 10),
+      user_id: parseInt(localStorage.getItem("userId")),
       booking_type: "hourly",
-      trip_option: tripType,
+      trip_type: tripType,
       source_location: pickup,
       destination_location: destination,
       hours: tripType === "roundtrip" ? hours : undefined,
       distance: tripType === "oneway" ? distance : undefined,
-      booking_datetime: `${date} ${time}:00`
+      payment: totalAmount,   // ✅ Fixed colon here
+      booking_datetime,
     };
 
     try {
