@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 
 // Pricing tables for hourly and distance-based fares
@@ -18,13 +19,12 @@ const hourlyPricing = {
 const distancePricing = {
   Hyderabad: { 5: 272, 10: 298, 15: 348, 20: 375, 30: 449, 40: 504, 50: 582, 60: 614, 70: 657 },
   Bangalore: { 5: 225, 10: 297, 15: 343, 20: 375, 30: 448, 40: 503, 50: 582, 60: 614, 70: 656 },
-  Navi_Mumbai: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
+  "Navi Mumbai": { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
   Gurugram: { 5: 297, 10: 322, 15: 372, 20: 399, 30: 473, 40: 528, 50: 606, 60: 638, 70: 681 },
   MumbaiPune: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
   Delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 }
 };
 
-// Function to extract city from the pickup address based on keywords
 const getCityFromAddress = (address) => {
   const lower = address.toLowerCase();
   if (lower.includes("delhi")) return "Delhi";
@@ -37,14 +37,12 @@ const getCityFromAddress = (address) => {
   if (lower.includes("mumbai")) return "Mumbai";
   if (lower.includes("pune")) return "Pune";
   if (lower.includes("navi mumbai")) return "Navi Mumbai";
-  return null; // City not identified
+  return null;
 };
 
 const HourlyDriver = () => {
   const navigate = useNavigate();
-  
-  // ★ NEW: grab token from localStorage
-  const isLoggedIn = Boolean(localStorage.getItem("token"));
+  const token = localStorage.getItem("token");
 
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
@@ -54,94 +52,77 @@ const HourlyDriver = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
-
-  // ★ NEW: state to hold inline auth error
   const [authError, setAuthError] = useState("");
+  const user = JSON.parse(localStorage.getItem("user")) || { name: "John Doe", phone: "+91 9876543210" };
 
-  const user = { name: "John Doe", phone: "+91 9876543210" };
-
-  // New fare calculation based on pickup address and trip type
   const calculateFare = () => {
     if (!pickup || !destination) return 0;
-    let city = getCityFromAddress(pickup);
-    // Fallback to "Delhi" if no city is detected
-    if (!city) city = "Delhi";
-    
+    let city = getCityFromAddress(pickup) || "Delhi";
+
     if (tripType === "roundtrip") {
       const pricing = hourlyPricing[city];
-      if (pricing && pricing[hours - 1] !== undefined) {
-        return pricing[hours - 1];
-      }
+      return pricing?.[hours - 1] ?? 0;
     } else {
-      let pricing;
-      if (city === "Hyderabad") {
-        pricing = distancePricing["Hyderabad"];
-      } else if (city === "Bangalore") {
-        pricing = distancePricing["Bangalore"];
-      } else if (city === "Gurugram") {
-        pricing = distancePricing["Gurugram"];
-      } else if (city === "Mumbai" || city === "Pune") {
-        pricing = distancePricing["MumbaiPune"];
-      } else if (city === "Delhi") {
-        pricing = distancePricing["Delhi"];
-      } else if (city === "Navi Mumbai") {
-        pricing = distancePricing["Navi Mumbai"];
-      } else {
-        pricing = distancePricing["Delhi"];
-      }
-      if (pricing && pricing[distance] !== undefined) {
-        return pricing[distance];
-      }
+      let pricing = distancePricing[city] ?? distancePricing["Delhi"];
+      return pricing[distance] ?? 0;
     }
-    return 0;
   };
 
-  // Simulated reverse geocoding to fetch a complete formatted address
   const fetchCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async ({ coords: { latitude, longitude } }) => {
-          try {
-            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`);
-            const data = await response.json();
-            if (data.status === "OK" && data.results.length > 0) {
-              setPickup(data.results[0].formatted_address);
-              alert("Current Location fetched: " + data.results[0].formatted_address);
-            } else {
-              alert("Unable to fetch address.");
-            }
-          } catch (error) {
-            alert("Error fetching location: " + error.message);
-          }
-        },
-        (error) => alert("Error fetching location: " + error.message)
-      );
-    } else {
-      alert("Geolocation not supported.");
-    }
+    if (!navigator.geolocation) return alert("Geolocation not supported.");
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords: { latitude, longitude } }) => {
+        try {
+          const resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`);
+          const data = await resp.json();
+          if (data.status === "OK") setPickup(data.results[0].formatted_address);
+          else alert("Unable to fetch address.");
+        } catch (err) {
+          alert("Error fetching location: " + err.message);
+        }
+      },
+      (err) => alert("Error fetching location: " + err.message)
+    );
   };
 
-   // ★ NEW: handle Book Now click
-   const handleBookNow = () => {
-    if (!isLoggedIn) {
-      setAuthError("Please register and login first to book a driver."); // ★
+  const handleBookNow = async () => {
+    if (!token) {
+      setAuthError("Please register and login first to book a driver.");
       return;
     }
-    // If logged in, clear any auth error and proceed
-    setAuthError(""); // ★
-    // ... your existing booking submission logic here ...
-    // e.g., navigate("/booking-confirmation", { state:{pickup,destination,...}});
+    setAuthError("");
+
+    // Build payload
+    const payload = {
+      user_id: parseInt(localStorage.getItem("userId"), 10),
+      booking_type: "hourly",
+      trip_option: tripType,
+      source_location: pickup,
+      destination_location: destination,
+      hours: tripType === "roundtrip" ? hours : undefined,
+      distance: tripType === "oneway" ? distance : undefined,
+      booking_datetime: `${date} ${time}:00`
+    };
+
+    try {
+      const resp = await axios.post(
+        "http://localhost:8000/api/booking",
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Booking submitted successfully!");
+      navigate("/dashboard/bookings");
+    } catch (err) {
+      console.error("Booking error:", err);
+      setAuthError("Booking failed. Please try again.");
+    }
   };
 
-
-  // Recalculate fare when relevant data changes
   useEffect(() => {
     if (pickup && destination) {
-      const fare = calculateFare();
-      setTotalAmount(fare);
+      setTotalAmount(calculateFare());
     }
   }, [pickup, destination, tripType, hours, distance]);
-
 
   return (
     <>
@@ -166,7 +147,7 @@ const HourlyDriver = () => {
           <div className="left-section">
             <h3>Select {tripType === "roundtrip" ? "Hours" : "Distance"}</h3>
             {tripType === "roundtrip" ? (
-              <select value={hours} onChange={(e) => setHours(Number(e.target.value))}>
+              <select value={hours} onChange={(e) => setHours(+e.target.value)}>
                 {[...Array(12).keys()].map((h) => (
                   <option key={h + 1} value={h + 1}>
                     {h + 1} Hour(s)
@@ -174,7 +155,7 @@ const HourlyDriver = () => {
                 ))}
               </select>
             ) : (
-              <select value={distance} onChange={(e) => setDistance(Number(e.target.value))}>
+              <select value={distance} onChange={(e) => setDistance(+e.target.value)}>
                 {[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80].map((d) => (
                   <option key={d} value={d}>
                     {d} km
@@ -210,16 +191,16 @@ const HourlyDriver = () => {
             <h3>User Details</h3>
             <p>Name: {user.name}</p>
             <p>Phone: {user.phone}</p>
+
             <h2>₹ {totalAmount}</h2>
+            <button className="book-now-btn" onClick={handleBookNow}>
+              Book Now
+            </button>
+            {authError && <p className="error-message">{authError}</p>}
 
-            {/* ★ Updated to use our new handler */}
-            <button className="book-now-btn" onClick={handleBookNow}>   Book Now </button>
-
-            {/* ★ Inline message if not authenticated */}
-            {authError && <p className="error-message">{authError}</p>} 
-            
             <p className="price-note">
-            For distances above 80 km, an additional charge of 10rs per km will be applied along with food, accommodation, and convenience charges. Night charges will be added if an overnight stay is required.
+              For distances above 80 km, an additional charge of ₹10/km will be applied, including food,
+              accommodation, and convenience. Night charges apply if an overnight stay is required.
             </p>
           </div>
         </div>
