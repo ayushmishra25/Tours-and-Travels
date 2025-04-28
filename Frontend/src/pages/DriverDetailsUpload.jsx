@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const token = localStorage.getItem("token");
 import axios from "axios";
+
 const DriverDetailsUpload = () => {
   const navigate = useNavigate();
   
@@ -28,15 +29,23 @@ const DriverDetailsUpload = () => {
     licenseBack: null,
     aadharFront: null,
     aadharBack: null,
-    passbook: null
+    passbook: null,
+    policeDoc: null // police verification document
   });
   
+  // Police verification state
+  const [policeVerified, setPoliceVerified] = useState("");
+
+  // Error state for validation
+  const [fieldError, setFieldError] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name === "policeVerified") {
+      setPoliceVerified(value);
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
   
   const handleFileChange = (e) => {
@@ -47,6 +56,31 @@ const DriverDetailsUpload = () => {
       [name]: file
     }));
   };
+
+  const validateFields = () => {
+    // Check text fields
+    for (const [key, val] of Object.entries(formData)) {
+      if (!val) {
+        return `${key.replace(/([A-Z])/g, ' $1')} is required`;
+      }
+    }
+    // Check all file uploads
+    const requiredFiles = ['photo', 'licenseFront', 'licenseBack', 'aadharFront', 'aadharBack', 'passbook'];
+    for (const fname of requiredFiles) {
+      if (!files[fname]) {
+        return `${fname} upload is required`;
+      }
+    }
+    // Police verification
+    if (!policeVerified) {
+      return `Police verification selection is required`;
+    }
+    if (policeVerified === 'yes' && !files.policeDoc) {
+      return `Police verification document is required`;
+    }
+    // No errors
+    return null;
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,6 +89,13 @@ const DriverDetailsUpload = () => {
       alert("Please register and login first.");
       return;
     }
+
+    const errorMsg = validateFields();
+    if (errorMsg) {
+      setFieldError(errorMsg);
+      return;
+    }
+    setFieldError("");
   
     // Create a FormData object
     const formDataToSend = new FormData();
@@ -79,7 +120,12 @@ const DriverDetailsUpload = () => {
     if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
-  
+    
+    formDataToSend.append("police_varified", policeVerified);
+    if(policeVerified === "yes" && files.policeDoc){
+      formDataToSend.append("police_varified_docu", files.policeDoc);
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:8000/api/driver-details",
@@ -102,9 +148,7 @@ const DriverDetailsUpload = () => {
     }
   };
   
-  
-  
-  
+
   return (
     <div className="driver-details-container">
       <h1>Upload Your Details</h1>
@@ -181,7 +225,37 @@ const DriverDetailsUpload = () => {
           <label>Upload Passbook Front Page:</label>
           <input type="file" name="passbook" accept="image/*" onChange={handleFileChange} />
         </div>
-        
+
+        {/* Police Verification Section */}
+<div className="form-group">
+  <label>Police Verification Done?</label>
+  <select
+    name="policeVerified"
+    value={policeVerified}
+    onChange={(e) => setPoliceVerified(e.target.value)}
+    required
+  >
+    <option value="">Select</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+</div>
+
+{/* Conditionally show police doc upload */}
+{policeVerified === "yes" && (
+  <div className="form-group">
+    <label>Upload Police Verification Document:</label>
+    <input
+      type="file"
+      name="policeDoc"
+      accept="application/pdf,image/*"
+      onChange={handleFileChange}
+      required
+    />
+  </div>
+)}
+
+
         <fieldset className="account-details">
           <legend>Account Details</legend>
           <div className="form-group">

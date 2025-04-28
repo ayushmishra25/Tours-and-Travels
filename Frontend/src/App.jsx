@@ -20,6 +20,9 @@ import DriverJobDetails from './pages/DriverJobDetails';
 import DriverNavbar from './components/DriverNavbar';
 import DriverDashboard from './pages/DriverDashboard';
 import DriverDetailsUpload from './pages/DriverDetailsUpload';
+import Earnings from './pages/Earnings';
+import DriverRides from './pages/DriverRides';
+import Support from './pages/Support';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -93,6 +96,23 @@ const MainContent = () => {
           element={
               <DriverDashboard />
           }
+        />
+        
+        <Route path="/earnings" element={<Earnings /> } />
+        {/* My Rides page */}
+       <Route
+          path="/trip-history"
+          element={
+             <DriverRides />
+            }
+        />
+        
+        {/* My Rides page */}
+       <Route
+          path="/support"
+          element={
+             <Support />
+            }
         />
 
         {/* Any unmatched goes home */}
