@@ -58,9 +58,7 @@ const MainContent = () => {
         <Route
           path="/login"
           element={
-            <ProtectedRoute step="login">
               <Login />
-            </ProtectedRoute>
           }
         />
 
@@ -79,27 +77,21 @@ const MainContent = () => {
         <Route
           path="/driverjobdetails"
           element={
-            <ProtectedRoute allowedRoles={[1]} step="jobdetails">
               <DriverJobDetails />
-            </ProtectedRoute>
           }
         />
 
         <Route
           path="/driver-details-upload"
           element={
-            <ProtectedRoute allowedRoles={[1]} step="upload">
               <DriverDetailsUpload />
-            </ProtectedRoute>
           }
         />
 
         <Route
           path="/driver-dashboard"
           element={
-            <ProtectedRoute allowedRoles={[1]} step="dashboard">
               <DriverDashboard />
-            </ProtectedRoute>
           }
         />
 
@@ -114,3 +106,4 @@ const MainContent = () => {
 };
 
 export default App;
+
