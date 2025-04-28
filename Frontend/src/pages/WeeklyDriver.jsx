@@ -4,11 +4,17 @@ import DashboardNavbar from "../components/DashboardNavbar";
 
 const WeeklyDriver = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token"); 
+
   const [location, setLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
+
+  
+  const [authError, setAuthError] = useState("");                     // ← will hold auth errors
+  const [fieldError, setFieldError] = useState(""); 
 
   const user = { name: "John Doe", phone: "+91 9876543210" };
 
@@ -38,7 +44,32 @@ const WeeklyDriver = () => {
   }, [location, workingDays]);
 
   const handleBookNow = () => {
-    alert("Weekly driver booked for ₹ " + totalAmount);
+    if (!token) {
+      setAuthError("Please register and login first to book a driver.");
+      setFieldError("");
+      return;
+    }
+    setAuthError("");
+    // 2) Validate each field
+    if (!location.trim()) {
+      setFieldError("Location is required");
+      return;
+    }
+    if (!workingDays) {
+      setFieldError("Working days selection is required");
+      return;
+    }
+    if (!date) {
+      setFieldError("Date is required");
+      return;
+    }
+    if (!time) {
+      setFieldError("Time is required");
+      return;
+    }
+
+    setFieldError("");
+
     // Add further booking logic here if needed
   };
 
@@ -95,6 +126,12 @@ const WeeklyDriver = () => {
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
             </button>
+
+            {/* Display either auth errors or field validation errors */}
+            {authError && <p className="error-message">{authError}</p>}
+            {!authError && fieldError && <p className="error-message">{fieldError}</p>}
+
+            
           </div>
         </div>
       </div>

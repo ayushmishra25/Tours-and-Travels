@@ -4,12 +4,17 @@ import DashboardNavbar from "../components/DashboardNavbar";
 
 const OndemandDriver = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token"); 
+
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
+
+  const [authError, setAuthError] = useState("");                     // ← auth error
+  const [fieldError, setFieldError] = useState("");  
 
   const user = { name: "John Doe", phone: "+91 9876543210" };
 
@@ -57,6 +62,38 @@ const OndemandDriver = () => {
   };
 
   const handleBookNow = () => {
+    // 1) Auth check
+    if (!token) {
+      setAuthError("Please register and login first to book a driver.");
+      setFieldError("");
+      return;
+    }
+    setAuthError("");
+
+    // 2) Field validations
+    if (!pickup.trim()) {
+      setFieldError("Pickup address is required");
+      return;
+    }
+    if (!destination.trim()) {
+      setFieldError("Destination address is required");
+      return;
+    }
+    if (!distance) {
+      setFieldError("Distance is required");
+      return;
+    }
+    if (!date) {
+      setFieldError("Date is required");
+      return;
+    }
+    if (!time) {
+      setFieldError("Time is required");
+      return;
+    }
+    setFieldError("");
+
+    // 3) Proceed
     alert(`On-demand driver booked for ₹ ${totalAmount}`);
   };
 
@@ -121,6 +158,11 @@ const OndemandDriver = () => {
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
             </button>
+
+            {authError && <p className="error-message">{authError}</p>}
+            {!authError && fieldError && <p className="error-message">{fieldError}</p>}
+
+            
           </div>
         </div>
       </div>

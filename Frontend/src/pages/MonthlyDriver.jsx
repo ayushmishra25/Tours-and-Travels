@@ -78,11 +78,16 @@ const monthlyPricing = {
 
 const MonthlyDriver = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
   const [location, setLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("22");
   const [workingHours, setWorkingHours] = useState("8");
   const [date, setDate] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
+
+  const [authError, setAuthError] = useState("");                     // ← auth error
+  const [fieldError, setFieldError] = useState(""); 
 
   const user = { name: "John Doe", phone: "+91 9876543210" };
 
@@ -102,8 +107,35 @@ const MonthlyDriver = () => {
   }, [location, workingDays, workingHours]);
 
   const handleBookNow = () => {
+    // 1) Must be logged in
+    if (!token) {
+      setAuthError("Please register and login first to book a driver.");
+      setFieldError("");
+      return;
+    }
+    setAuthError("");
+
+    // 2) Field validations
+    if (!location) {
+      setFieldError("Location is required");
+      return;
+    }
+    if (!workingDays) {
+      setFieldError("Working days is required");
+      return;
+    }
+    if (!workingHours) {
+      setFieldError("Working hours is required");
+      return;
+    }
+    if (!date) {
+      setFieldError("Start date is required");
+      return;
+    }
+    setFieldError("");
+
+    // 3) Proceed
     alert("Monthly driver booked for ₹ " + totalAmount);
-    // Implement further booking logic if needed
   };
 
   return (
@@ -153,6 +185,11 @@ const MonthlyDriver = () => {
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
             </button>
+
+            {authError && <p className="error-message">{authError}</p>}
+            {!authError && fieldError && <p className="error-message">{fieldError}</p>}
+
+            
             <p className="price-note">
             For long-distance travel, accommodation, food, and night stays, extra charges apply.
             We understand that every requirement is unique, so **pricing can be negotiated as per the requirements and preferences.** Once you submit your request, we will contact you soon to discuss the details.
