@@ -8,7 +8,8 @@ class DriverDetailsUpload extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable = [        
+        'user_id',
         'photo',
         'education',
         'age',

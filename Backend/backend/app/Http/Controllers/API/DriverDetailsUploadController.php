@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DriverDetailsUpload;
+use Illuminate\Support\Facades\Auth;
+
 
 class DriverDetailsUploadController extends Controller
 {
@@ -17,7 +19,7 @@ class DriverDetailsUploadController extends Controller
     // Store a new driver record
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validatedData = $request->validate([
             'photo' => 'nullable|image',
             'education' => 'required|string',
             'age' => 'required|integer',
@@ -25,7 +27,7 @@ class DriverDetailsUploadController extends Controller
             'pincode' => 'required|string',
             'zone' => 'required|string',
             'driving_experience' => 'required|integer',
-            'car_driving_experience' => 'required|integer',
+            'car_driving_experience' => 'required|string',
             'driving_licence_front' => 'nullable|image',
             'driving_licence_back' => 'nullable|image',
             'type_of_driving_licence' => 'required|string',
@@ -38,21 +40,19 @@ class DriverDetailsUploadController extends Controller
             'account_holder_name' => 'required|string',
         ]);
 
+        // After validation, manually add user_id
+        $validatedData['user_id'] = Auth::id();
+
+        // Handling file uploads
         foreach (['photo', 'driving_licence_front', 'driving_licence_back', 'aadhar_card_front', 'aadhar_card_back', 'passbook_front'] as $field) {
             if ($request->hasFile($field)) {
-                $data[$field] = $request->file($field)->store('uploads/driver', 'public');
+                $validatedData[$field] = $request->file($field)->store('uploads/driver', 'public');
             }
         }
 
-        $driver = DriverDetailsUpload::create($data);
-        return response()->json($driver, 201);
-    }
+        $driver = DriverDetailsUpload::create($validatedData);
 
-    // Show a specific driver record
-    public function show($id)
-    {
-        $driver = DriverDetailsUpload::findOrFail($id);
-        return response()->json($driver);
+        return response()->json($driver, 201);
     }
 
     // Update a driver record

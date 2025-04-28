@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const token = localStorage.getItem("token");
-
+import axios from "axios";
 const DriverDetailsUpload = () => {
   const navigate = useNavigate();
   
@@ -51,56 +51,58 @@ const DriverDetailsUpload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    const form = new FormData();
+    if (!token) {
+      alert("Please register and login first.");
+      return;
+    }
   
-    // Append text fields
-    form.append("education", formData.education);
-    form.append("age", formData.age);
-    form.append("exact_location", formData.location);
-    form.append("pincode", formData.pincode);
-    form.append("zone", formData.zone);
-    form.append("driving_experience", formData.drivingExperienceYears);
-    form.append("car_driving_experience", formData.drivingExperienceType); // assuming string type
-    form.append("type_of_driving_licence", formData.licenseType);
-    form.append("account_number", formData.accountNumber);
-    form.append("bank_name", formData.bankName);
-    form.append("ifsc_code", formData.ifsc);
-    form.append("account_holder_name", formData.accountHolderName);
+    // Create a FormData object
+    const formDataToSend = new FormData();
   
-    // Append file fields if available
-    if (files.photo) form.append("photo", files.photo);
-    if (files.licenseFront) form.append("driving_licence_front", files.licenseFront);
-    if (files.licenseBack) form.append("driving_licence_back", files.licenseBack);
-    if (files.aadharFront) form.append("aadhar_card_front", files.aadharFront);
-    if (files.aadharBack) form.append("aadhar_card_back", files.aadharBack);
-    if (files.passbook) form.append("passbook_front", files.passbook);
+    // Append all text fields
+    formDataToSend.append("education", formData.education);
+    formDataToSend.append("age", formData.age);
+    formDataToSend.append("exact_location", formData.location);
+    formDataToSend.append("pincode", formData.pincode);
+    formDataToSend.append("zone", formData.zone);
+    formDataToSend.append("driving_experience", formData.drivingExperienceYears);
+    formDataToSend.append("car_driving_experience", formData.drivingExperienceType);
+    formDataToSend.append("type_of_driving_licence", formData.licenseType);
+    formDataToSend.append("account_number", formData.accountNumber);
+    formDataToSend.append("bank_name", formData.bankName);
+    formDataToSend.append("ifsc_code", formData.ifsc);
+    formDataToSend.append("account_holder_name", formData.accountHolderName);
+  
+    if (files.photo) formDataToSend.append("photo", files.photo);
+    if (files.licenseFront) formDataToSend.append("driving_licence_front", files.licenseFront);
+    if (files.licenseBack) formDataToSend.append("driving_licence_back", files.licenseBack);
+    if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
+    if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
+    if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
   
     try {
-      const response = await fetch("http://localhost:8000/api/driver-details", {
-        method: "POST",
-        mode:"cors",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: form,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/driver-details",
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", // important
+          },
+        }
+      );
   
-      if (response.ok) {
-        const result = await response.json();
-        alert("Driver details submitted successfully!");
-        console.log("Response from API:", result);
-        localStorage.setItem("driverUploaded", "true"); 
-        navigate("/driver-dashboard");  // ✅ Corrected here
-      } else {
-        const errorData = await response.json();
-        console.error("API Error:", errorData);
-        alert("Failed to submit. Please check the form and try again.");
-      }
+      alert("Driver details submitted successfully!");
+      console.log("Response from API:", response.data);
+      localStorage.setItem("driverUploaded", "true");
+      navigate("/driver-dashboard");
     } catch (error) {
-      console.error("Network error:", error);
-      alert("Something went wrong. Please try again later.");
+      console.error("API Error:", error.response?.data || error.message);
+      alert("Failed to submit. Please check the form and try again.");
     }
   };
+  
+  
   
   
   return (

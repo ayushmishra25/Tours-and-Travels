@@ -13,6 +13,7 @@ return new class extends Migration
 {
     Schema::create('driver_details_uploads', function (Blueprint $table) {
         $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->string('photo')->nullable();
         $table->string('education');
         $table->integer('age');
@@ -20,7 +21,7 @@ return new class extends Migration
         $table->string('pincode');
         $table->string('zone');
         $table->integer('driving_experience');
-        $table->integer('car_driving_experience');
+        $table->string('car_driving_experience');
         $table->string('driving_licence_front')->nullable();
         $table->string('driving_licence_back')->nullable();
         $table->string('type_of_driving_licence');
