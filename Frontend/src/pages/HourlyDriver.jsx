@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 
+
 // Pricing tables for hourly and distance-based fares
 const hourlyPricing = {
   Delhi: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
@@ -41,8 +42,12 @@ const getCityFromAddress = (address) => {
 };
 
 const HourlyDriver = () => {
+
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
 
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
@@ -66,23 +71,6 @@ const HourlyDriver = () => {
       let pricing = distancePricing[city] ?? distancePricing["Delhi"];
       return pricing[distance] ?? 0;
     }
-  };
-
-  const fetchCurrentLocation = () => {
-    if (!navigator.geolocation) return alert("Geolocation not supported.");
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords: { latitude, longitude } }) => {
-        try {
-          const resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`);
-          const data = await resp.json();
-          if (data.status === "OK") setPickup(data.results[0].formatted_address);
-          else alert("Unable to fetch address.");
-        } catch (err) {
-          alert("Error fetching location: " + err.message);
-        }
-      },
-      (err) => alert("Error fetching location: " + err.message)
-    );
   };
 
   const handleBookNow = async () => {
@@ -127,11 +115,25 @@ const HourlyDriver = () => {
     }
   };
 
+  const formatDateLocal = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
   useEffect(() => {
-    if (pickup && destination) {
-      setTotalAmount(calculateFare());
-    }
-  }, [pickup, destination, tripType, hours, distance]);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+  
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
+  
+    setMinDate(formatDateLocal(tomorrow));
+    setMaxDate(formatDateLocal(nextWeek));
+  }, []);
+  
 
   return (
     <>
@@ -179,9 +181,6 @@ const HourlyDriver = () => {
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
             />
-            <button className="fetch-location-btn" onClick={fetchCurrentLocation}>
-              Use Current Location
-            </button>
 
             <input
               type="text"
@@ -191,7 +190,7 @@ const HourlyDriver = () => {
             />
 
             <div className="date-time-container">
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <input type="date" value={date} min={minDate} max={maxDate} onChange={(e) => setDate(e.target.value)} />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
             </div>
           </div>

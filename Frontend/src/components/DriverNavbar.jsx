@@ -34,7 +34,10 @@ const DriverNavbar = () => {
 
   return (
     <header className="driver-navbar">
-      <h1>Driver Dashboard</h1>
+       <div className="logo-title">
+        <img src="logo.jpg" alt="Sahyog Force Logo" className="navbar-logo" />
+        <h1>DRIVER DASHBOARD</h1>
+      </div>
       <div className="hamburger" onClick={toggleMenu}>
         ☰
       </div>

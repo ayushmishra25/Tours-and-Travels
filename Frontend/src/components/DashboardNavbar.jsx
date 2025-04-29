@@ -35,7 +35,10 @@ const DashboardNavbar = () => {
 
   return (
     <header className="dashboard-header">
-      <h1>Dashboard</h1>
+      <div className="logo-title">
+        <img src="logo.jpg" alt="Sahyog Force Logo" className="navbar-logo" />
+        <h1>USER DASHBOARD</h1>
+      </div>
 
       <div className="hamburger" onClick={toggleMenu}>
         ☰

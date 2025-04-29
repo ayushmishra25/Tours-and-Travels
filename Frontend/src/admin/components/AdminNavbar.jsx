@@ -11,7 +11,10 @@ const AdminNavbar = () => {
   return (
     
     <header className="admin-navbar">
-      <h1>Admin Panel</h1>
+      <div className="logo-title">
+        <img src="/logo.jpg" alt="Sahyog Force Logo" className="navbar-logo" />
+        <h1>ADMIN PANEL</h1>
+      </div>
 
 
       {/* Hamburger icon for mobile */}
