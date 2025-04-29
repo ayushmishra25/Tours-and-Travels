@@ -1,3 +1,4 @@
+// src/admin/AdminApp.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -11,35 +12,34 @@ import PaymentManagement from './pages/PaymentManagement';
 import Reports from './pages/Reports';
 import AdminSettings from './pages/AdminSettings';
 
-import PrivateRoute from './utils/PrivateRoute';
 import './AdminApp.css';
+import SupportComplaints from './pages/SupportComplaints';
 
 const AdminApp = () => {
-  const isAuthenticated = Boolean(localStorage.getItem('adminToken'));
-
   return (
     <>
-      {/* Show navbar only when authenticated */}
-      {isAuthenticated && <AdminNavbar />}
+      {/* Navbar always visible */}
+      <AdminNavbar />
 
       <Routes>
         {/* Public Admin Login */}
         <Route path="login" element={<AdminLogin />} />
 
-        {/* Protected Admin Routes */}
-        <Route path="dashboard" element={<PrivateRoute component={<AdminDashboard />} />}/>
-        <Route path="users" element={<PrivateRoute component={<ManageUsers />} />}/>
-        <Route path="drivers"element={<PrivateRoute component={<ManageDrivers />} />}/>
-        <Route path="bookings" element={<PrivateRoute component={<BookingManagement />} />} />
-        <Route path="payments"element={<PrivateRoute component={<PaymentManagement />} />}/>
-        <Route path="reports"element={<PrivateRoute component={<Reports />} />}/>
-        <Route path="settings" element={<PrivateRoute component={<AdminSettings />} />} />
-
+        {/* All admin pages now directly accessible */}
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="users" element={<ManageUsers />} />
+        <Route path="drivers" element={<ManageDrivers />} />
+        <Route path="bookings" element={<BookingManagement />} />
+        <Route path="payments" element={<PaymentManagement />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="settings" element={<AdminSettings />} />
+        <Route path="support-complaints" element={<SupportComplaints />}/>
         {/* Fallback */}
-        <Route path="*" element={<Navigate to={isAuthenticated ? 'dashboard' : 'login'} replace />} />
+        <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Routes>
     </>
   );
 };
 
 export default AdminApp;
+

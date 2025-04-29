@@ -253,101 +253,159 @@
   }
 /* BookingManagement.css - Booking Management Page Styles */
 
+/* src/admin/pages/BookingManagement.css */
 .booking-management-container {
-    margin: 80px auto 20px;
-    padding: 20px;
-    max-width: 1200px;
-    background-color: var(--background-color);
+  padding: 2rem;
+  background: #f5f5f5;
+}
+.booking-management-container h2 {
+  color: #003366;
+  margin-bottom: 1.5rem;
+}
+.booking-card {
+  background: #fff;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+.booking-info p {
+  margin: 0.25rem 0;
+}
+.assign-btn,
+.confirm-btn {
+  background: #003366;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.assign-form {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.assign-form input {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+.assigned-note {
+  color: #006400;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .booking-card {
+    padding: 0.75rem;
   }
-  
-  .booking-management-container h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 20px;
+  .assign-form {
+    flex-direction: column;
   }
-  
-  .bookings-table {
+  .assign-form input,
+  .assign-btn,
+  .confirm-btn {
     width: 100%;
-    border-collapse: collapse;
-    background-color: var(--white);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
-  
-  .bookings-table th,
-  .bookings-table td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .bookings-table th {
-    background-color: var(--primary-color);
-    color: var(--white);
-  }
-  
-  .bookings-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .bookings-table th,
-    .bookings-table td {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
-  }
+}
+
 
   /* PaymentManagement.css - Payment Management Page Styles */
+/* src/admin/pages/PaymentManagement.css */
 
 .payment-management-container {
-    margin: 80px auto 20px;
-    padding: 20px;
-    max-width: 1200px;
-    background-color: var(--background-color);
+  padding: 2rem;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.payment-management-container h2 {
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+.payments-table-wrapper {
+  overflow-x: auto;
+  background: #e0e0e0;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.payments-table th,
+.payments-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  white-space: nowrap;
+}
+.payments-table td, 
+.payments-table th {
+  color: #000000; /* or any contrasting color */
+}
+
+.payments-table th {
+  background-color: #e6f4ea;
+  color: #003366;
+  font-weight: 600;
+}
+
+.paid-row {
+  background-color: #e6f4ea;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .payment-management-container {
+    padding: 1.5rem;
   }
-  
-  .payment-management-container h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-  }
-  
+
   .payments-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: var(--white);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    min-width: 100%;
   }
-  
+
   .payments-table th,
   .payments-table td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
+    padding: 0.5rem;
+    font-size: 0.9rem;
   }
-  
-  .payments-table th {
-    background-color: var(--primary-color);
-    color: var(--white);
+}
+
+@media (max-width: 640px) {
+  .payment-management-container {
+    padding: 1rem;
   }
-  
-  .payments-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+
+  .payments-table th,
+  .payments-table td {
+    padding: 0.4rem;
+    font-size: 0.8rem;
   }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .payments-table th,
-    .payments-table td {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
+}
+
+@media (max-width: 480px) {
+  .payment-management-container {
+    padding: 0.5rem;
   }
+
+  .payments-table th,
+  .payments-table td {
+    padding: 0.3rem;
+    font-size: 0.75rem;
+  }
+}
+
   
   /* Reports.css - Reports Page Styles */
 
@@ -545,5 +603,48 @@
   .nav-menu ul li a {
     display: block;
     padding: 10px 20px;
+  }
+}
+/* support complaint section */
+.support-complaints-container {
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.support-complaints-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.complaints-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.complaints-table th,
+.complaints-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.complaints-table th {
+  background-color: #f8f8f8;
+  color: #222;
+}
+
+.complaints-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .complaints-table th,
+  .complaints-table td {
+    font-size: 12px;
+    padding: 8px;
   }
 }

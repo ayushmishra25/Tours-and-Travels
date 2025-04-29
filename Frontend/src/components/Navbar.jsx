@@ -10,7 +10,10 @@ function Navbar() {
 
   return (
     <header className="header">
-      <h1>SAHYOG FORCE</h1>
+      <div className="logo-title">
+        <img src="logo.jpg" alt="Sahyog Force Logo" className="navbar-logo" />
+        <h1>SAHYOG FORCE</h1>
+      </div>
       {/* Hamburger Menu Button */}
       <div className="hamburger" onClick={toggleMenu}>
         ☰

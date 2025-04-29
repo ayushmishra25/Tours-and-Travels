@@ -5,14 +5,50 @@ const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    // Dummy payment data
+    // Dummy data with extended fields
     setPayments([
-      { id: 1, driver: "Alice Brown", amount: 1000, date: "2025-04-10", status: "Paid" },
-      { id: 2, driver: "Bob Green", amount: 1200, date: "2025-04-11", status: "Pending" },
-      { id: 3, driver: "Bob Green", amount: 1200, date: "2025-04-11", status: "Pending" },
-      // Add more dummy payment entries as needed
+      {
+        id: 1,
+        userName: 'John Doe',
+        driverName: 'Alice Brown',
+        from: 'Area A',
+        to: 'Area B',
+        date: '2025-04-10',
+        serviceType: 'Hourly',
+        paidViaUPI: true,
+        paymentToDriver: false
+      },
+      {
+        id: 2,
+        userName: 'Jane Smith',
+        driverName: 'Bob Green',
+        from: 'Station',
+        to: 'Mall',
+        date: '2025-04-11',
+        serviceType: 'One-way',
+        paidViaUPI: false,
+        paymentToDriver: false
+      },
+      {
+        id: 3,
+        userName: 'John Doe',
+        driverName: 'Alice Brown',
+        from: 'Area A',
+        to: 'Area B',
+        date: '2025-04-10',
+        serviceType: 'Hourly',
+        paidViaUPI: true,
+        paymentToDriver: false
+      },
+      // ...more entries
     ]);
   }, []);
+
+  const togglePaymentToDriver = (id) => {
+    setPayments(prev => prev.map(p =>
+      p.id === id ? { ...p, paymentToDriver: !p.paymentToDriver } : p
+    ));
+  };
 
   return (
     <div className="payment-management-container">
@@ -20,28 +56,44 @@ const PaymentManagement = () => {
       {payments.length === 0 ? (
         <p>No payment records found.</p>
       ) : (
-        <table className="payments-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Driver</th>
-              <th>Amount (₹)</th>
-              <th>Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payments.map((payment) => (
-              <tr key={payment.id}>
-                <td>{payment.id}</td>
-                <td>{payment.driver}</td>
-                <td>{payment.amount}</td>
-                <td>{payment.date}</td>
-                <td>{payment.status}</td>
+        <div className="payments-table-wrapper">
+          <table className="payments-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Driver</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date</th>
+                <th>Service Type</th>
+                <th>Paid via UPI</th>
+                <th>Payment to Driver</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {payments.map(p => (
+                <tr key={p.id} className={p.paymentToDriver ? 'paid-row' : ''}>
+                  <td>{p.id}</td>
+                  <td>{p.userName}</td>
+                  <td>{p.driverName}</td>
+                  <td>{p.from}</td>
+                  <td>{p.to}</td>
+                  <td>{p.date}</td>
+                  <td>{p.serviceType}</td>
+                  <td>{p.paidViaUPI ? '✅' : '❌'}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={p.paymentToDriver}
+                      onChange={() => togglePaymentToDriver(p.id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

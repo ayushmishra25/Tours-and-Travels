@@ -9,8 +9,10 @@ const AdminNavbar = () => {
   };
 
   return (
+    
     <header className="admin-navbar">
       <h1>Admin Panel</h1>
+
 
       {/* Hamburger icon for mobile */}
       <div className="hamburger" onClick={toggleMenu}>
@@ -25,8 +27,7 @@ const AdminNavbar = () => {
           <li><Link to="/admin/drivers" onClick={toggleMenu}>Driver Management</Link></li>
           <li><Link to="/admin/bookings" onClick={toggleMenu}>Booking Management</Link></li>
           <li><Link to="/admin/payments" onClick={toggleMenu}>Payment Management</Link></li>
-          <li><Link to="/admin/reports" onClick={toggleMenu}>Reports</Link></li>
-          <li><Link to="/admin/settings" onClick={toggleMenu}>Settings</Link></li>
+          <li><Link to="/admin/support-complaints" onClick={toggleMenu}>Support & Complaints</Link></li>
         </ul>
       </nav>
     </header>

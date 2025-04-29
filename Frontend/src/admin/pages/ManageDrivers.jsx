@@ -7,10 +7,10 @@ const ManageDrivers = () => {
   useEffect(() => {
     // Dummy driver data
     setDrivers([
-      { id: 1, name: "Alice Brown", email: "alice@example.com", status: "Active" },
-      { id: 2, name: "Bob Green", email: "bob@example.com", status: "Pending" },
-      { id: 3, name: "Bob Green", email: "bob@example.com", status: "Pending" },
-      { id: 4, name: "Bob Green", email: "bob@example.com", status: "Pending" },
+      { id: 1, name: "Alice Brown", email: "alice@example.com", location:"delhi", status: "Active" },
+      { id: 2, name: "Bob Green", email: "bob@example.com",location:"pune", status: "Pending" },
+      { id: 3, name: "Bob Green", email: "bob@example.com",location:"mumbai",status: "Pending" },
+      { id: 4, name: "Bob Green", email: "bob@example.com",location:"hydrabad", status: "Pending" },
       // Add more dummy drivers as needed
     ]);
   }, []);
@@ -27,6 +27,7 @@ const ManageDrivers = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Location</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -36,6 +37,7 @@ const ManageDrivers = () => {
                 <td>{driver.id}</td>
                 <td>{driver.name}</td>
                 <td>{driver.email}</td>
+                <td>{driver.location}</td>
                 <td>{driver.status}</td>
               </tr>
             ))}
