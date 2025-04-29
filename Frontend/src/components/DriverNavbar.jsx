@@ -40,6 +40,7 @@ const DriverNavbar = () => {
       </div>
       <nav className={isOpen ? 'nav-menu open' : 'nav-menu'}>
         <ul>
+          <li><Link to="/driver-dashboard" onClick={toggleMenu}>Home</Link></li>
           <li><Link to="/earnings" onClick={toggleMenu}>My Earnings</Link></li>
           <li><Link to="/trip-history" onClick={toggleMenu}>My Rides</Link></li>
           <li><Link to="/support" onClick={toggleMenu}>Support</Link></li>
