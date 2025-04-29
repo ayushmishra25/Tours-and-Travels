@@ -23,6 +23,7 @@ import DriverDetailsUpload from './pages/DriverDetailsUpload';
 import Earnings from './pages/Earnings';
 import DriverRides from './pages/DriverRides';
 import Support from './pages/Support';
+import DriverProfile from './pages/DriverProfile';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -113,6 +114,13 @@ const MainContent = () => {
           element={
              <Support />
             }
+        />
+
+        <Route
+          path="/driver-profile"
+          element={
+              <DriverProfile />
+          }
         />
 
         {/* Any unmatched goes home */}

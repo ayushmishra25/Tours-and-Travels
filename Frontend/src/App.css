@@ -2141,3 +2141,110 @@ fieldset.account-details legend {
     padding: 0.75rem;
   }
 }
+/* src/pages/DriverProfile.css */
+.profile-container {
+  margin-top: 64px; /* push below navbar */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  background: #f5f7fa;
+  min-height: calc(100vh - 64px);
+}
+
+.profile-card {
+  display: flex;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 800px;
+}
+
+.avatar-section {
+  flex: 0 0 200px;
+  background: #e8f0fe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.info-section {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.info-section h2 {
+  margin-top: 0;
+  color: #003366;
+}
+
+.info-section p {
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.stats-card {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.stat-item {
+  flex: 1;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.stat-item h3 {
+  margin: 0;
+  font-size: 2rem;
+  color: #003366;
+}
+
+.stat-item p {
+  margin: 0.5rem 0 0;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-card {
+    flex-direction: column;
+    align-items: center;
+  }
+  .avatar-section {
+    width: 100%;
+    padding: 1rem 0;
+  }
+  .stats-card {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 1rem;
+  }
+  .info-section,
+  .stat-item {
+    padding: 1rem;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+}
