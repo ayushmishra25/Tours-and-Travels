@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const DriverNavbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -17,14 +22,12 @@ const DriverNavbar = () => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Clear all relevant storage
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       localStorage.removeItem('user');
       localStorage.removeItem('userRole');
       localStorage.removeItem('driverAgreed');
       localStorage.removeItem('driverUploaded');
-      // Navigate back to login
       navigate('/login');
     }
   };
@@ -32,15 +35,20 @@ const DriverNavbar = () => {
   return (
     <header className="driver-navbar">
       <h1>Driver Dashboard</h1>
-      <nav>
+      <div className="hamburger" onClick={toggleMenu}>
+        ☰
+      </div>
+      <nav className={isOpen ? 'nav-menu open' : 'nav-menu'}>
         <ul>
-          <li><Link to="/earnings">My Earnings</Link></li>
-          <li><Link to="/trip-history">My Rides</Link></li>
-          <li><Link to="/support">Support</Link></li>
-          <li><Link to="/driver-profile">Driver Profile</Link></li>
+          <li><Link to="/earnings" onClick={toggleMenu}>My Earnings</Link></li>
+          <li><Link to="/trip-history" onClick={toggleMenu}>My Rides</Link></li>
+          <li><Link to="/support" onClick={toggleMenu}>Support</Link></li>
+          <li><Link to="/driver-profile" onClick={toggleMenu}>Driver Profile</Link></li>
           {token && (
             <li>
-              <a href="#" onClick={handleLogout}>Logout</a>
+              <a href="#" onClick={(e) => { toggleMenu(); handleLogout(e); }}>
+                Logout
+              </a>
             </li>
           )}
         </ul>
@@ -50,4 +58,3 @@ const DriverNavbar = () => {
 };
 
 export default DriverNavbar;
-

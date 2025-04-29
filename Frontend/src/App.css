@@ -1474,60 +1474,87 @@ button.login-btn:hover {
     font-size: 14px;
   }
 }
-/* driver navbar css *//* Driver Navbar CSS */
+/* src/components/DriverNavbar.css */
 
 .driver-navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: var(--primary-color); /* Consistent with global style */
+  background-color: var(--primary-color);
   color: var(--white);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
   z-index: 1000;
 }
 
 .driver-navbar h1 {
-  font-size: 24px;
+  margin: 0;
+  font-size: 1.25rem;
 }
 
-.driver-navbar nav ul {
+.driver-navbar .hamburger {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.driver-navbar .nav-menu {
+  display: flex;
+  align-items: center;
+}
+
+.driver-navbar .nav-menu ul {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
-.driver-navbar nav ul li {
-  display: inline;
-}
-
-.driver-navbar nav ul li a {
+.driver-navbar .nav-menu ul li a {
   color: var(--white);
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1rem;
   transition: var(--transition);
 }
 
-.driver-navbar nav ul li a:hover {
+.driver-navbar .nav-menu ul li a:hover {
   color: var(--accent-color);
 }
 
-/* Responsive adjustments */
+/* Mobile / smaller screens */
 @media (max-width: 768px) {
-  .driver-navbar {
-    flex-direction: column;
-    align-items: flex-start;
+  .driver-navbar .hamburger {
+    display: block;
   }
-  
-  .driver-navbar nav ul {
+
+  .driver-navbar .nav-menu {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+  }
+
+  .driver-navbar .nav-menu.open {
+    max-height: 500px; /* enough to show all items */
+  }
+
+  .driver-navbar .nav-menu ul {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .driver-navbar .nav-menu ul li a {
+    display: block;
+    padding: 0.5rem 1rem;
   }
 }
+
 
 /*driver dashboard css */
 .driver-dashboard {
@@ -1895,58 +1922,84 @@ fieldset.account-details legend {
 /* Summary cards */
 
 /* Earnings table */
+/* Ensure content sits below fixed/sticky navbar */
+.earnings-container {
+  margin-top: 64px; /* adjust if navbar height differs */
+  padding: 2rem;
+  background: #f9f9f9;
+  min-height: calc(100vh - 64px);
+}
+
+.earnings-container h1 {
+  font-size: 2rem;
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+.earnings-list {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .earnings-list table {
   width: 100%;
   border-collapse: collapse;
-}
-.earnings-list th,
-.earnings-list td {
-  padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid #e0e0e0;
-  text-align: left;
-}
-.earnings-list th {
-  background: var(--header-bg);
-  color: var(--header-text);
-}
-.earnings-list tr:hover {
-  background: rgba(0,0,0,0.025);
+  min-width: 600px;
 }
 
-/* Responsive */
+.earnings-list th,
+.earnings-list td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.earnings-list th {
+  background-color: #e8f0fe;
+  font-weight: 600;
+  color: #003366;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .earnings-summary {
-    flex-direction: column;
+  .earnings-container {
+    margin-top: 56px;
+    padding: 1.5rem;
   }
-  .summary-card {
-    margin-bottom: 1rem;
+
+  .earnings-container h1 {
+    font-size: 1.5rem;
   }
-  .earnings-list table,
-  .earnings-list thead,
-  .earnings-list tbody,
+
+  .earnings-list table {
+    min-width: 100%;
+  }
+
   .earnings-list th,
-  .earnings-list td,
-  .earnings-list tr {
-    display: block;
-  }
-  .earnings-list tr {
-    margin-bottom: 1rem;
-  }
   .earnings-list td {
-    padding-left: 50%;
-    position: relative;
+    padding: 0.5rem;
+    font-size: 0.9rem;
   }
-  .earnings-list td::before {
-    position: absolute;
-    left: 0;
-    width: 45%;
-    padding-left: 0.5rem;
-    font-weight: bold;
-    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .earnings-container {
+    margin-top: 48px;
+    padding: 1rem;
   }
-  .earnings-list td:nth-of-type(1)::before { content: "Date"; }
-  .earnings-list td:nth-of-type(2)::before { content: "Ride Type"; }
-  .earnings-list td:nth-of-type(3)::before { content: "Amount"; }
+
+  .earnings-container h1 {
+    font-size: 1.25rem;
+  }
+
+  .earnings-list th,
+  .earnings-list td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
 }
 
 .rides-page {
@@ -2010,10 +2063,11 @@ fieldset.account-details legend {
   }
 }
 
-/*  src/pages/Support */
+/* Ensure content doesn’t overlap fixed navbar */
 .support-container {
   max-width: 800px;
   margin: 2rem auto;
+  margin-top: 100px; /* space below navbar */
   padding: 2rem;
   background: #fff;
   border-radius: 0.5rem;
@@ -2032,7 +2086,7 @@ fieldset.account-details legend {
 
 .feedback-message {
   margin-bottom: 1rem;
-  color: #fb2929;
+  color: #006400;
   font-weight: bold;
 }
 
@@ -2053,6 +2107,7 @@ fieldset.account-details legend {
   border: 1px solid #ccc;
   border-radius: 0.25rem;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .submit-btn {
@@ -2069,12 +2124,20 @@ fieldset.account-details legend {
   background: #002244;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .support-container {
     margin: 1rem;
+    margin-top: 80px;
     padding: 1rem;
   }
   .submit-btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-container {
+    margin-top: 70px;
+    padding: 0.75rem;
   }
 }
