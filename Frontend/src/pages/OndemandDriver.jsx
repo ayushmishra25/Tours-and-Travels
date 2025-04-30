@@ -33,33 +33,6 @@ const OndemandDriver = () => {
     }
   }, [pickup, destination, distance]);
 
-  // Function to fetch current location and convert to an address
-  const fetchLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-
-          try {
-            const response = await fetch(reverseGeocodeUrl);
-            const data = await response.json();
-            const address = data.display_name || "Location not found";
-            setPickup(address); // Set the fetched address in the input field
-          } catch (error) {
-            console.error("Error fetching address:", error);
-            setPickup("Failed to fetch location");
-          }
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          setPickup("Unable to fetch location");
-        }
-      );
-    } else {
-      setPickup("Geolocation not supported");
-    }
-  };
 
   const handleBookNow = () => {
     // 1) Auth check
@@ -113,9 +86,6 @@ const OndemandDriver = () => {
                   value={pickup}
                   onChange={(e) => setPickup(e.target.value)}
                 />
-                <button className="location-btn" onClick={fetchLocation}>
-                  Use My Location
-                </button>
               </div>
             </label>
             <label>

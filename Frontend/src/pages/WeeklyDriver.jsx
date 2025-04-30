@@ -7,6 +7,7 @@ const WeeklyDriver = () => {
   const token = localStorage.getItem("token"); 
 
   const [location, setLocation] = useState("");
+  const [pickupLocation, setPickupLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -81,12 +82,21 @@ const WeeklyDriver = () => {
         <div className="booking-form">
           <div className="left-section">
             <label>
-              Location:
+              Zone:
               <input
                 type="text"
                 placeholder="Enter Location"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+              />
+            </label>
+            <label>
+              Pickup Location:
+              <input
+                type="text"
+                placeholder="Enter Pickup Location"
+                value={pickupLocation}
+                onChange={(e) => setPickupLocation(e.target.value)}
               />
             </label>
             <label>

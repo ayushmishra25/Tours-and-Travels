@@ -81,6 +81,7 @@ const MonthlyDriver = () => {
   const token = localStorage.getItem("token");
 
   const [location, setLocation] = useState("");
+  const [pickupLocation, setPickupLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("22");
   const [workingHours, setWorkingHours] = useState("8");
   const [date, setDate] = useState("");
@@ -146,7 +147,7 @@ const MonthlyDriver = () => {
         <div className="booking-form">
           <div className="left-section">
             <label>
-              Location:
+              Zone:
               <select value={location} onChange={(e) => setLocation(e.target.value)}>
                 <option value="">Select Location</option>
                 {Object.keys(monthlyPricing).map((loc) => (
@@ -155,6 +156,15 @@ const MonthlyDriver = () => {
                   </option>
                 ))}
               </select>
+            </label>
+            <label>
+              Pickup Location:
+              <input
+                type="text"
+                placeholder="Enter Pickup Location"
+                value={pickupLocation}
+                onChange={(e) => setPickupLocation(e.target.value)}
+              />
             </label>
             <label>
               Working Days:
@@ -191,6 +201,7 @@ const MonthlyDriver = () => {
 
             
             <p className="price-note">
+            ₹ 4000 will be charged extra for the monthly driver services. 
             For long-distance travel, accommodation, food, and night stays, extra charges apply.
             We understand that every requirement is unique, so **pricing can be negotiated as per the requirements and preferences.** Once you submit your request, we will contact you soon to discuss the details.
             </p>

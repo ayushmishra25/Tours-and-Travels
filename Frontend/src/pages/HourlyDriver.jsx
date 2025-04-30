@@ -11,19 +11,33 @@ const hourlyPricing = {
   Faridabad: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
   Ghaziabad: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
   Noida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+  GreaterNoida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
   Bangalore: [276, 376, 477, 572, 674, 778, 880, 972, 1170, 1171, 1281, 1380],
   Hyderabad: [270, 340, 410, 480, 560, 640, 720, 800, 880, 980, 1080, 1180],
   Mumbai: [270, 340, 410, 480, 560, 640, 720, 820, 920, 1020, 1130, 1240],
+  NaviMumbai: [270, 340, 410, 480, 560, 640, 720, 820, 920, 1020, 1130, 1240],
+  thane: [270, 340, 410, 480, 560, 640, 720, 820, 920, 1020, 1130, 1240],
   Pune: [225, 295, 370, 450, 535, 637, 690, 783, 842, 922, 1012, 1082]
 };
 
 const distancePricing = {
   Hyderabad: { 5: 272, 10: 298, 15: 348, 20: 375, 30: 449, 40: 504, 50: 582, 60: 614, 70: 657 },
   Bangalore: { 5: 225, 10: 297, 15: 343, 20: 375, 30: 448, 40: 503, 50: 582, 60: 614, 70: 656 },
-  "Navi Mumbai": { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
+  Navi_Mumbai: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
+  Thane: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
+  SouthDelhi: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
   Gurugram: { 5: 297, 10: 322, 15: 372, 20: 399, 30: 473, 40: 528, 50: 606, 60: 638, 70: 681 },
-  MumbaiPune: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  Delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 }
+  Mumbai: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  Pune: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  Faridabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  MAnesar: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  Ghaziabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  Noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  GreaterNoida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  EastDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  SouthDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  NorthDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  CentralDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 }
 };
 
 const getCityFromAddress = (address) => {
@@ -33,11 +47,13 @@ const getCityFromAddress = (address) => {
   if (lower.includes("faridabad")) return "Faridabad";
   if (lower.includes("ghaziabad")) return "Ghaziabad";
   if (lower.includes("noida")) return "Noida";
+  if (lower.includes("greater noida")) return "GreaterNoida";
   if (lower.includes("bangalore") || lower.includes("bengaluru")) return "Bangalore";
   if (lower.includes("hyderabad")) return "Hyderabad";
   if (lower.includes("mumbai")) return "Mumbai";
+  if (lower.includes("navi mumbai")) return "NaviMumbai";
+  if (lower.includes("thane")) return "Thane";
   if (lower.includes("pune")) return "Pune";
-  if (lower.includes("navi mumbai")) return "Navi Mumbai";
   return null;
 };
 
@@ -62,14 +78,11 @@ const HourlyDriver = () => {
 
   const calculateFare = () => {
     if (!pickup || !destination) return 0;
-    let city = getCityFromAddress(pickup) || "Delhi";
-
+    const city = getCityFromAddress(pickup);
     if (tripType === "roundtrip") {
-      const pricing = hourlyPricing[city];
-      return pricing?.[hours - 1] ?? 0;
+      return hourlyPricing[city]?.[hours - 1] ?? 0;
     } else {
-      let pricing = distancePricing[city] ?? distancePricing["Delhi"];
-      return pricing[distance] ?? 0;
+      return distancePricing[city]?.[distance] ?? 0;
     }
   };
 
@@ -133,6 +146,9 @@ const HourlyDriver = () => {
     setMinDate(formatDateLocal(tomorrow));
     setMaxDate(formatDateLocal(nextWeek));
   }, []);
+  useEffect(() => {
+    setTotalAmount(calculateFare());
+  }, [pickup, destination, tripType, hours, distance]);
   
 
   return (
@@ -202,9 +218,9 @@ const HourlyDriver = () => {
 
             <h2>₹ {totalAmount}</h2>
             <button className="book-now-btn" onClick={handleBookNow}>
-              Book Now
-            </button>
-            {authError && <p className="error-message">{authError}</p>}
+            Book Now
+          </button>
+          {authError && <p className="error-message">{authError}</p>}
 
             <p className="price-note">
               For distances above 80 km, an additional charge of ₹10/km will be applied, including food,
