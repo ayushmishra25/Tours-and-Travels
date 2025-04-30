@@ -120,8 +120,18 @@ const HourlyDriver = () => {
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("Booking submitted successfully!");
-      navigate("/dashboard/bookings");
+      // → after success, send booking details into state and navigate:
+      navigate("/booking-confirmation", {
+        state: {
+          bookingId: resp.data.id,
+          pickupLocation: pickup,
+          bookingType: "Hourly",
+          tripType,
+          bookingDatetime: booking_datetime,
+          totalAmount,
+          user: JSON.parse(localStorage.getItem("user")),
+        },
+      });
     } catch (err) {
       console.error("Booking error:", err);
       setAuthError("Booking failed. Please try again.");

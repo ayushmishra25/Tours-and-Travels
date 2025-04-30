@@ -24,6 +24,7 @@ import Earnings from './pages/Earnings';
 import DriverRides from './pages/DriverRides';
 import Support from './pages/Support';
 import DriverProfile from './pages/DriverProfile';
+import PostBooking from './pages/PostBooking';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -122,6 +123,7 @@ const MainContent = () => {
               <DriverProfile />
           }
         />
+        <Route path="/post-booking" element={<PostBooking />} />
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />
