@@ -136,7 +136,19 @@ const MonthlyDriver = () => {
     setFieldError("");
 
     // 3) Proceed
-    alert("Monthly driver booked for ₹ " + totalAmount);
+    // 3) Proceed: navigate to post-booking confirmation
+   navigate("/post-booking", {
+    state: {
+      bookingId: Date.now(),            // or your real booking ID from API
+      bookingType: "Monthly",
+      tripType: `${workingDays} days / ${workingHours} hrs`,
+      pickupLocation,
+     bookingDatetime: date,
+      totalAmount,
+      user: JSON.parse(localStorage.getItem("user")),
+    }
+ });
+
   };
 
   return (
@@ -202,6 +214,7 @@ const MonthlyDriver = () => {
             
             <p className="price-note">
             ₹ 4000 will be charged extra for the monthly driver services. 
+            you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.  
             For long-distance travel, accommodation, food, and night stays, extra charges apply.
             We understand that every requirement is unique, so **pricing can be negotiated as per the requirements and preferences.** Once you submit your request, we will contact you soon to discuss the details.
             </p>

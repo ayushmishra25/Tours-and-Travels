@@ -66,8 +66,20 @@ const OndemandDriver = () => {
     }
     setFieldError("");
 
-    // 3) Proceed
-    alert(`On-demand driver booked for ₹ ${totalAmount}`);
+    // 3) Proceed → navigate to PostBooking
+   navigate("/post-booking", {
+    state: {
+      bookingId: Date.now(),               // or your real booking ID
+      bookingType: "On-Demand",
+      tripType: "One Way",                 // or however you choose to name it
+      pickupLocation: pickup,
+      destinationLocation: destination,
+      bookingDatetime: `${date} ${time}`,
+      totalAmount,
+      user: JSON.parse(localStorage.getItem("user")),
+    },
+  });
+
   };
 
   return (
@@ -124,6 +136,7 @@ const OndemandDriver = () => {
               Please note: On-demand services may have surge pricing during peak hours.
               Extra charges for food, accommodation, and night stays may apply.
               Pricing is negotiable.
+              you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.
             </p>
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now

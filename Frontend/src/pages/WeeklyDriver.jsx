@@ -71,7 +71,17 @@ const WeeklyDriver = () => {
 
     setFieldError("");
 
-    // Add further booking logic here if needed
+    // ▶️ All good—navigate to post-booking page with details:
+    const bookingData = {
+      bookingId: Date.now(),                             // unique ID
+      pickupLocation,                                    // new field
+      bookingType: "weekly",
+      tripType: `${workingDays} days`,
+      bookingDatetime: `${date} ${time}`,
+      totalAmount,
+      user,
+    };
+    navigate("/post-booking", { state: bookingData });
   };
 
   return (
@@ -129,6 +139,7 @@ const WeeklyDriver = () => {
             <p>Phone: {user.phone}</p>
             <h2>₹ {totalAmount}</h2>
             <p className="price-note">
+              you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.
               Please note: For each night stay, an extra charge of ₹300 applies,
               along with food and accommodation costs. Pricing is negotiable;
               we will contact you soon to confirm the details.

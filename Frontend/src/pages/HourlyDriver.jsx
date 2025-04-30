@@ -121,16 +121,17 @@ const HourlyDriver = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // → after success, send booking details into state and navigate:
-      navigate("/booking-confirmation", {
-        state: {
-          bookingId: resp.data.id,
-          pickupLocation: pickup,
-          bookingType: "Hourly",
-          tripType,
-          bookingDatetime: booking_datetime,
-          totalAmount,
-          user: JSON.parse(localStorage.getItem("user")),
-        },
+      // → on success, navigate to post-booking page with all details in state
+      navigate("/post-booking", {
+      state: {
+        bookingId: resp.data.id,
+        pickupLocation: pickup,
+        bookingType: "Hourly",
+        tripType,
+        bookingDatetime,
+        totalAmount,
+        user: JSON.parse(localStorage.getItem("user")),
+      },
       });
     } catch (err) {
       console.error("Booking error:", err);
@@ -233,6 +234,7 @@ const HourlyDriver = () => {
           {authError && <p className="error-message">{authError}</p>}
 
             <p className="price-note">
+              you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.
               For distances above 80 km, an additional charge of ₹10/km will be applied, including food,
               accommodation, and convenience. Night charges apply if an overnight stay is required.
             </p>
