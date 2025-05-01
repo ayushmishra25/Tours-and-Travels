@@ -1697,152 +1697,118 @@ fieldset.account-details legend {
 }
 
 /* Driver Dashboard CSS */
-
+/* Container */
 .driver-dashboard-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: var(--background-color, #f5f5f5);
-}
-
-.driver-dashboard-container h1 {
-  text-align: center;
-  color: var(--primary-color, #002855);
-  margin-bottom: 30px;
-}
-
-/* Section Styles */
-.availability-section,
-.scheduling-section,
-.ride-requests-section {
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: var(--white, #fff);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.availability-section h2,
-.scheduling-section h2,
-.ride-requests-section h2 {
-  color: var(--primary-color, #002855);
-  margin-bottom: 15px;
-}
-
-/* Availability Section */
-.availability-btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: var(--primary-color, #002855);
-  color: var(--white, #fff);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: var(--transition, all 0.3s ease-in-out);
-}
-
-.availability-btn:hover {
-  background-color: var(--secondary-color, #004a99);
-}
-
-/* Scheduling Section */
-.slot-form {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-}
-
-.slot-form input[type="date"],
-.slot-form input[type="time"] {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.slot-form button {
-  padding: 8px 16px;
-  font-size: 14px;
-  background-color: var(--primary-color, #002855);
-  color: var(--white, #fff);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: var(--transition, all 0.3s ease-in-out);
-}
-
-.slot-form button:hover {
-  background-color: var(--secondary-color, #004a99);
-}
-
-.slots-list ul {
-  list-style: none;
-  padding: 0;
-}
-
-.slots-list li {
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Ride Requests Section */
-.ride-requests-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.ride-request-item {
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  background-color: #fff;
-}
-
-.request-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.request-buttons button {
-  padding: 8px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: var(--transition, all 0.3s ease-in-out);
-}
-
-.request-buttons button:first-child {
-  background-color: var(--primary-color, #002855);
-  color: var(--white, #fff);
-}
-
-.request-buttons button:first-child:hover {
-  background-color: var(--secondary-color, #004a99);
-}
-
-.request-buttons button:last-child {
-  background-color: #ccc;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  font-family: Arial, sans-serif;
   color: #333;
 }
 
-.request-buttons button:last-child:hover {
-  background-color: #bbb;
+/* Section Headings */
+.driver-dashboard-container h1,
+.driver-dashboard-container h2 {
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+  font-weight: 600;
 }
 
-/* Responsive Design */
+/* Availability */
+.availability-section {
+  background: #f5f7fa;
+  border: 1px solid #dde2e6;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+}
+.availability-btn {
+  background-color: #0052cc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.availability-btn:hover {
+  background-color: #0041a8;
+}
+
+/* Assigned & Ongoing Rides Sections */
+.assigned-rides-section,
+.ongoing-rides-section {
+  margin-top: 2rem;
+}
+.assigned-rides-section ul,
+.ongoing-rides-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ride Cards */
+.assigned-ride-item,
+.ongoing-ride-item {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.assigned-ride-item p,
+.ongoing-ride-item p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+/* Payment Confirmation */
+.payment-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+.payment-confirmation label {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.payment-confirmation input[type="radio"] {
+  margin-right: 0.5rem;
+  accent-color: #0052cc;
+}
+
+/* Responsive Breakpoints */
 @media (max-width: 768px) {
-  .slot-form {
-    flex-direction: column;
+  .driver-dashboard-container {
+    padding: 0 1rem;
   }
-  
-  .request-buttons {
+  .assigned-ride-item,
+  .ongoing-ride-item {
+    padding: 0.75rem 1rem;
+  }
+  .payment-confirmation {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
+
+@media (max-width: 480px) {
+  .availability-btn {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  .assigned-ride-item p,
+  .ongoing-ride-item p {
+    font-size: 0.85rem;
+  }
+  .payment-confirmation label {
+    font-size: 0.85rem;
+  }
+}
+
 
 /* CSS FOR HOW TO USE PAGE */
 /* HowToUse.css */

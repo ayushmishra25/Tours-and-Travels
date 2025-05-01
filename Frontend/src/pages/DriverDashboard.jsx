@@ -2,34 +2,61 @@ import React, { useState, useEffect } from "react";
 import DriverNavbar from "../components/DriverNavbar";
 
 const DriverDashboard = () => {
-  // Availability state
   const [isAvailable, setIsAvailable] = useState(false);
-
-  // Scheduling state: list of time slots and new slot details
   const [timeSlots, setTimeSlots] = useState([]);
   const [newSlot, setNewSlot] = useState({ date: "", start: "", end: "" });
 
-  // Future rides state: accepted rides for the future
-  const [futureRides, setFutureRides] = useState([]);
+  const [assignedRides, setAssignedRides] = useState([]);
+  const [ongoingRides, setOngoingRides] = useState([]);
 
-  // Ride requests state (simulate fetching with dummy data)
-  const [rideRequests, setRideRequests] = useState([]);
-
-  // Simulate an API call to fetch ride requests dynamically
   useEffect(() => {
+    // Simulate fetching assigned rides
     setTimeout(() => {
-      setRideRequests([
-        { id: 1, pickup: "Downtown", destination: "Airport", time: "10:00 AM" },
-        { id: 2, pickup: "Mall", destination: "Station", time: "11:30 AM" },
-        { id: 3, pickup: "University", destination: "Hospital", time: "1:00 PM" },
+      setAssignedRides([
+        {
+          id: 1,
+          user: "John Doe",
+          contact: "1234567890",
+          pickup: "Downtown",
+          destination: "Airport",
+          date: "2025-05-02",
+          time: "10:00 AM",
+          type: "Hourly",
+        },
+        {
+          id: 2,
+          user: "Jane Smith",
+          contact: "9876543210",
+          pickup: "Mall",
+          destination: "Station",
+          date: "2025-05-02",
+          time: "12:00 PM",
+          type: "Weekly",
+        },
       ]);
     }, 1000);
 
-    // Simulate fetching accepted future rides (scheduling details)
+    // Simulate fetching ongoing rides
     setTimeout(() => {
-      setFutureRides([
-        { id: 1, date: "2025-03-25", time: "10:00 AM", pickup: "Area A", destination: "Area B" },
-        { id: 2, date: "2025-03-26", time: "2:00 PM", pickup: "Area C", destination: "Area D" },
+      setOngoingRides([
+        {
+          id: 1,
+          user: "Alice Johnson",
+          contact: "1112223333",
+          type: "Weekly",
+          from: "Area A",
+          to: "Area B",
+          time: "2:00 PM",
+        },
+        {
+          id: 2,
+          user: "Bob Brown",
+          contact: "4445556666",
+          type: "Monthly",
+          from: "Area C",
+          to: "Area D",
+          time: "4:00 PM",
+        },
       ]);
     }, 1000);
   }, []);
@@ -51,23 +78,9 @@ const DriverDashboard = () => {
     }
   };
 
-  const handleAcceptRequest = (id) => {
-    const accepted = rideRequests.find((req) => req.id === id);
-    setRideRequests(rideRequests.filter((req) => req.id !== id));
-    // In a real app, accepted ride details would be added to future rides schedule dynamically
-    setFutureRides([...futureRides, {
-      id: accepted.id,
-      date: new Date().toISOString().split("T")[0],
-      time: accepted.time,
-      pickup: accepted.pickup,
-      destination: accepted.destination
-    }]);
-    alert(`Ride request from ${accepted.pickup} accepted!`);
-  };
-
-  const handleDeclineRequest = (id) => {
-    setRideRequests(rideRequests.filter((req) => req.id !== id));
-    alert("Ride request declined.");
+  const handlePaymentConfirmation = (id) => {
+    setAssignedRides(assignedRides.filter((ride) => ride.id !== id));
+    alert("Payment confirmed and ride removed from assigned rides.");
   };
 
   return (
@@ -76,7 +89,6 @@ const DriverDashboard = () => {
       <div className="driver-dashboard-container">
         <h1>Driver Dashboard</h1>
 
-        {/* Availability Section */}
         <section className="availability-section">
           <h2>Availability</h2>
           <button onClick={toggleAvailability} className="availability-btn">
@@ -87,7 +99,6 @@ const DriverDashboard = () => {
           </p>
         </section>
 
-        {/* Scheduling Section */}
         <section className="scheduling-section">
           <h2>Scheduling</h2>
           <form onSubmit={handleAddSlot} className="slot-form">
@@ -106,7 +117,7 @@ const DriverDashboard = () => {
               required
             />
             <input
-              placeholder="endtime"
+              placeholder="End Time"
               type="time"
               name="end"
               value={newSlot.end}
@@ -115,59 +126,58 @@ const DriverDashboard = () => {
             />
             <button type="submit">Add Time Slot</button>
           </form>
-          <div className="slots-list">
-            {timeSlots.length === 0 ? (
-              <p>No working time slots added yet.</p>
-            ) : (
-              <ul>
-                {timeSlots.map((slot, index) => (
-                  <li key={index}>
-                    Date: {slot.date}, From: {slot.start} to {slot.end}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {/* Future Rides Section */}
-          <div className="future-rides">
-            <h3>Future Ride Details</h3>
-            {futureRides.length === 0 ? (
-              <p>No future rides scheduled.</p>
-            ) : (
-              <ul>
-                {futureRides.map((ride) => (
-                  <li key={ride.id}>
-                    Date: {ride.date}, Time: {ride.time}, From: {ride.pickup} to {ride.destination}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <ul>
+            {timeSlots.map((slot, index) => (
+              <li key={index}>
+                Date: {slot.date}, From: {slot.start} to {slot.end}
+              </li>
+            ))}
+          </ul>
         </section>
 
-        {/* Ride Requests Section */}
-        <section className="ride-requests-section">
-          <h2>Ride Requests</h2>
-          {rideRequests.length === 0 ? (
-            <p>No ride requests at the moment.</p>
+        <section className="assigned-rides-section">
+          <h2>Assigned Rides</h2>
+          {assignedRides.length === 0 ? (
+            <p>No assigned rides currently.</p>
           ) : (
             <ul>
-              {rideRequests.map((req) => (
-                <li key={req.id} className="ride-request-item">
-                  <p>
-                    <strong>Pickup:</strong> {req.pickup}
-                  </p>
-                  <p>
-                    <strong>Destination:</strong> {req.destination}
-                  </p>
-                  <p>
-                    <strong>Time:</strong> {req.time}
-                  </p>
-                  <div className="request-buttons">
-                    <button onClick={() => handleAcceptRequest(req.id)}>Accept</button>
-                    <button onClick={() => handleDeclineRequest(req.id)}>Decline</button>
+              {assignedRides.map((ride) => (
+                <li key={ride.id} className="assigned-ride-item">
+                  <p><strong>User:</strong> {ride.user}</p>
+                  <p><strong>Contact:</strong> {ride.contact}</p>
+                  <p><strong>Pickup:</strong> {ride.pickup}</p>
+                  <p><strong>Destination:</strong> {ride.destination}</p>
+                  <p><strong>Date:</strong> {ride.date}</p>
+                  <p><strong>Time:</strong> {ride.time}</p>
+                  <p><strong>Type:</strong> {ride.type}</p>
+                  <div className="payment-confirmation">
+                    <label>
+                      <input type="checkbox" onChange={() => handlePaymentConfirmation(ride.id)} /> Paid via Cash
+                    </label>
+                    <label>
+                      <input type="checkbox" onChange={() => handlePaymentConfirmation(ride.id)} /> Paid via UPI
+                    </label>
                   </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="ongoing-rides-section">
+          <h2>Ongoing Rides (Weekly/Monthly)</h2>
+          {ongoingRides.length === 0 ? (
+            <p>No ongoing rides.</p>
+          ) : (
+            <ul>
+              {ongoingRides.map((ride) => (
+                <li key={ride.id} className="ongoing-ride-item">
+                  <p><strong>User:</strong> {ride.user}</p>
+                  <p><strong>Contact:</strong> {ride.contact}</p>
+                  <p><strong>Type:</strong> {ride.type}</p>
+                  <p><strong>From:</strong> {ride.from}</p>
+                  <p><strong>To:</strong> {ride.to}</p>
+                  <p><strong>Time:</strong> {ride.time}</p>
                 </li>
               ))}
             </ul>
