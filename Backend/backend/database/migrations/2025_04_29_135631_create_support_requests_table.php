@@ -15,6 +15,7 @@ class CreateSupportRequestsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('subject');
             $table->text('message');
+            $table->boolean('is_resolved')->default(true);
             $table->timestamps();
         });
     }

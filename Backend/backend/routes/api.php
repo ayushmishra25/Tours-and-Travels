@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/{id}/assign-driver', [BookingController::class, 'assignDriver']);
     Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('support', SupportRequestController::class);
+    Route::put('/support-requests/{id}/resolve', [SupportRequestController::class, 'markResolved']);
     Route::apiResource('driver-details', DriverDetailsUploadController::class);
 
     // Driver-related Routes

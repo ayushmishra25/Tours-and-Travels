@@ -17,9 +17,10 @@ return new class extends Migration
             $table->enum('booking_type', ['hourly', 'weekly', 'monthly', '((on_demand']);
             $table->string('trip_type');
             $table->string('source_location');
-            $table->string('destination_location');
+            $table->string('zone')->nullable();
+            $table->string('destination_location')->nullablle();
             $table->integer('hours')->nullable(); // For hourly
-            $table->json('working_days')->nullable(); 
+            $table->integer('working_days')->nullable(); 
             $table->integer('working_hours_per_day')->nullable(); 
             $table->integer('payment'); 
             $table->date('start_date')->nullable(); 

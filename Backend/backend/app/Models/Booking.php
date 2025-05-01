@@ -14,6 +14,7 @@ class Booking extends Model
         'user_id',
         'booking_type',
         'trip_type',
+        'zone',
         'source_location',
         'destination_location',
         'hours',

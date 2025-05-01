@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardNavbar from "../components/DashboardNavbar";
+import axios from "axios";
 
 const WeeklyDriver = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
 
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
@@ -13,9 +14,8 @@ const WeeklyDriver = () => {
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
 
-  
-  const [authError, setAuthError] = useState("");                     // ← will hold auth errors
-  const [fieldError, setFieldError] = useState(""); 
+  const [authError, setAuthError] = useState(""); // ← will hold auth errors
+  const [fieldError, setFieldError] = useState("");
 
   const user = { name: "John Doe", phone: "+91 9876543210" };
 
@@ -44,13 +44,14 @@ const WeeklyDriver = () => {
     setTotalAmount(fare);
   }, [location, workingDays]);
 
-  const handleBookNow = () => {
+  const handleBookNow = async () => {
     if (!token) {
       setAuthError("Please register and login first to book a driver.");
       setFieldError("");
       return;
     }
     setAuthError("");
+
     // 2) Validate each field
     if (!location.trim()) {
       setFieldError("Location is required");
@@ -68,21 +69,44 @@ const WeeklyDriver = () => {
       setFieldError("Time is required");
       return;
     }
-
+    
     setFieldError("");
+    const bookingDatetime = `${date} ${time}:00`;
 
-    // ▶️ All good—navigate to post-booking page with details:
+    // ▶️ All good—prepare the booking data
     const bookingData = {
-      bookingId: Date.now(),                             // unique ID
-      pickupLocation,                                    // new field
-      bookingType: "weekly",
-      tripType: `${workingDays} days`,
-      bookingDatetime: `${date} ${time}`,
-      totalAmount,
-      user,
+      user_id: parseInt(localStorage.getItem("userId")),
+      booking_type: "weekly",
+      trip_type: `${workingDays} days`,
+      source_location: pickupLocation, // Mapping pickupLocation to source_location
+      destination_location: location, // Assuming destination_location is based on location
+      hours: workingDays * 8, // Assuming working hours per day is 8
+      working_days: workingDays,
+      working_hours_per_day: 8, // Assuming each day has 8 working hours
+      payment: totalAmount,
+      start_date: date,
+      booking_datetime: bookingDatetime,
     };
-    navigate("/post-booking", { state: bookingData });
-  };
+
+    try {
+      // Send the booking details to the API
+      const response = await axios.post("http://localhost:8000/api/booking", bookingData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        // Successfully booked
+        navigate("/post-booking", { state: bookingData });
+      } else {
+        setFieldError("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error booking driver:", error);
+      setFieldError("An error occurred while booking. Please try again.");
+    }
+};
 
   return (
     <>
@@ -139,10 +163,8 @@ const WeeklyDriver = () => {
             <p>Phone: {user.phone}</p>
             <h2>₹ {totalAmount}</h2>
             <p className="price-note">
-              you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.
-              Please note: For each night stay, an extra charge of ₹300 applies,
-              along with food and accommodation costs. Pricing is negotiable;
-              we will contact you soon to confirm the details.
+              You can cancel the ride before one hour of service, otherwise you need to pay cancellation charges of ₹100.
+              Please note: For each night stay, an extra charge of ₹300 applies, along with food and accommodation costs. Pricing is negotiable; we will contact you soon to confirm the details.
             </p>
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
@@ -151,8 +173,6 @@ const WeeklyDriver = () => {
             {/* Display either auth errors or field validation errors */}
             {authError && <p className="error-message">{authError}</p>}
             {!authError && fieldError && <p className="error-message">{fieldError}</p>}
-
-            
           </div>
         </div>
       </div>

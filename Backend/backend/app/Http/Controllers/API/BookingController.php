@@ -49,7 +49,7 @@ class BookingController extends Controller
                 'userContact' => $booking->user->phone ?? 'N/A',
                 'date' => $booking->booking_datetime ? date('Y-m-d', strtotime($booking->booking_datetime)) : null,
                 'time' => $booking->booking_datetime ? date('H:i', strtotime($booking->booking_datetime)) : null,
-                'type' => ucfirst($booking->booking_type),
+                'booking_type' => $booking->booking_type,
                 'from' => $booking->source_location,
                 'to' => $booking->destination_location,
                 'driver' => $booking->driver_name ?? null,

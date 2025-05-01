@@ -45,7 +45,7 @@ const PaymentManagement = () => {
                 <th>From</th>
                 <th>To</th>
                 <th>Date</th>
-                <th>Service Type</th>
+                <th>Booking Type</th>
                 <th>Paid via UPI</th>
                 <th>Payment to Driver</th>
               </tr>
@@ -55,7 +55,7 @@ const PaymentManagement = () => {
                 <tr key={p.id} className={p.paymentToDriver ? 'paid-row' : ''}>
                   <td>{p.id}</td>
                   <td>{p.userName}</td>
-                  <td>{p.driverName}</td>
+                  <td>{p.driver}</td>
                   <td>{p.from}</td>
                   <td>{p.to}</td>
                   <td>{p.date}</td>

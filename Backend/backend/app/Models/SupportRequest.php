@@ -13,6 +13,7 @@ class SupportRequest extends Model
         'user_id',
         'subject',
         'message',
+        'is_resolved',
     ];
 
     public function user()
