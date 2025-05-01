@@ -5,19 +5,32 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DriverDetailsUploadController;
 use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\SupportRequestController;
+use App\Http\Controllers\API\DriverController;
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/listUsers', [AuthController::class, 'listUsers']); 
-
-
-// Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
+Route::get('/listUsers', [AuthController::class, 'listUsers']);
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/booking', [BookingController::class, 'store']); 
+    Route::apiResource('booking', BookingController::class);
+    Route::apiResource('support', SupportRequestController::class);
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::post('/bookings/{id}/assign-driver', [BookingController::class, 'assignDriver']);
     Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('driver-details', DriverDetailsUploadController::class);
+
+    // Driver-related Routes
+    Route::prefix('drivers/{id}')->group(function () {
+        Route::post('/toggle-availability', [DriverController::class, 'toggleAvailability']);
+        Route::post('/add-slot', [DriverController::class, 'addTimeSlot']);
+        Route::get('/slots', [DriverController::class, 'getTimeSlots']);
+        Route::get('/ride-requests', [DriverController::class, 'getRideRequests']);
+        Route::post('/accept-ride/{requestId}', [DriverController::class, 'acceptRide']);
+        Route::delete('/decline-ride/{requestId}', [DriverController::class, 'declineRide']);
+        Route::get('/future-rides', [DriverController::class, 'getFutureRides']);
+    });
 });

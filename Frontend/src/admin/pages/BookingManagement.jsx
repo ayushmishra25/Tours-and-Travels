@@ -3,43 +3,75 @@ import React, { useState, useEffect } from "react";
 
 const BookingManagement = () => {
   const [bookings, setBookings] = useState([]);
-  const [assignForms, setAssignForms] = useState({}); // track which booking id is showing form
+  const [assignForms, setAssignForms] = useState({});
   const [formData, setFormData] = useState({});
 
-  // Simulate fetching bookings
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setBookings([
-      // Today's bookings
-      { id: 1, userName: 'John Doe', userContact: '+91 9876543210', date: today, time: '10:00', type: 'Hourly', from: 'Area A', to: 'Area B', driver: null },
-      { id: 2, userName: 'Jane Smith', userContact: '+91 9123456780', date: today, time: '14:30', type: 'One-way', from: 'Station', to: 'Mall', driver: null },
-      // Earlier bookings
-      { id: 3, userName: 'Bob Lee', userContact: '+91 9988776655', date: '2025-04-10', time: '09:00', type: 'Weekly', from: 'Home', to: 'Office', driver: 'Alice Brown', driverContact: '+91 9000000001' },
-      { id: 4, userName: 'Alice Green', userContact: '+91 9112233445', date: '2025-04-11', time: '16:00', type: 'Monthly', from: 'City Center', to: 'Airport', driver: 'Bob White', driverContact: '+91 9000000002' },
-    ]);
+    const fetchBookings = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/bookings", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await response.json();
+        setBookings(data.bookings);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
+      }
+    };
+
+    fetchBookings();
   }, []);
 
-  const todayDate = new Date().toISOString().split('T')[0];
-  const todays = bookings.filter(b => b.date === todayDate);
-  const earlier = bookings.filter(b => b.date < todayDate);
+  const todayDate = new Date().toISOString().split("T")[0];
+  const todays = bookings.filter((b) => b.date === todayDate);
+  const earlier = bookings.filter((b) => b.date < todayDate);
 
   const toggleAssignForm = (id) => {
-    setAssignForms(prev => ({ ...prev, [id]: !prev[id] }));
-    setFormData(prev => ({ ...prev, [id]: { name: '', contact: '', location: '' } }));
+    setAssignForms((prev) => ({ ...prev, [id]: !prev[id] }));
+    setFormData((prev) => ({ ...prev, [id]: { name: "", contact: "", location: "" } }));
   };
 
   const handleInputChange = (id, e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: { ...prev[id], [name]: value } }));
+    setFormData((prev) => ({ ...prev, [id]: { ...prev[id], [name]: value } }));
   };
 
-  const submitAssign = (id) => {
+  const submitAssign = async (id) => {
     const data = formData[id];
-    // TODO: send to backend
-    alert(`Driver assigned: ${data.name}`);
-    // update booking
-    setBookings(prev => prev.map(b => b.id === id ? { ...b, driver: data.name, driverContact: data.contact } : b));
-    toggleAssignForm(id);
+
+    try {
+      await fetch(`http://localhost:8000/api/bookings/${id}/assign-driver`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          driver_name: data.name,
+          driver_contact: data.contact,
+          driver_location: data.location,
+        }),
+      });
+
+      alert(`Driver assigned: ${data.name}`);
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === id
+            ? {
+                ...b,
+                driver: data.name,
+                driverContact: data.contact,
+              }
+            : b
+        )
+      );
+      toggleAssignForm(id);
+    } catch (error) {
+      console.error("Error assigning driver:", error);
+      alert("Failed to assign driver.");
+    }
   };
 
   const renderBooking = (b) => (
@@ -58,12 +90,27 @@ const BookingManagement = () => {
       )}
       {assignForms[b.id] && (
         <div className="assign-form">
-          <input type="text" name="name" placeholder="Driver Name"
-            value={formData[b.id]?.name || ''} onChange={e => handleInputChange(b.id, e)} />
-          <input type="text" name="contact" placeholder="Driver Contact"
-            value={formData[b.id]?.contact || ''} onChange={e => handleInputChange(b.id, e)} />
-          <input type="text" name="location" placeholder="Driver Location"
-            value={formData[b.id]?.location || ''} onChange={e => handleInputChange(b.id, e)} />
+          <input
+            type="text"
+            name="name"
+            placeholder="Driver Name"
+            value={formData[b.id]?.name || ""}
+            onChange={(e) => handleInputChange(b.id, e)}
+          />
+          <input
+            type="text"
+            name="contact"
+            placeholder="Driver Contact"
+            value={formData[b.id]?.contact || ""}
+            onChange={(e) => handleInputChange(b.id, e)}
+          />
+          <input
+            type="text"
+            name="location"
+            placeholder="Driver Location"
+            value={formData[b.id]?.location || ""}
+            onChange={(e) => handleInputChange(b.id, e)}
+          />
           <button className="submit-assign" onClick={() => submitAssign(b.id)}>
             Driver Assigned Successfully
           </button>

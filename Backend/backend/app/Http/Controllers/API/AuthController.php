@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\DriverDetailsUpload; 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -80,15 +81,19 @@ class AuthController extends Controller
             2 => 'admin',
         };
 
+        $detailsUploaded = false;
+        if ($user->role == 1) { // driver role
+            $detailsUploaded = DriverDetailsUpload::where('user_id', $user->id)->exists();
+        }
+
         return response()->json([
             'token' => $token,
             'user' => $user,
             'role' => $user->role,
-            'redirect' => $redirect
+            'redirect' => $redirect,
+            'detailsUploaded' => $detailsUploaded
         ]);
     }
-
-
 
     /**
      * Logout user
@@ -117,6 +122,8 @@ class AuthController extends Controller
         ], 200);
     }
 
+
+    // listing API of users and drivers 
     public function listUsers(Request $request)
     {
     $role = $request->query('role'); 

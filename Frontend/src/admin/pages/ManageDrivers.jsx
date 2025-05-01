@@ -1,24 +1,39 @@
-// src/admin/pages/ManageDrivers.jsx
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const ManageDrivers = () => {
   const [drivers, setDrivers] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Dummy driver data
-    setDrivers([
-      { id: 1, name: "Alice Brown", email: "alice@example.com", location:"delhi", status: "Active" },
-      { id: 2, name: "Bob Green", email: "bob@example.com",location:"pune", status: "Pending" },
-      { id: 3, name: "Bob Green", email: "bob@example.com",location:"mumbai",status: "Pending" },
-      { id: 4, name: "Bob Green", email: "bob@example.com",location:"hydrabad", status: "Pending" },
-      // Add more dummy drivers as needed
-    ]);
+    const fetchDrivers = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/listUsers?role=1", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setDrivers(response.data.users); // API returns { users: [...] }
+      } catch (err) {
+        console.error("Failed to fetch drivers:", err);
+        setError("Could not fetch drivers.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDrivers();
   }, []);
 
   return (
     <div className="manage-drivers-container">
       <h2>Driver Management</h2>
-      {drivers.length === 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : drivers.length === 0 ? (
         <p>No drivers found.</p>
       ) : (
         <table className="drivers-table">
@@ -37,8 +52,8 @@ const ManageDrivers = () => {
                 <td>{driver.id}</td>
                 <td>{driver.name}</td>
                 <td>{driver.email}</td>
-                <td>{driver.location}</td>
-                <td>{driver.status}</td>
+                <td>{driver.location || "N/A"}</td>
+                <td>{driver.is_available ? "Active" : "Inactive"}</td>
               </tr>
             ))}
           </tbody>
