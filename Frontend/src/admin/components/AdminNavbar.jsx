@@ -26,7 +26,7 @@ const AdminNavbar = () => {
     // Clear admin session
     localStorage.removeItem("adminToken");
     // Navigate to admin login
-    navigate("/admin/login");
+    navigate("/login");
   };
 
   return (
