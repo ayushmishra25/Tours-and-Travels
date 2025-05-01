@@ -37,4 +37,45 @@ class BookingController extends Controller
 
         return response()->json(['message' => 'Booking successful', 'booking' => $booking], 201);
     }
+
+    public function index()
+    {
+        $bookings = Booking::with('user')->orderBy('created_at', 'desc')->get();
+
+        $formatted = $bookings->map(function ($booking) {
+            return [
+                'id' => $booking->id,
+                'userName' => $booking->user->name,
+                'userContact' => $booking->user->phone ?? 'N/A',
+                'date' => $booking->booking_datetime ? date('Y-m-d', strtotime($booking->booking_datetime)) : null,
+                'time' => $booking->booking_datetime ? date('H:i', strtotime($booking->booking_datetime)) : null,
+                'type' => ucfirst($booking->booking_type),
+                'from' => $booking->source_location,
+                'to' => $booking->destination_location,
+                'driver' => $booking->driver_name ?? null,
+                'driverContact' => $booking->driver_contact ?? null,
+            ];
+        });
+
+        return response()->json(['bookings' => $formatted]);
+    }
+
+    public function assignDriver(Request $request, $id)
+    {
+        $request->validate([
+            'driver_name' => 'required|string',
+            'driver_contact' => 'required|string',
+            'driver_location' => 'nullable|string',
+        ]);
+
+        $booking = Booking::findOrFail($id);
+        $booking->driver_name = $request->driver_name;
+        $booking->driver_contact = $request->driver_contact;
+        $booking->driver_location = $request->driver_location;
+        $booking->save();
+
+        return response()->json(['message' => 'Driver assigned successfully.', 'booking' => $booking]);
+    }
+
+
 }

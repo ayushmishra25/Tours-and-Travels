@@ -15,12 +15,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique()->nullable(); // Optional if using phone-based login
+            $table->string('email')->unique()->nullable(); 
             $table->string('phone')->unique();
-            $table->string('location')->nullable(); // Mark as nullable if not always provided
-            $table->tinyInteger('role')->default(1); // 0 = admin, 1 = user, 2 = admin
+            $table->string('location')->nullable(); 
+            $table->tinyInteger('role')->default(1);
+            $table->boolean('is_available')->default(false); 
             $table->string('password')->nullable(); 
-            $table->rememberToken(); // For Laravel auth (optional)
+            $table->rememberToken(); 
             $table->timestamps();
         });
 

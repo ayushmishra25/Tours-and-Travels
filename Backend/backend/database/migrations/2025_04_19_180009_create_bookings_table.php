@@ -23,7 +23,10 @@ return new class extends Migration
             $table->integer('working_hours_per_day')->nullable(); 
             $table->integer('payment'); 
             $table->date('start_date')->nullable(); 
-            $table->dateTime('booking_datetime')->nullable(); 
+            $table->dateTime('booking_datetime')->nullable();
+            $table->string('driver_name')->nullable();
+            $table->string('driver_contact')->nullable();
+            $table->string('driver_location')->nullable(); 
             $table->timestamps();
         });
     }

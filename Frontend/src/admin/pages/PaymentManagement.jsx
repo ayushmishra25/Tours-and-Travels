@@ -5,44 +5,23 @@ const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    // Dummy data with extended fields
-    setPayments([
-      {
-        id: 1,
-        userName: 'John Doe',
-        driverName: 'Alice Brown',
-        from: 'Area A',
-        to: 'Area B',
-        date: '2025-04-10',
-        serviceType: 'Hourly',
-        paidViaUPI: true,
-        paymentToDriver: false
-      },
-      {
-        id: 2,
-        userName: 'Jane Smith',
-        driverName: 'Bob Green',
-        from: 'Station',
-        to: 'Mall',
-        date: '2025-04-11',
-        serviceType: 'One-way',
-        paidViaUPI: false,
-        paymentToDriver: false
-      },
-      {
-        id: 3,
-        userName: 'John Doe',
-        driverName: 'Alice Brown',
-        from: 'Area A',
-        to: 'Area B',
-        date: '2025-04-10',
-        serviceType: 'Hourly',
-        paidViaUPI: true,
-        paymentToDriver: false
-      },
-      // ...more entries
-    ]);
+    const fetchPayments = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/bookings", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const result = await response.json();
+        setPayments(result.bookings);
+      } catch (error) {
+        console.error("Error fetching payments:", error);
+      }
+    };
+  
+    fetchPayments();
   }, []);
+  
 
   const togglePaymentToDriver = (id) => {
     setPayments(prev => prev.map(p =>
@@ -80,7 +59,7 @@ const PaymentManagement = () => {
                   <td>{p.from}</td>
                   <td>{p.to}</td>
                   <td>{p.date}</td>
-                  <td>{p.serviceType}</td>
+                  <td>{p.booking_type}</td>
                   <td>{p.paidViaUPI ? '✅' : '❌'}</td>
                   <td>
                     <input

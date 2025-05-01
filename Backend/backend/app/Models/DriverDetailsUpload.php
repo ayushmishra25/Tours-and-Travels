@@ -8,6 +8,8 @@ class DriverDetailsUpload extends Model
 {
     use HasFactory;
 
+    protected $table = 'driver_details_uploads';
+
     protected $fillable = [        
         'user_id',
         'photo',

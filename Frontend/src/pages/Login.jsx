@@ -44,7 +44,7 @@ const Login = () => {
       console.log("API response:", response.data);
   
       if (response.status === 200 && response.data.token) {
-        const { token, user, role, redirect } = response.data;
+        const { token, user, role, redirect, detailsUploaded } = response.data;
   
         // Store token and user details
         localStorage.setItem("token", token);
@@ -52,23 +52,22 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("userRole", role);
   
-        // alert("Login Successful!");
-  
         const numericRole = parseInt(role, 10);
   
-        // Log redirect information
-        console.log("Navigating to:", redirect);
-  
-        // Redirect based on role
-        if (numericRole === 1) {
-          navigate("/driverjobdetails");
-        } else if (numericRole === 2) {
-          //mark this session as Admin
+        // Redirect based on role and driver details status
+        if (numericRole === 1) { // Driver
+          if (detailsUploaded) {
+            navigate("/driverjobdetails"); // Already uploaded, go to dashboard
+          } else {
+            navigate("/driver-upload"); // Not uploaded yet
+          }
+        } else if (numericRole === 2) { // Admin
           localStorage.setItem("adminToken", token);
           navigate("/admin/dashboard");
-        } else {
-          navigate("/dashboard"); // Default user dashboard
+        } else { // Default user
+          navigate("/dashboard");
         }
+  
       } else {
         setErrorMsg(response.data.message || "Invalid login credentials.");
       }
@@ -79,6 +78,7 @@ const Login = () => {
       );
     }
   };
+  
   
   
 

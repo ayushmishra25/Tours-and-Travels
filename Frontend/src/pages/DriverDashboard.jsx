@@ -1,74 +1,126 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import DriverNavbar from "../components/DriverNavbar";
 
 const DriverDashboard = () => {
-  // Availability state
-  const [isAvailable, setIsAvailable] = useState(false);
+  // Fetch driverId and auth token from localStorage
+  const driverId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
-  // Scheduling state: list of time slots and new slot details
+  // State variables
+  const [isAvailable, setIsAvailable] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
   const [newSlot, setNewSlot] = useState({ date: "", start: "", end: "" });
-
-  // Future rides state: accepted rides for the future
   const [futureRides, setFutureRides] = useState([]);
-
-  // Ride requests state (simulate fetching with dummy data)
   const [rideRequests, setRideRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  // Simulate an API call to fetch ride requests dynamically
+  // Common axios headers
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/json",
+    "Content-Type": "application/json"
+  };
+  const BASE_URL = "http://localhost:8000/api";
+
+  // Load initial data
   useEffect(() => {
-    setTimeout(() => {
-      setRideRequests([
-        { id: 1, pickup: "Downtown", destination: "Airport", time: "10:00 AM" },
-        { id: 2, pickup: "Mall", destination: "Station", time: "11:30 AM" },
-        { id: 3, pickup: "University", destination: "Hospital", time: "1:00 PM" },
-      ]);
-    }, 1000);
+    const fetchDashboardData = async () => {
+      if (!driverId || !token) {
+        setErrorMsg("Driver not authenticated.");
+        setIsLoading(false);
+        return;
+      }
 
-    // Simulate fetching accepted future rides (scheduling details)
-    setTimeout(() => {
-      setFutureRides([
-        { id: 1, date: "2025-03-25", time: "10:00 AM", pickup: "Area A", destination: "Area B" },
-        { id: 2, date: "2025-03-26", time: "2:00 PM", pickup: "Area C", destination: "Area D" },
-      ]);
-    }, 1000);
-  }, []);
+      try {
+        const [requestsRes, futureRes, slotsRes] = await Promise.all([
+          axios.get(`${BASE_URL}/drivers/${driverId}/ride-requests`, { headers }),
+          axios.get(`${BASE_URL}/drivers/${driverId}/future-rides`, { headers }),
+          axios.get(`${BASE_URL}/drivers/${driverId}/slots`, { headers })
+        ]);
 
-  const toggleAvailability = () => {
-    setIsAvailable((prev) => !prev);
+        setRideRequests(requestsRes.data);
+        setFutureRides(futureRes.data);
+        setTimeSlots(slotsRes.data);
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+        setErrorMsg("Failed to load dashboard data. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [driverId, token]);
+
+  // Handlers
+  const toggleAvailability = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/drivers/${driverId}/toggle-availability`,
+        {},
+        { headers }
+      );
+      setIsAvailable(res.data.available);
+    } catch (error) {
+      console.error("Error toggling availability:", error);
+      setErrorMsg("Failed to toggle availability. Please try again.");
+    }
   };
 
   const handleNewSlotChange = (e) => {
     const { name, value } = e.target;
-    setNewSlot((prev) => ({ ...prev, [name]: value }));
+    setNewSlot(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddSlot = (e) => {
+  const handleAddSlot = async (e) => {
     e.preventDefault();
-    if (newSlot.date && newSlot.start && newSlot.end) {
-      setTimeSlots([...timeSlots, newSlot]);
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/drivers/${driverId}/add-slot`,
+        newSlot,
+        { headers }
+      );
+      setTimeSlots(prev => [...prev, res.data]);
       setNewSlot({ date: "", start: "", end: "" });
+    } catch (error) {
+      console.error("Error adding slot:", error);
+      setErrorMsg("Failed to add time slot. Please try again.");
     }
   };
 
-  const handleAcceptRequest = (id) => {
-    const accepted = rideRequests.find((req) => req.id === id);
-    setRideRequests(rideRequests.filter((req) => req.id !== id));
-    // In a real app, accepted ride details would be added to future rides schedule dynamically
-    setFutureRides([...futureRides, {
-      id: accepted.id,
-      date: new Date().toISOString().split("T")[0],
-      time: accepted.time,
-      pickup: accepted.pickup,
-      destination: accepted.destination
-    }]);
-    alert(`Ride request from ${accepted.pickup} accepted!`);
+  const handleAcceptRequest = async (id) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/drivers/${driverId}/accept-ride/${id}`,
+        {},
+        { headers }
+      );
+      setRideRequests(prev => prev.filter(r => r.id !== id));
+      setFutureRides(prev => [...prev, res.data]);
+      alert(`Accepted ride from ${res.data.pickup}`);
+    } catch (error) {
+      console.error("Error accepting ride:", error);
+      setErrorMsg("Failed to accept ride. Please try again.");
+    }
   };
 
-  const handleDeclineRequest = (id) => {
-    setRideRequests(rideRequests.filter((req) => req.id !== id));
-    alert("Ride request declined.");
+  const handleDeclineRequest = async (id) => {
+    try {
+      await axios.delete(
+        `${BASE_URL}/drivers/${driverId}/decline-ride/${id}`,
+        { headers }
+      );
+      setRideRequests(prev => prev.filter(r => r.id !== id));
+      alert("Ride declined.");
+    } catch (error) {
+      console.error("Error declining ride:", error);
+      setErrorMsg("Failed to decline ride. Please try again.");
+    }
   };
+
+  
 
   return (
     <>
@@ -76,94 +128,51 @@ const DriverDashboard = () => {
       <div className="driver-dashboard-container">
         <h1>Driver Dashboard</h1>
 
-        {/* Availability Section */}
         <section className="availability-section">
           <h2>Availability</h2>
           <button onClick={toggleAvailability} className="availability-btn">
             {isAvailable ? "Set Unavailable" : "Set Available"}
           </button>
-          <p>
-            Status: <strong>{isAvailable ? "Available" : "Unavailable"}</strong>
-          </p>
+          <p>Status: <strong>{isAvailable ? "Available" : "Unavailable"}</strong></p>
         </section>
 
-        {/* Scheduling Section */}
         <section className="scheduling-section">
           <h2>Scheduling</h2>
           <form onSubmit={handleAddSlot} className="slot-form">
-            <input
-              type="date"
-              name="date"
-              value={newSlot.date}
-              onChange={handleNewSlotChange}
-              required
-            />
-            <input
-              type="time"
-              name="start"
-              value={newSlot.start}
-              onChange={handleNewSlotChange}
-              required
-            />
-            <input
-              placeholder="endtime"
-              type="time"
-              name="end"
-              value={newSlot.end}
-              onChange={handleNewSlotChange}
-              required
-            />
-            <button type="submit">Add Time Slot</button>
+            <input type="date" name="date" value={newSlot.date} onChange={handleNewSlotChange} required />
+            <input type="time" name="start" value={newSlot.start} onChange={handleNewSlotChange} required />
+            <input type="time" name="end" value={newSlot.end} onChange={handleNewSlotChange} required />
+            <button type="submit">Add Slot</button>
           </form>
-          <div className="slots-list">
-            {timeSlots.length === 0 ? (
-              <p>No working time slots added yet.</p>
-            ) : (
-              <ul>
-                {timeSlots.map((slot, index) => (
-                  <li key={index}>
-                    Date: {slot.date}, From: {slot.start} to {slot.end}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          {timeSlots.length === 0 ? <p>No slots added.</p> : (
+            <ul>
+              {timeSlots.map((s, i) => (
+                <li key={i}>{s.date} {s.start}-{s.end}</li>
+              ))}
+            </ul>
+          )}
 
-          {/* Future Rides Section */}
           <div className="future-rides">
-            <h3>Future Ride Details</h3>
-            {futureRides.length === 0 ? (
-              <p>No future rides scheduled.</p>
-            ) : (
+            <h3>Future Rides</h3>
+            {futureRides.length === 0 ? <p>No rides scheduled.</p> : (
               <ul>
-                {futureRides.map((ride) => (
-                  <li key={ride.id}>
-                    Date: {ride.date}, Time: {ride.time}, From: {ride.pickup} to {ride.destination}
-                  </li>
+                {futureRides.map(r => (
+                  <li key={r.id}>{r.date} {r.time} {r.pickup} → {r.destination}</li>
                 ))}
               </ul>
             )}
           </div>
         </section>
 
-        {/* Ride Requests Section */}
         <section className="ride-requests-section">
           <h2>Ride Requests</h2>
-          {rideRequests.length === 0 ? (
-            <p>No ride requests at the moment.</p>
-          ) : (
+          {rideRequests.length === 0 ? <p>No requests.</p> : (
             <ul>
-              {rideRequests.map((req) => (
+              {rideRequests.map(req => (
                 <li key={req.id} className="ride-request-item">
-                  <p>
-                    <strong>Pickup:</strong> {req.pickup}
-                  </p>
-                  <p>
-                    <strong>Destination:</strong> {req.destination}
-                  </p>
-                  <p>
-                    <strong>Time:</strong> {req.time}
-                  </p>
+                  <p><strong>Pickup:</strong> {req.pickup}</p>
+                  <p><strong>Destination:</strong> {req.destination}</p>
+                  <p><strong>Time:</strong> {req.time}</p>
                   <div className="request-buttons">
                     <button onClick={() => handleAcceptRequest(req.id)}>Accept</button>
                     <button onClick={() => handleDeclineRequest(req.id)}>Decline</button>

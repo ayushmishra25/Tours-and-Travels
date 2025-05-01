@@ -57,30 +57,6 @@ const DriverDetailsUpload = () => {
     }));
   };
 
-  const validateFields = () => {
-    // Check text fields
-    for (const [key, val] of Object.entries(formData)) {
-      if (!val) {
-        return `${key.replace(/([A-Z])/g, ' $1')} is required`;
-      }
-    }
-    // Check all file uploads
-    const requiredFiles = ['photo', 'licenseFront', 'licenseBack', 'aadharFront', 'aadharBack', 'passbook'];
-    for (const fname of requiredFiles) {
-      if (!files[fname]) {
-        return `${fname} upload is required`;
-      }
-    }
-    // Police verification
-    if (!policeVerified) {
-      return `Police verification selection is required`;
-    }
-    if (policeVerified === 'yes' && !files.policeDoc) {
-      return `Police verification document is required`;
-    }
-    // No errors
-    return null;
-  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,13 +66,6 @@ const DriverDetailsUpload = () => {
       return;
     }
 
-    const errorMsg = validateFields();
-    if (errorMsg) {
-      setFieldError(errorMsg);
-      return;
-    }
-    setFieldError("");
-  
     // Create a FormData object
     const formDataToSend = new FormData();
   
@@ -120,11 +89,6 @@ const DriverDetailsUpload = () => {
     if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
-    
-    formDataToSend.append("police_varified", policeVerified);
-    if(policeVerified === "yes" && files.policeDoc){
-      formDataToSend.append("police_varified_docu", files.policeDoc);
-    }
 
     try {
       const response = await axios.post(
