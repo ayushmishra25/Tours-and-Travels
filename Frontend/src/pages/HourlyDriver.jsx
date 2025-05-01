@@ -194,7 +194,7 @@ const HourlyDriver = () => {
               </select>
             ) : (
               <select value={distance} onChange={(e) => setDistance(+e.target.value)}>
-                {[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80].map((d) => (
+                {[5, 10, 15, 20, 30, 40, 50, 60, 70].map((d) => (
                   <option key={d} value={d}>
                     {d} km
                   </option>
