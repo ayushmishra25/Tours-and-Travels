@@ -139,7 +139,7 @@ const DriverDetailsUpload = () => {
         
         <div className="form-group">
           <label>Pincode:</label>
-          <input type="number" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Enter pincode" />
+          <input type="text" inputMode="numeric" pattern="\d*" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Enter pincode" />
         </div>
         
         <div className="form-group">

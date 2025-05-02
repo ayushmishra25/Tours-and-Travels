@@ -20,13 +20,6 @@ const DriverProfile = () => {
       <DriverNavbar />
       <div className="profile-container">
         <div className="profile-card">
-          <div className="avatar-section">
-            <img
-              src={user.photo_url || '/default-avatar.png'}
-              alt="Driver Avatar"
-              className="avatar"
-            />
-          </div>
           <div className="info-section">
             <h2>{user.name}</h2>
             <p><strong>Email:</strong> {user.email}</p>
@@ -44,6 +37,7 @@ const DriverProfile = () => {
             <h3>₹ {stats.earnings}</h3>
             <p>Total Earnings</p>
           </div>
+          <button>Edit Profile</button>
         </div>
       </div>
     </>
