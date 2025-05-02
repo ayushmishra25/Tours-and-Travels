@@ -44,36 +44,6 @@ const monthlyPricing = {
     "24": { "8": 18000, "10": 19000, "12": 20000 },
     "26": { "8": 19000, "10": 20000, "12": 21000 }
   },
-  Bangalore: {
-    "22": { "8": 24000, "10": 25000, "12": 26000 },
-    "24": { "8": 25000, "10": 26000, "12": 27000 },
-    "26": { "8": 26000, "10": 27000, "12": 28000 }
-  },
-  Hyderabad: {
-    "22": { "8": 22000, "10": 23000, "12": 24000 },
-    "24": { "8": 23000, "10": 24000, "12": 25000 },
-    "26": { "8": 24000, "10": 25000, "12": 26000 }
-  },
-  Mumbai: {
-    "22": { "8": 20000, "10": 21000, "12": 22000 },
-    "24": { "8": 21000, "10": 22000, "12": 23000 },
-    "26": { "8": 22000, "10": 23000, "12": 24000 }
-  },
-  "Navi Mumbai": {
-    "22": { "8": 17000, "10": 18000, "12": 19000 },
-    "24": { "8": 18000, "10": 19000, "12": 20000 },
-    "26": { "8": 19000, "10": 20000, "12": 21000 }
-  },
-  Thane: {
-    "22": { "8": 18000, "10": 19000, "12": 20000 },
-    "24": { "8": 19000, "10": 20000, "12": 21000 },
-    "26": { "8": 20000, "10": 21000, "12": 22000 }
-  },
-  Pune: {
-    "22": { "8": 20000, "10": 21000, "12": 22000 },
-    "24": { "8": 21000, "10": 22000, "12": 23000 },
-    "26": { "8": 23000, "10": 24000, "12": 25000 }
-  }
 };
 
 const MonthlyDriver = () => {
@@ -82,6 +52,7 @@ const MonthlyDriver = () => {
 
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
+  const [destinationLocation, setDestinationLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("22");
   const [workingHours, setWorkingHours] = useState("8");
   const [date, setDate] = useState("");
@@ -143,7 +114,8 @@ const MonthlyDriver = () => {
       bookingType: "Monthly",
       tripType: `${workingDays} days / ${workingHours} hrs`,
       pickupLocation,
-     bookingDatetime: date,
+      destinationLocation,
+      bookingDatetime: date,
       totalAmount,
       user: JSON.parse(localStorage.getItem("user")),
     }
@@ -178,6 +150,15 @@ const MonthlyDriver = () => {
                 onChange={(e) => setPickupLocation(e.target.value)}
               />
             </label>
+            <label>
+                Destination Location:
+                <input
+                  type="text"
+                  placeholder="Enter Destination Location"
+                  value={destinationLocation}
+                  onChange={(e) => setDestinationLocation(e.target.value)}
+                />
+              </label>
             <label>
               Working Days:
               <select value={workingDays} onChange={(e) => setWorkingDays(e.target.value)}>
