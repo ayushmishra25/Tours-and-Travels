@@ -2288,6 +2288,7 @@ fieldset.account-details legend {
 .pay-btn {
   display: inline-block;
   margin-top: 1rem;
+  margin-right: 5px;
   padding: 0.6rem 1.2rem;
   background: #0056b3;
   color: white;
@@ -2346,3 +2347,77 @@ fieldset.account-details legend {
     text-align: center;
   }
 }
+
+/* Container for the myrides page */
+.rides-page {
+  max-width: 1200px;
+  margin: 0 auto;               /* center the page container */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Heading is centered */
+.rides-page h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #002855;
+}
+
+/* The list wrapper: use flex to center and wrap cards */
+.rides-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;      /* center cards horizontally */
+  gap: 20px;
+}
+
+/* Individual ride card */
+.ride-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 20px;
+  width: calc(33.333% - 40px);  /* three cards per row minus gaps */
+  box-sizing: border-box;
+  transition: transform 0.2s;
+}
+
+.ride-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Ride card text styling */
+.ride-card p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.ride-card p strong {
+  color: #002855;
+}
+
+/* Messages (loading / no rides / error) */
+.loading,
+.no-rides,
+.error-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 40px;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 992px) {
+  .ride-card {
+    width: calc(50% - 40px);     /* two cards per row */
+  }
+}
+
+@media (max-width: 600px) {
+  .ride-card {
+    width: 100%;                 /* one card per row */
+  }
+}
+
