@@ -15,7 +15,7 @@ function Footer() {
         <div className="footer-section">
           <h2>Follow Us</h2>
           <div className="social-links">
-              <a href="https://www.facebook.com/YourPageOrProfile"  target="_blank" rel="noopener noreferrer"> <img src="/facebook.jpg" alt="Facebook" /></a>
+              <a href="https://www.facebook.com/share/196oNQ1qkF/"  target="_blank" rel="noopener noreferrer"> <img src="/facebook.jpg" alt="Facebook" /></a>
               <a href="https://twitter.com/YourHandle" target="_blank" rel="noopener noreferrer" > <img src="/twitter.jpg" alt="Twitter" /></a>
               <a href="https://www.instagram.com/sahyogforce?igsh=cjY2bzQ3MzA0ZTI1"  target="_blank"  rel="noopener noreferrer" > <img src="/instagram.jpg" alt="Instagram" /></a>
           </div>
