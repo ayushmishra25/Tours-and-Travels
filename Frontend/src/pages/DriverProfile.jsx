@@ -31,7 +31,9 @@ const DriverProfile = () => {
         <div className="stats-card">
           <div className="stat-item">
             <h3>{stats.rides}</h3>
-            <p>Total Rides</p>
+            <p>
+              Total Rides
+            </p>
           </div>
           <div className="stat-item">
             <h3>₹ {stats.earnings}</h3>
