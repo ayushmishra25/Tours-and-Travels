@@ -9,6 +9,7 @@ const WeeklyDriver = () => {
 
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
+  const [destinationLocation, setDestinationLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -33,9 +34,6 @@ const WeeklyDriver = () => {
     const city = getCityFromAddress(location);
     const days = parseInt(workingDays, 10);
     let dailyRate = 1250;
-    if (city === "Hyderabad" || city === "Bangalore") {
-      dailyRate = 1400;
-    }
     return dailyRate * days;
   };
 
@@ -57,6 +55,10 @@ const WeeklyDriver = () => {
       setFieldError("Location is required");
       return;
     }
+    if (!destinationLocation.trim()) {
+           setFieldError("Destination location is required");
+           return;
+         }
     if (!workingDays) {
       setFieldError("Working days selection is required");
       return;
@@ -79,7 +81,7 @@ const WeeklyDriver = () => {
       booking_type: "weekly",
       trip_type: `${workingDays} days`,
       source_location: pickupLocation, // Mapping pickupLocation to source_location
-      destination_location: location, // Assuming destination_location is based on location
+      destination_location: destinationLocation,
       hours: workingDays * 8, // Assuming working hours per day is 8
       working_days: workingDays,
       working_hours_per_day: 8, // Assuming each day has 8 working hours
@@ -115,15 +117,23 @@ const WeeklyDriver = () => {
         <h1>Weekly Driver Service</h1>
         <div className="booking-form">
           <div className="left-section">
+            {/* Zone selector */}
             <label>
               Zone:
-              <input
-                type="text"
-                placeholder="Enter Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
+              <select value={location} onChange={(e) => setLocation(e.target.value)}>
+                <option value="">Select Zone</option>
+                <option value="Noida">Noida</option>
+                <option value="Greater Noida">Greater Noida</option>
+                <option value="Ghaziabad">Ghaziabad</option>
+                <option value="Faridabad">Faridabad</option>
+                <option value="Gurgaon">Gurgaon</option>
+                <option value="West Delhi">West Delhi</option>
+                <option value="East Delhi">East Delhi</option>
+                <option value="South Delhi">South Delhi</option>
+                <option value="North Delhi">North Delhi</option>
+              </select>
             </label>
+
             <label>
               Pickup Location:
               <input
@@ -131,6 +141,16 @@ const WeeklyDriver = () => {
                 placeholder="Enter Pickup Location"
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
+              />
+            </label>
+            {/* New destination field */}
+            <label>
+              Destination Location:
+              <input
+                type="text"
+                placeholder="Enter Destination Location"
+                value={destinationLocation}
+                onChange={(e) => setDestinationLocation(e.target.value)}
               />
             </label>
             <label>
