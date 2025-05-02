@@ -24,6 +24,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('support', SupportRequestController::class);
     Route::put('/support-requests/{id}/resolve', [SupportRequestController::class, 'markResolved']);
     Route::apiResource('driver-details', DriverDetailsUploadController::class);
+    Route::get('/driver/rides', [BookingController::class, 'getRidesForDriver']);
+    Route::get('/booking/{id}', [BookingController::class, 'getBooking']);
+
+
 
     // Driver-related Routes
     Route::prefix('drivers/{id}')->group(function () {

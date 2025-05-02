@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const BookingConfirmation = () => {
   const navigate = useNavigate();
@@ -14,40 +15,80 @@ const BookingConfirmation = () => {
     user,
   } = state || {};
 
-  // assignedDriver will be populated by admin; here we simulate with null
+  // Grab token for authenticated requests
+  const token = localStorage.getItem("token");
+
   const [assignedDriver, setAssignedDriver] = useState(null);
   const [showUPIScanner, setShowUPIScanner] = useState(false);
 
-  // Simulate admin assignment arriving after a delay
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setAssignedDriver({
-        name: "Ravi Kumar",
-        phone: "+91 98765 43210",
-        photoUrl: "/driver-photo.jpg",
-        licenseLocation: "DL-04-2025-XYZ123",
-      });
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!bookingId) {
+      console.warn("No bookingId passed into BookingConfirmation");
+      return;
+    }
+
+    // Helper: fetch booking and check for driver fields
+    const pollDriver = async () => {
+      try {
+        const resp = await axios.get(
+          `http://localhost:8000/api/booking/${bookingId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("pollDriver response:", resp.data);
+
+        const booking = resp.data.booking;
+        const name     = booking.driver_name;
+        const contact  = booking.driver_contact;
+
+        if (name && contact) {
+          setAssignedDriver({
+            name,
+            phone: contact,
+          });
+          return true;  // stop polling
+        }
+      } catch (err) {
+        console.error("Error fetching booking details:", err);
+      }
+      return false;     // continue polling
+    };
+
+    // Poll every 3 seconds
+    const interval = setInterval(async () => {
+      if (await pollDriver()) {
+        clearInterval(interval);
+      }
+    }, 3000);
+
+    // Also do an immediate check
+    (async () => {
+      if (await pollDriver()) {
+        clearInterval(interval);
+      }
+    })();
+
+    return () => clearInterval(interval);
+  }, [bookingId, token]);
 
   const handleCancel = () => {
     navigate("/dashboard/bookings");
   };
 
   const handlePayCash = () => {
-    alert("Please pay ₹" + totalAmount + " in cash to your driver.");
+    alert(`Please pay ₹${totalAmount} in cash to your driver.`);
     navigate("/dashboard");
   };
 
-  const handleUPIClick = () => {
-    setShowUPIScanner(true);
-  };
-
+  const handleUPIClick = () => setShowUPIScanner(true);
   const handleUPISuccess = () => {
     alert("UPI payment successful!");
     navigate("/dashboard");
   };
+
+  // If we haven't even loaded the booking info yet, show a loader
+  if (!bookingId) {
+    return <p>Invalid booking. Please go back and try again.</p>;
+  }
 
   return (
     <div className="confirmation-wrapper">
@@ -61,16 +102,8 @@ const BookingConfirmation = () => {
         {assignedDriver ? (
           <div className="driver-details">
             <h2>Driver Assigned</h2>
-            <img
-              src={assignedDriver.photoUrl}
-              alt={assignedDriver.name}
-              className="driver-photo"
-            />
             <p><strong>Name:</strong> {assignedDriver.name}</p>
             <p><strong>Phone:</strong> {assignedDriver.phone}</p>
-            <p>
-              <strong>License No.:</strong> {assignedDriver.licenseLocation}
-            </p>
           </div>
         ) : (
           <p className="waiting-msg">Waiting for driver assignment...</p>
@@ -82,12 +115,11 @@ const BookingConfirmation = () => {
       </section>
 
       <section className="confirmation-right">
-        <h2>Booking & Billing</h2>
+        <h2>Booking &amp; Billing</h2>
         <ul className="booking-summary">
-          <li><strong>Booking ID:</strong> {bookingId}</li>
-          <li><strong>Type:</strong> {bookingType} / {tripType}</li>
+          <li><strong>Booking Type:</strong> {bookingType} / {tripType}</li>
           <li><strong>Pickup:</strong> {pickupLocation}</li>
-          <li><strong>Date & Time:</strong> {bookingDatetime}</li>
+          <li><strong>Date &amp; Time:</strong> {bookingDatetime}</li>
         </ul>
         <p className="total-amount">Total Fare: ₹ {totalAmount}</p>
 
@@ -104,7 +136,6 @@ const BookingConfirmation = () => {
         {showUPIScanner && (
           <div className="upi-scanner">
             <h4>Scan to Pay</h4>
-            {/* Replace src with your QR image */}
             <img src="/upi-qr.png" alt="UPI QR Code" />
             <button className="pay-btn" onClick={handleUPISuccess}>
               I’ve Paid

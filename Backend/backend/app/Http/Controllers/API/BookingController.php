@@ -78,4 +78,43 @@ class BookingController extends Controller
     }
 
 
+    public function show($id)
+    {
+        $booking = Booking::findOrFail($id);
+        return response()->json(['booking' => $booking]);
+    }
+
+
+
+    // my rides page details
+    public function getRidesForDriver()
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->phone) {
+            return response()->json(['error' => 'Contact to admin about your phone number is wrong.'], 401);
+        }
+
+        // Fetch bookings based on driver's phone
+        $rawRides = Booking::where('driver_contact', $user->phone)
+                    ->orderBy('booking_datetime', 'desc')
+                    ->get();
+
+
+        // Format the rides
+        $rides = $rawRides->map(function ($ride) {
+            return [
+                'id' => $ride->id,
+                'date' => $ride->booking_datetime ? date('Y-m-d', strtotime($ride->booking_datetime)) : null,
+                'time' => $ride->booking_datetime ? date('H:i', strtotime($ride->booking_datetime)) : null,
+                'pickup' => $ride->source_location,
+                'destination' => $ride->destination_location,
+                'type' => $ride->booking_type,
+                'fare' => $ride->payment ?? 'N/A',
+            ];
+        });
+
+        return response()->json(['rides' => $rides], 200);
+    }
+
 }
