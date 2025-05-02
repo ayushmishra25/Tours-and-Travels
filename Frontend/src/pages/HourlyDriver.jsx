@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 
-
-// Pricing tables for hourly and distance-based fares
+// Hourly pricing table
 const hourlyPricing = {
   delhi: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
   gurugram: [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
@@ -14,6 +13,7 @@ const hourlyPricing = {
   greater_noida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
 };
 
+// Distance-based pricing table
 const distancePricing = {
   south_delhi: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
   gurugram: { 5: 297, 10: 322, 15: 372, 20: 399, 30: 473, 40: 528, 50: 606, 60: 638, 70: 681 },
@@ -23,18 +23,17 @@ const distancePricing = {
   noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
   greater_noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
   east_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  south_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
   north_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  central_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 }
+  central_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
 };
 
 const getCityFromAddress = (address) => {
   const lower = address.toLowerCase();
-  if (lower.includes("south delhi"))   return "south_delhi";
-  if (lower.includes("north delhi"))   return "north_delhi";
+  if (lower.includes("south delhi")) return "south_delhi";
+  if (lower.includes("north delhi")) return "north_delhi";
   if (lower.includes("central delhi")) return "central_delhi";
-  if (lower.includes("manesar"))          return "manesar";
-  if (lower.includes("east delhi"))          return "east_delhi";
+  if (lower.includes("manesar")) return "manesar";
+  if (lower.includes("east delhi")) return "east_delhi";
   if (lower.includes("gurugram") || lower.includes("gurgaon")) return "gurugram";
   if (lower.includes("faridabad")) return "faridabad";
   if (lower.includes("ghaziabad")) return "ghaziabad";
@@ -45,13 +44,11 @@ const getCityFromAddress = (address) => {
 };
 
 const HourlyDriver = () => {
-
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
-
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [tripType, setTripType] = useState("roundtrip");
@@ -84,11 +81,9 @@ const HourlyDriver = () => {
       setAuthError("Please select both a date and a time.");
       return;
     }
-  
-    // Combine date and time into the format Y-m-d H:i:s
+
     const booking_datetime = `${date} ${time}:00`;
 
-    // Build payload
     const payload = {
       user_id: parseInt(localStorage.getItem("userId")),
       booking_type: "hourly",
@@ -97,29 +92,28 @@ const HourlyDriver = () => {
       destination_location: destination,
       hours: tripType === "roundtrip" ? hours : undefined,
       distance: tripType === "oneway" ? distance : undefined,
-      payment: totalAmount,   // ✅ Fixed colon here
+      payment: totalAmount,
       booking_datetime,
     };
 
     try {
-      const resp = await axios.post(
-        "http://localhost:8000/api/booking",
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      // → after success, send booking details into state and navigate:
-      // → on success, navigate to post-booking page with all details in state
-      navigate("/post-booking", {
-      state: {
-        bookingId: resp.data.id,
-        pickupLocation: pickup,
-        bookingType: "Hourly",
-        tripType,
-        bookingDatetime,
-        totalAmount,
-        user: JSON.parse(localStorage.getItem("user")),
-      },
+      const resp = await axios.post("http://localhost:8000/api/booking", payload, {
+        headers: { Authorization: `Bearer ${token}` },
       });
+
+      const { booking } = resp.data;
+
+      navigate("/post-booking", {
+        state: {
+        bookingId: booking.id,
+        pickupLocation: booking.source_location,
+          bookingType: booking.booking_type,
+          tripType: booking.trip_type,
+          bookingDatetime: booking.booking_datetime,
+          totalAmount: booking.payment,
+          user,
+      },
+    });
     } catch (err) {
       console.error("Booking error:", err);
       setAuthError("Booking failed. Please try again.");
@@ -128,22 +122,23 @@ const HourlyDriver = () => {
 
   const formatDateLocal = (d) => {
     const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  
+
   useEffect(() => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-  
+
     const nextWeek = new Date(today);
     nextWeek.setDate(today.getDate() + 7);
-  
+
     setMinDate(formatDateLocal(tomorrow));
     setMaxDate(formatDateLocal(nextWeek));
   }, []);
+
   useEffect(() => {
     setTotalAmount(calculateFare());
   }, [pickup, destination, tripType, hours, distance]);

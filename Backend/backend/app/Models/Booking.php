@@ -23,6 +23,9 @@ class Booking extends Model
         'payment',
         'start_date',
         'booking_datetime',
+        'driver_name',
+        'driver_contact',
+        'driver_location'
     ];
 
     /**
