@@ -6,54 +6,41 @@ import DashboardNavbar from "../components/DashboardNavbar";
 
 // Pricing tables for hourly and distance-based fares
 const hourlyPricing = {
-  Delhi: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-  Gurugram: [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
-  Faridabad: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-  Ghaziabad: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-  Noida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-  GreaterNoida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-  Bangalore: [276, 376, 477, 572, 674, 778, 880, 972, 1170, 1171, 1281, 1380],
-  Hyderabad: [270, 340, 410, 480, 560, 640, 720, 800, 880, 980, 1080, 1180],
-  Mumbai: [270, 340, 410, 480, 560, 640, 720, 820, 920, 1020, 1130, 1240],
-  NaviMumbai: [270, 340, 410, 480, 560, 640, 720, 820, 920, 1020, 1130, 1240],
-  thane: [270, 340, 410, 480, 560, 640, 720, 820, 920, 1020, 1130, 1240],
-  Pune: [225, 295, 370, 450, 535, 637, 690, 783, 842, 922, 1012, 1082]
+  delhi: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+  gurugram: [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
+  faridabad: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+  ghaziabad: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+  noida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+  greater_noida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
 };
 
 const distancePricing = {
-  Hyderabad: { 5: 272, 10: 298, 15: 348, 20: 375, 30: 449, 40: 504, 50: 582, 60: 614, 70: 657 },
-  Bangalore: { 5: 225, 10: 297, 15: 343, 20: 375, 30: 448, 40: 503, 50: 582, 60: 614, 70: 656 },
-  Navi_Mumbai: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
-  Thane: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
-  SouthDelhi: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
-  Gurugram: { 5: 297, 10: 322, 15: 372, 20: 399, 30: 473, 40: 528, 50: 606, 60: 638, 70: 681 },
-  Mumbai: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  Pune: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  Faridabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  MAnesar: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  Ghaziabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  Noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  GreaterNoida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  EastDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  SouthDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  NorthDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  CentralDelhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 }
+  south_delhi: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
+  gurugram: { 5: 297, 10: 322, 15: 372, 20: 399, 30: 473, 40: 528, 50: 606, 60: 638, 70: 681 },
+  faridabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  manesar: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  ghaziabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  greater_noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  east_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  south_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  north_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
+  central_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 }
 };
 
 const getCityFromAddress = (address) => {
   const lower = address.toLowerCase();
-  if (lower.includes("delhi")) return "Delhi";
-  if (lower.includes("gurugram") || lower.includes("gurgaon")) return "Gurugram";
-  if (lower.includes("faridabad")) return "Faridabad";
-  if (lower.includes("ghaziabad")) return "Ghaziabad";
-  if (lower.includes("noida")) return "Noida";
-  if (lower.includes("greater noida")) return "GreaterNoida";
-  if (lower.includes("bangalore") || lower.includes("bengaluru")) return "Bangalore";
-  if (lower.includes("hyderabad")) return "Hyderabad";
-  if (lower.includes("mumbai")) return "Mumbai";
-  if (lower.includes("navi mumbai")) return "NaviMumbai";
-  if (lower.includes("thane")) return "Thane";
-  if (lower.includes("pune")) return "Pune";
+  if (lower.includes("south delhi"))   return "south_delhi";
+  if (lower.includes("north delhi"))   return "north_delhi";
+  if (lower.includes("central delhi")) return "central_delhi";
+  if (lower.includes("manesar"))          return "manesar";
+  if (lower.includes("east delhi"))          return "east_delhi";
+  if (lower.includes("gurugram") || lower.includes("gurgaon")) return "gurugram";
+  if (lower.includes("faridabad")) return "faridabad";
+  if (lower.includes("ghaziabad")) return "ghaziabad";
+  if (lower.includes("greater noida")) return "greater_noida";
+  if (lower.includes("noida")) return "noida";
+  if (lower.includes("delhi")) return "delhi";
   return null;
 };
 

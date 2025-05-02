@@ -91,14 +91,12 @@ const OndemandDriver = () => {
           <div className="left-section">
             <label>
               Pickup Address:
-              <div className="location-input">
                 <input
                   type="text"
                   placeholder="Enter Pickup Address"
                   value={pickup}
                   onChange={(e) => setPickup(e.target.value)}
                 />
-              </div>
             </label>
             <label>
               Destination Address:
