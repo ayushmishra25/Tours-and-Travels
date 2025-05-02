@@ -1,84 +1,16 @@
-// src/pages/Support.jsx
-import React, { useState } from 'react';
-import DriverNavbar from '../components/DriverNavbar';
-import axios from 'axios';
+import React from 'react';
 
-const Contact = () => {
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [feedback, setFeedback] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFeedback('');
-    setError('');
-  
-    if (!subject.trim() || !message.trim()) {
-      setFeedback('Both subject and message are required.');
-      return;
-    }
-  
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        'http://localhost:8000/api/support',
-        { subject, message },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
-      if (response.status === 200) {
-        setFeedback('Your request has been submitted. Our support team will contact you soon.');
-        setSubject('');
-        setMessage('');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Something went wrong. Please try again later.');
-    }
-  };
-  
-
+function Contact() {
   return (
-    <>
-      <DriverNavbar />
-      <div className="support-container">
-        <h1>Support</h1>
-        <p>If you have any questions or issues, please fill out the form below and our support team will get back to you shortly.</p>
-        {feedback && <p className="feedback-message">{feedback}</p>}
-        {error && <p className="error-message">{error}</p>}
-        <form className="support-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="subject">Subject</label>
-            <input
-              id="subject"
-              type="text"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="Brief summary"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="message">Message</label>
-            <textarea
-              id="message"
-              rows="5"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Describe your issue in detail"
-            />
-          </div>
-          <button type="submit" className="submit-btn">Send Request</button>
-        </form>
-      </div>
-    </>
+    <div className="page-content">
+      <section className="contact">
+        <h2>Contact Us</h2>
+        <p>Email: sahyogforce@gmail.com</p>
+        <p>Phone: +91 8800716535</p>
+      </section>
+    </div>
   );
-};
+}
 
 export default Contact;
 
