@@ -374,6 +374,9 @@ input:focus, textarea:focus, select:focus {
   flex-wrap: wrap;
   padding: 20px;
 }
+.service-card h3{
+  color: #57cd63;
+}
 
 .service-card {
   background: #f8f9fa;
@@ -2426,3 +2429,78 @@ fieldset.account-details legend {
   }
 }
 
+/* css for contact page */
+/* src/pages/Contact.css */
+.contact-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+  background: #f0f4f8;
+  min-height: 60vh;
+}
+
+.contact-card {
+  background: #fff;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.contact-card h2 {
+  margin-bottom: 0.5rem;
+  color: #002855;
+  font-size: 2rem;
+}
+
+.contact-card p {
+  margin-bottom: 1.5rem;
+  color: #555;
+  font-size: 1rem;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-label {
+  font-weight: 600;
+  color: #002855;
+  margin-bottom: 0.5rem;
+}
+
+.contact-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-item li {
+  margin-bottom: 0.25rem;
+}
+
+.contact-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.contact-item a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .contact-card {
+    padding: 1.5rem;
+  }
+}

@@ -22,6 +22,7 @@ function Services() {
           <div className="service-card">
             <img src="/cook_image.jpg" alt="Maid Services" />
             <h2>Maid & Cook Services</h2>
+            <h3>Coming Soon...</h3>
             <p>Find trusted maids and cooks to assist with household chores and meals.</p>
           </div>
         </div>

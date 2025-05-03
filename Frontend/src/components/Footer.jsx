@@ -9,7 +9,6 @@ function Footer() {
           <h2>Contact Us</h2>
           <p>No.25 block b EXTN Bhagwati garden, near by dwarka</p>
           <p>mod metro station, uttam Nagar, New Delhi-110059</p>
-          <p> sahyogforce@gmail.com</p>
           <p>Phone: +91 9220922268</p>
         </div>
         <div className="footer-section">
