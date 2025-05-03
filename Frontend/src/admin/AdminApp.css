@@ -102,58 +102,100 @@
   
   /* AdminDashboard.css - Admin Dashboard Page Styles */
 
-.admin-dashboard-container {
-    margin: 100px auto 20px; /* leave space for the fixed navbar */
-    padding: 20px;
+  .admin-dashboard {
     max-width: 1200px;
-    background-color: var(--background-color);
-  }
-  
-  .admin-dashboard-container h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 30px;
-  }
-  
-  .dashboard-cards {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .card {
-    background-color: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    width: 250px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .card h3 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-  }
-  
-  .card p {
-    font-size: 24px;
-    font-weight: bold;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: sans-serif;
     color: #333;
   }
   
-  /* Responsive */
-  @media (max-width: 768px) {
-    .dashboard-cards {
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .card {
-      width: 90%;
-    }
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
   }
-
+  
+  .dashboard-header h1 {
+    font-size: 2.5rem;
+    color: #002855;
+  }
+  
+  .dashboard-header p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .dashboard-section {
+    margin-bottom: 2.5rem;
+  }
+  
+  .dashboard-section h2 {
+    font-size: 1.75rem;
+    border-bottom: 3px solid #002855;
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding-bottom: 0.25rem;
+  }
+  
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .cards-grid.small-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  
+  .card {
+    background: #fff;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .card h3 {
+    margin-top: 0;
+    color: #002855;
+    font-size: 1.25rem;
+  }
+  
+  .card p {
+    margin: 0.5rem 0 0;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  
+  .announcements {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .announcements li {
+    background: #fff;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    font-size: 0.95rem;
+  }
+  
+  .dashboard-footer {
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid #ddd;
+    color: #777;
+    font-size: 0.85rem;
+  }
+  
   /* ManageUsers.css - Manage Users Page Styles */
 
 .manage-users-container {
