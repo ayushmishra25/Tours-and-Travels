@@ -154,7 +154,7 @@ const OndemandDriver = () => {
               Please note: On-demand services may have surge pricing during peak hours.
               Extra charges for food, accommodation, and night stays may apply.
               Pricing is negotiable.
-              You can cancel the ride before one hour of service; otherwise, you need to pay cancellation charges of 100rs.
+              You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
             </p>
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now

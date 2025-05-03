@@ -230,10 +230,10 @@ const MonthlyDriver = () => {
 
             
             <p className="price-note">
-            ₹ 4000 will be charged extra for the monthly driver services. 
-            you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.  
+            ₹ 4000 will be charged Annually for the monthly driver services. 
+            You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.  
             For long-distance travel, accommodation, food, and night stays, extra charges apply.
-            We understand that every requirement is unique, so **pricing can be negotiated as per the requirements and preferences.** Once you submit your request, we will contact you soon to discuss the details.
+            We understand that every requirement is unique, Once you submit your request, we will contact you soon to discuss the details.
             </p>
           </div>
         </div>
