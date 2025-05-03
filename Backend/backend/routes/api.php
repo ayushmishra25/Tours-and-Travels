@@ -26,17 +26,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('driver-details', DriverDetailsUploadController::class);
     Route::get('/driver/rides', [BookingController::class, 'getRidesForDriver']);
     Route::get('/booking/{id}', [BookingController::class, 'getBooking']);
+    Route::get('/drivers/{id}/details', [DriverDetailsUploadController::class, 'checkDetails']);
 
 
 
     // Driver-related Routes
     Route::prefix('drivers/{id}')->group(function () {
         Route::post('/toggle-availability', [DriverController::class, 'toggleAvailability']);
+        Route::get('/drivers/{driverId}/toggle-availability', [DriverController::class, 'getAvailability']);
         Route::post('/add-slot', [DriverController::class, 'addTimeSlot']);
         Route::get('/slots', [DriverController::class, 'getTimeSlots']);
-        Route::get('/ride-requests', [DriverController::class, 'getRideRequests']);
-        Route::post('/accept-ride/{requestId}', [DriverController::class, 'acceptRide']);
-        Route::delete('/decline-ride/{requestId}', [DriverController::class, 'declineRide']);
-        Route::get('/future-rides', [DriverController::class, 'getFutureRides']);
     });
 });

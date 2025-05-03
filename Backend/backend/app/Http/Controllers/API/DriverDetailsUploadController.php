@@ -16,6 +16,16 @@ class DriverDetailsUploadController extends Controller
         return DriverDetailsUpload::all();
     }
 
+    // details api 
+    public function checkDetails($id)
+    {
+        $detailsExist = DriverDetailsUpload::where('user_id', $id)->exists();
+
+        return response()->json([
+            'detailsExist' => $detailsExist
+        ]);
+    }
+
     // Store a new driver record
     public function store(Request $request)
     {

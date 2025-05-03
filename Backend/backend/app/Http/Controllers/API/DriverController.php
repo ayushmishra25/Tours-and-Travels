@@ -29,6 +29,19 @@ class DriverController extends Controller
 
 
 
+    public function getAvailability($driverId)
+    {
+        // Find the user by driverId
+        $user = User::findOrFail($driverId);
+
+        // Return the availability status
+        return response()->json([
+            'status' => 'success',
+            'available' => $user->is_available ? 'Active' : 'Inactive'
+        ]);
+    }
+
+    
     // Add a time slot for a driver
     public function addTimeSlot(Request $request, $driverId)
     {

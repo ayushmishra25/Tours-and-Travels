@@ -1,24 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const DriverJobDetails = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true); // Track the loading state
+
+  useEffect(() => {
+    const driverId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+
+    console.log("Retrieved driverId from localStorage:", driverId);
+
+    if (!driverId || !token) {
+      console.warn("No driverId or token found in localStorage.");
+      setLoading(false); // Stop loading if there's no driverId or token
+      return;
+    }
+
+    const checkDriverDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/drivers/${driverId}/details`, {
+          headers: {
+            "Authorization": `Bearer ${token}`, // Pass the token in the header
+          },
+        });
+        console.log("Driver details response:", response.data);
+
+        if (response.status === 200 && response.data && response.data.detailsExist) {
+          navigate("/driver-dashboard"); // Navigate only after the check completes
+        } else {
+          setLoading(false); // If details do not exist, stop loading
+        }
+      } catch (error) {
+        console.error("Error checking driver details:", error);
+        setLoading(false); // Stop loading in case of error
+      }
+    };
+
+    checkDriverDetails();
+  }, [navigate]);
 
   const handleAgree = () => {
-    // If the driver agrees, navigate to the next page (e.g., driver dashboard)
-    localStorage.setItem("driverAgreed","true");
+    localStorage.setItem("driverAgreed", "true");
     navigate("/driver-details-upload");
   };
 
   const handleDisagree = () => {
-    // If they disagree, navigate back (e.g., to the login or registration page)
     navigate(-1);
   };
+
+  // Show loading spinner or loading message while fetching details
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="job-details-container">
       <h1>Driver Job Details</h1>
-      
+
       <section className="company-info">
         <h2>Company Overview</h2>
         <p>
