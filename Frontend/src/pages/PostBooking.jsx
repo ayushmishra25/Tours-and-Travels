@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import DashboardNavbar from "../components/DashboardNavbar";
 import axios from "axios";
 
 const BookingConfirmation = () => {
@@ -90,6 +91,9 @@ const BookingConfirmation = () => {
   }
 
   return (
+    <>
+      {/* ← Dashboard navbar */}
+      <DashboardNavbar />
     <div className="confirmation-wrapper">
       <section className="confirmation-left">
         <h1>Booking Confirmed</h1>
@@ -143,6 +147,7 @@ const BookingConfirmation = () => {
         )}
       </section>
     </div>
+    </>
   );
 };
 
