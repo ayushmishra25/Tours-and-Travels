@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 
 const OndemandDriver = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
 
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
@@ -13,15 +14,17 @@ const OndemandDriver = () => {
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const [authError, setAuthError] = useState("");                     // ← auth error
-  const [fieldError, setFieldError] = useState("");  
+  const [authError, setAuthError] = useState("");
+  const [fieldError, setFieldError] = useState("");
 
-  const user = { name: "John Doe", phone: "+91 9876543210" };
+  const user = JSON.parse(localStorage.getItem("user")) || {
+    name: "John Doe",
+    phone: "+91 9876543210",
+  };
 
   const baseFare = 50;
   const perKmRate = 15;
 
-  // Calculate fare dynamically
   const calculateFare = () => {
     const d = parseFloat(distance);
     return isNaN(d) ? 0 : baseFare + d * perKmRate;
@@ -33,9 +36,7 @@ const OndemandDriver = () => {
     }
   }, [pickup, destination, distance]);
 
-
-  const handleBookNow = () => {
-    // 1) Auth check
+  const handleBookNow = async () => {
     if (!token) {
       setAuthError("Please register and login first to book a driver.");
       setFieldError("");
@@ -43,7 +44,6 @@ const OndemandDriver = () => {
     }
     setAuthError("");
 
-    // 2) Field validations
     if (!pickup.trim()) {
       setFieldError("Pickup address is required");
       return;
@@ -66,20 +66,40 @@ const OndemandDriver = () => {
     }
     setFieldError("");
 
-    // 3) Proceed → navigate to PostBooking
-   navigate("/post-booking", {
-    state: {
-      bookingId: Date.now(),               // or your real booking ID
-      bookingType: "On-Demand",
-      tripType: "One Way",                 // or however you choose to name it
-      pickupLocation: pickup,
-      destinationLocation: destination,
-      bookingDatetime: `${date} ${time}`,
-      totalAmount,
-      user: JSON.parse(localStorage.getItem("user")),
-    },
-  });
+    const bookingDatetime = `${date} ${time}:00`;
+    const payload = {
+      booking_type: "On demand", // Ensure this value is accepted by your database
+      trip_type: "one-way", // Ensure this value is accepted by your database
+      source_location: pickup,
+      destination_location: destination,
+      distance: parseFloat(distance),
+      booking_datetime: bookingDatetime,
+      payment: totalAmount,
+    };
 
+    try {
+      const resp = await axios.post("http://localhost:8000/api/booking", payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const { booking } = resp.data;
+
+      navigate("/post-booking", {
+        state: {
+          bookingId: booking.id,
+          pickupLocation: booking.source_location,
+          destinationLocation: booking.destination_location,
+          bookingType: booking.booking_type,
+          tripType: booking.trip_type,
+          bookingDatetime: booking.booking_datetime,
+          totalAmount: booking.payment,
+          user,
+        },
+      });
+    } catch (err) {
+      console.error("Booking error:", err);
+      setAuthError("Booking failed. Please try again.");
+    }
   };
 
   return (
@@ -91,12 +111,12 @@ const OndemandDriver = () => {
           <div className="left-section">
             <label>
               Pickup Address:
-                <input
-                  type="text"
-                  placeholder="Enter Pickup Address"
-                  value={pickup}
-                  onChange={(e) => setPickup(e.target.value)}
-                />
+              <input
+                type="text"
+                placeholder="Enter Pickup Address"
+                value={pickup}
+                onChange={(e) => setPickup(e.target.value)}
+              />
             </label>
             <label>
               Destination Address:
@@ -134,7 +154,7 @@ const OndemandDriver = () => {
               Please note: On-demand services may have surge pricing during peak hours.
               Extra charges for food, accommodation, and night stays may apply.
               Pricing is negotiable.
-              you can cancel the ride before one hour of service, otherwise you need to pay cancellation charges 100rs.
+              You can cancel the ride before one hour of service; otherwise, you need to pay cancellation charges of 100rs.
             </p>
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
@@ -142,8 +162,6 @@ const OndemandDriver = () => {
 
             {authError && <p className="error-message">{authError}</p>}
             {!authError && fieldError && <p className="error-message">{fieldError}</p>}
-
-            
           </div>
         </div>
       </div>

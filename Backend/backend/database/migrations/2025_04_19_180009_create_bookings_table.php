@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('booking_type', ['hourly', 'weekly', 'monthly', '((on_demand']);
+            $table->enum('booking_type', ['Hourly', 'Weekly', 'Monthly', 'On demand']);
             $table->string('trip_type');
             $table->string('source_location');
             $table->string('zone')->nullable();

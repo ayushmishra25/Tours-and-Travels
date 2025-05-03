@@ -58,7 +58,7 @@ const HourlyDriver = () => {
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [authError, setAuthError] = useState("");
-  const user = JSON.parse(localStorage.getItem("user")) || { name: "John Doe", phone: "+91 9876543210" };
+  const user = JSON.parse(localStorage.getItem("user")) ||  "User not authenticated" ;
 
   const calculateFare = () => {
     if (!pickup || !destination) return 0;
@@ -86,7 +86,7 @@ const HourlyDriver = () => {
 
     const payload = {
       user_id: parseInt(localStorage.getItem("userId")),
-      booking_type: "hourly",
+      booking_type: "Hourly",
       trip_type: tripType,
       source_location: pickup,
       destination_location: destination,

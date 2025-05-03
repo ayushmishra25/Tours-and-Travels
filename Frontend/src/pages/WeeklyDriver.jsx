@@ -14,12 +14,10 @@ const WeeklyDriver = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
-
-  const [authError, setAuthError] = useState(""); // ← will hold auth errors
+  const [authError, setAuthError] = useState(""); 
   const [fieldError, setFieldError] = useState("");
 
-  const user = { name: "John Doe", phone: "+91 9876543210" };
-
+  const user = JSON.parse(localStorage.getItem("user")) ||  "User not authenticated" ;
   // Function to extract city from the entered location (manual input)
   const getCityFromAddress = (address) => {
     const lower = address.toLowerCase();
@@ -50,7 +48,6 @@ const WeeklyDriver = () => {
     }
     setAuthError("");
 
-    // 2) Validate each field
     if (!location.trim()) {
       setFieldError("Location is required");
       return;
@@ -78,36 +75,44 @@ const WeeklyDriver = () => {
     // ▶️ All good—prepare the booking data
     const bookingData = {
       user_id: parseInt(localStorage.getItem("userId")),
-      booking_type: "weekly",
+      booking_type: "Weekly",
       trip_type: `${workingDays} days`,
-      source_location: pickupLocation, // Mapping pickupLocation to source_location
+      source_location: pickupLocation,
       destination_location: destinationLocation,
-      hours: workingDays * 8, // Assuming working hours per day is 8
-      working_days: workingDays,
-      working_hours_per_day: 8, // Assuming each day has 8 working hours
+      hours: workingDays * 8,
+      working_days: workingDays, // Send as an array
+      working_hours_per_day: 8,
       payment: totalAmount,
       start_date: date,
       booking_datetime: bookingDatetime,
     };
 
     try {
-      // Send the booking details to the API
       const response = await axios.post("http://localhost:8000/api/booking", bookingData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        
       });
 
-      if (response.status === 200) {
-        // Successfully booked
-        navigate("/post-booking", { state: bookingData });
-      } else {
-        setFieldError("Something went wrong. Please try again.");
-      }
+      const { booking } = response.data;
+      navigate("/post-booking", {
+        state: {
+        bookingId: booking.id,
+        pickupLocation: booking.source_location,
+          bookingType: booking.booking_type,
+          tripType: booking.trip_type,
+          bookingDatetime: booking.booking_datetime,
+          totalAmount: booking.payment,
+          user,
+      },
+    });
     } catch (error) {
       console.error("Error booking driver:", error);
       setFieldError("An error occurred while booking. Please try again.");
     }
+    
+    
 };
 
   return (

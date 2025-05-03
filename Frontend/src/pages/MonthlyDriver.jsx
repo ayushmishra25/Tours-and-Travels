@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 
 // Pricing tables for monthly driver service
@@ -63,12 +64,20 @@ const MonthlyDriver = () => {
   const [date, setDate] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const [authError, setAuthError] = useState("");                     // ← auth error
-  const [fieldError, setFieldError] = useState(""); 
+  const [authError, setAuthError] = useState("");
+  const [fieldError, setFieldError] = useState("");
 
-  const user = { name: "John Doe", phone: "+91 9876543210" };
+  const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
 
-  // Calculate fare based on selected location, working days, and working hours
+  // Replace this with your actual pricing logic
+  const monthlyPricing = {
+    Delhi: {
+      22: { 8: 15000 },
+      26: { 10: 20000 }
+    }
+    // Add more cities and pricing as needed
+  };
+
   const calculateFare = () => {
     if (!location) return 0;
     const pricing = monthlyPricing[location];
@@ -83,8 +92,7 @@ const MonthlyDriver = () => {
     setTotalAmount(fare);
   }, [location, workingDays, workingHours]);
 
-  const handleBookNow = () => {
-    // 1) Must be logged in
+  const handleBookNow = async () => {
     if (!token) {
       setAuthError("Please register and login first to book a driver.");
       setFieldError("");
@@ -92,41 +100,64 @@ const MonthlyDriver = () => {
     }
     setAuthError("");
 
-    // 2) Field validations
-    if (!location) {
-      setFieldError("Location is required");
+    if (!location || !workingDays || !workingHours || !date || !pickupLocation || !destinationLocation) {
+      setFieldError("All fields are required");
       return;
     }
-    if (!workingDays) {
-      setFieldError("Working days is required");
-      return;
-    }
-    if (!workingHours) {
-      setFieldError("Working hours is required");
-      return;
-    }
-    if (!date) {
-      setFieldError("Start date is required");
-      return;
-    }
+
     setFieldError("");
 
-    // 3) Proceed
-    // 3) Proceed: navigate to post-booking confirmation
-   navigate("/post-booking", {
-    state: {
-      bookingId: Date.now(),            // or your real booking ID from API
-      bookingType: "Monthly",
-      tripType: `${workingDays} days / ${workingHours} hrs`,
-      pickupLocation,
-      destinationLocation,
-      bookingDatetime: date,
-      totalAmount,
-      user: JSON.parse(localStorage.getItem("user")),
-    }
- });
+    // ✅ Format booking_datetime correctly as "Y-m-d H:i:s"
+    const now = new Date();
+    const formattedDatetime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
+      now.getDate()
+    ).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(
+      now.getSeconds()
+    ).padStart(2, '0')}`;
 
+    const bookingData = {
+      booking_type: "Monthly",
+      trip_type: "M", 
+      source_location: pickupLocation,
+      destination_location: destinationLocation,
+      hours: null,
+      working_days: parseInt(workingDays),
+      working_hours_per_day: parseInt(workingHours),
+      start_date: date,
+      booking_datetime: formattedDatetime,
+      payment: totalAmount
+    };
+
+    try {
+      const response = await axios.post("http://localhost:8000/api/booking", bookingData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      const { booking } = response.data;
+
+      navigate("/post-booking", {
+        state: {
+          bookingId: booking.id,
+          pickupLocation: booking.source_location,
+          destinationLocation: booking.destination_location,
+          bookingType: booking.booking_type,
+          tripType: booking.trip_type,
+          bookingDatetime: booking.booking_datetime,
+          totalAmount: booking.payment,
+          user
+        }
+      });
+    } catch (error) {
+      console.error("Booking failed:", error.response?.data || error.message);
+      setFieldError("An error occurred while booking. Please try again.");
+    }
   };
+
+  
+
 
   return (
     <>

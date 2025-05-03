@@ -46,7 +46,6 @@ const Login = () => {
       if (response.status === 200 && response.data.token) {
         const { token, user, role, redirect, detailsUploaded } = response.data;
   
-        // Store token and user details
         localStorage.setItem("token", token);
         localStorage.setItem("userId", user.id);
         localStorage.setItem("user", JSON.stringify(user));
@@ -54,20 +53,18 @@ const Login = () => {
   
         const numericRole = parseInt(role, 10);
   
-        // Redirect based on role and driver details status
-        if (numericRole === 1) { // Driver
-          if (detailsUploaded) {
-            navigate("/driverjobdetails"); // Already uploaded, go to dashboard
-          } else {
-            navigate("/driver-upload"); // Not uploaded yet
-          }
-        } else if (numericRole === 2) { // Admin
+        // Log redirect information
+        console.log("Navigating to:", redirect);
+   
+        // Redirect based on role
+        if (numericRole === 1) {
+          navigate("/driverjobdetails");
+        } else if (numericRole === 2) {
           localStorage.setItem("adminToken", token);
           navigate("/admin/dashboard");
-        } else { // Default user
+        } else {
           navigate("/dashboard");
         }
-  
       } else {
         setErrorMsg(response.data.message || "Invalid login credentials.");
       }
