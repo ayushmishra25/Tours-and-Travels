@@ -740,6 +740,7 @@ button.login-btn:hover {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(20,20,20,20.1);
   text-align: center;
+  height: 100px;
 }
 
 .profile-container h2 {
@@ -2116,7 +2117,7 @@ fieldset.account-details legend {
   align-items: center;
   gap: 2rem;
   background: #f5f7fa;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 40vh);
 }
 
 .profile-card {
@@ -2127,21 +2128,6 @@ fieldset.account-details legend {
   overflow: hidden;
   width: 100%;
   max-width: 800px;
-}
-
-.avatar-section {
-  flex: 0 0 200px;
-  background: #e8f0fe;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .info-section {
@@ -2164,6 +2150,11 @@ fieldset.account-details legend {
   gap: 2rem;
   width: 100%;
   max-width: 800px;
+  justify-content: center;
+  align-items: center;
+  /* gap: 2rem;  remove or keep as you like */
+  width: 100%;
+  max-width: 800px;
 }
 
 .stat-item {
@@ -2184,6 +2175,20 @@ fieldset.account-details legend {
 .stat-item p {
   margin: 0.5rem 0 0;
   color: #555;
+}
+
+.stats-card button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.stats-card button:hover {
+  background-color: #0056b3;
 }
 
 /* Responsive */
