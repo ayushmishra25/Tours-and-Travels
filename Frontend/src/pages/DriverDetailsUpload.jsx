@@ -61,6 +61,7 @@ const DriverDetailsUpload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+    const token = localStorage.getItem("token"); 
     if (!token) {
       alert("Please register and login first.");
       return;
