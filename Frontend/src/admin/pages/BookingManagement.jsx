@@ -1,10 +1,10 @@
-// src/admin/pages/BookingManagement.jsx
 import React, { useState, useEffect } from "react";
 
 const BookingManagement = () => {
   const [bookings, setBookings] = useState([]);
   const [assignForms, setAssignForms] = useState({});
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -14,10 +14,15 @@ const BookingManagement = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+
+        if (!response.ok) throw new Error("Failed to fetch bookings");
+
         const data = await response.json();
-        setBookings(data.bookings);
+        setBookings(data.bookings || []);
       } catch (err) {
         console.error("Error fetching bookings:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -25,24 +30,51 @@ const BookingManagement = () => {
   }, []);
 
   const todayDate = new Date().toISOString().split("T")[0];
-  const todays = bookings.filter((b) => b.date === todayDate);
-  const earlier = bookings.filter((b) => b.date < todayDate);
+
+  const todays = bookings.filter((b) => {
+    const createdAt = b.created_at || b.date;
+    const createdAtDate = new Date(createdAt).toISOString().split("T")[0];
+    return createdAtDate === todayDate;
+  });
+
+  const earlier = bookings.filter((b) => {
+    const createdAt = b.created_at || b.date;
+    const createdAtDate = new Date(createdAt).toISOString().split("T")[0];
+    return createdAtDate < todayDate;
+  });
 
   const toggleAssignForm = (id) => {
-    setAssignForms((prev) => ({ ...prev, [id]: !prev[id] }));
-    setFormData((prev) => ({ ...prev, [id]: { name: "", contact: "", location: "" } }));
+    setAssignForms((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+    setFormData((prev) => ({
+      ...prev,
+      [id]: { name: "", contact: "", location: "" },
+    }));
   };
 
   const handleInputChange = (id, e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: { ...prev[id], [name]: value } }));
+    setFormData((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [name]: value,
+      },
+    }));
   };
 
   const submitAssign = async (id) => {
     const data = formData[id];
 
+    if (!data.name || !data.contact || !data.location) {
+      alert("Please fill all fields before submitting.");
+      return;
+    }
+
     try {
-      await fetch(`http://localhost:8000/api/bookings/${id}/assign-driver`, {
+      const response = await fetch(`http://localhost:8000/api/bookings/${id}/assign-driver`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,6 +86,8 @@ const BookingManagement = () => {
           driver_location: data.location,
         }),
       });
+
+      if (!response.ok) throw new Error("Failed to assign driver");
 
       alert(`Driver assigned: ${data.name}`);
       setBookings((prev) =>

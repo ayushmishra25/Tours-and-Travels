@@ -12,7 +12,6 @@ const BookingConfirmation = () => {
     tripType,
     bookingDatetime,
     totalAmount,
-    user,
   } = state || {};
 
   // Grab token for authenticated requests
@@ -50,7 +49,7 @@ const BookingConfirmation = () => {
       } catch (err) {
         console.error("Error fetching booking details:", err);
       }
-      return false;     // continue polling
+      return false; 
     };
 
     // Poll every 3 seconds
