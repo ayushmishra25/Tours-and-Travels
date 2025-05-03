@@ -54,6 +54,7 @@ class BookingController extends Controller
                 'to' => $booking->destination_location,
                 'driver' => $booking->driver_name ?? null,
                 'driverContact' => $booking->driver_contact ?? null,
+                'created_at' => $booking->created_at->toDateTimeString(),
             ];
         });
 
