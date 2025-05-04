@@ -19,7 +19,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'http://localhost:5173',   // Local development frontend
+        'http://65.0.163.37:5173', // Your remote frontend origin
+    ],
 
     'allowed_origins_patterns' => [],
 
