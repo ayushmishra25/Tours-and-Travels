@@ -51,7 +51,6 @@ const Profile = () => {
       <p><strong>Email:</strong> {userData.email}</p>
       <p><strong>Phone:</strong> {userData.phone}</p>
       <p><strong>Location:</strong> {userData.location}</p>
-      <button>Edit Profile</button>
     </div>
   );
 };

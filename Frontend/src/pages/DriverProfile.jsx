@@ -56,10 +56,6 @@ const DriverProfile = () => {
             <p><strong>Joined:</strong> {user.created_at }</p>
           </div>
         </div>
-
-        <div className="stats-card">
-          <button>Edit Profile</button>
-        </div>
       </div>
     </>
   );
