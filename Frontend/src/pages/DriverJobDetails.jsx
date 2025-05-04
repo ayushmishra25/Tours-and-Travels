@@ -18,9 +18,12 @@ const DriverJobDetails = () => {
       return;
     }
 
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+
     const checkDriverDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/drivers/${driverId}/details`, {
+        const response = await axios.get(`{baseURL}/api/drivers/${driverId}/details`, {
           headers: {
             "Authorization": `Bearer ${token}`, // Pass the token in the header
           },

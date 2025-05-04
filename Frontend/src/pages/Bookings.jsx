@@ -15,7 +15,9 @@ const Bookings = () => {
           return;
         }
 
-        const response = await axios.get(`http://localhost:8000/api/booking/${userId}`, {
+        const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+        const response = await axios.get(`${baseURL}/api/booking/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

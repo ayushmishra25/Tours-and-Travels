@@ -31,8 +31,10 @@ const Login = () => {
     e.preventDefault();
     if (!validateForm()) return;
   
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  
     try {
-      const response = await axios.post("http://localhost:8000/api/login", {
+      const response = await axios.post(`${baseURL}/api/login`, {
         email,
         password,
       }, {
@@ -55,7 +57,7 @@ const Login = () => {
   
         // Log redirect information
         console.log("Navigating to:", redirect);
-   
+  
         // Redirect based on role
         if (numericRole === 1) {
           navigate("/driverjobdetails");
@@ -75,6 +77,7 @@ const Login = () => {
       );
     }
   };
+  
   
   
   

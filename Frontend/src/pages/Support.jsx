@@ -19,10 +19,13 @@ const Support = () => {
       return;
     }
   
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  
     try {
       const token = localStorage.getItem('token');
+      console.log("Sending request...");
       const response = await axios.post(
-        'http://localhost:8000/api/support',
+        `${baseURL}/api/support`,
         { subject, message },
         {
           headers: {
@@ -32,13 +35,14 @@ const Support = () => {
         }
       );
   
-      if (response.status === 200) {
+      console.log("Response:", response);  // Check if the response is as expected
+      if (response.status === 201) {
         setFeedback('Your request has been submitted. Our support team will contact you soon.');
         setSubject('');
         setMessage('');
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error:", err);
       setError('Something went wrong. Please try again later.');
     }
   };
@@ -61,6 +65,7 @@ const Support = () => {
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Brief summary"
+              required
             />
           </div>
           <div className="form-group">
@@ -71,6 +76,7 @@ const Support = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Describe your issue in detail"
+              required
             />
           </div>
           <button type="submit" className="submit-btn">Send Request</button>

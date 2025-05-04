@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const token = localStorage.getItem("token");
 import axios from "axios";
 
 const DriverDetailsUpload = () => {
   const navigate = useNavigate();
-  
-  // Form state for text/number inputs
+
   const [formData, setFormData] = useState({
     education: "",
     age: "",
@@ -21,8 +19,7 @@ const DriverDetailsUpload = () => {
     ifsc: "",
     accountHolderName: ""
   });
-  
-  // File state for uploads
+
   const [files, setFiles] = useState({
     photo: null,
     licenseFront: null,
@@ -32,12 +29,8 @@ const DriverDetailsUpload = () => {
     passbook: null,
     policeDoc: null // police verification document
   });
-  
-  // Police verification state
-  const [policeVerified, setPoliceVerified] = useState("");
 
-  // Error state for validation
-  const [fieldError, setFieldError] = useState("");
+  const [policeVerified, setPoliceVerified] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +40,7 @@ const DriverDetailsUpload = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-  
+
   const handleFileChange = (e) => {
     const { name } = e.target;
     const file = e.target.files[0];
@@ -57,11 +50,10 @@ const DriverDetailsUpload = () => {
     }));
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const token = localStorage.getItem("token"); 
+
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("Please register and login first.");
       return;
@@ -69,7 +61,7 @@ const DriverDetailsUpload = () => {
 
     // Create a FormData object
     const formDataToSend = new FormData();
-  
+
     // Append all text fields
     formDataToSend.append("education", formData.education);
     formDataToSend.append("age", formData.age);
@@ -83,7 +75,7 @@ const DriverDetailsUpload = () => {
     formDataToSend.append("bank_name", formData.bankName);
     formDataToSend.append("ifsc_code", formData.ifsc);
     formDataToSend.append("account_holder_name", formData.accountHolderName);
-  
+
     if (files.photo) formDataToSend.append("photo", files.photo);
     if (files.licenseFront) formDataToSend.append("driving_licence_front", files.licenseFront);
     if (files.licenseBack) formDataToSend.append("driving_licence_back", files.licenseBack);
@@ -91,18 +83,24 @@ const DriverDetailsUpload = () => {
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
 
+    if (policeVerified === "yes" && files.policeDoc) {
+      formDataToSend.append("police_verification_doc", files.policeDoc);
+    }
+
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/driver-details",
+        `${baseURL}/api/driver-details`,
         formDataToSend,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data", // important
-          },
+            "Content-Type": "multipart/form-data"
+          }
         }
       );
-  
+
       alert("Driver details submitted successfully!");
       console.log("Response from API:", response.data);
       localStorage.setItem("driverUploaded", "true");
@@ -112,7 +110,7 @@ const DriverDetailsUpload = () => {
       alert("Failed to submit. Please check the form and try again.");
     }
   };
-  
+
 
   return (
     <div className="driver-details-container">
