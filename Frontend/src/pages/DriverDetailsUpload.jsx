@@ -93,7 +93,7 @@ const DriverDetailsUpload = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/driver-details",
+        "http://65.0.163.37:8000/api/driver-details",
         formDataToSend,
         {
           headers: {

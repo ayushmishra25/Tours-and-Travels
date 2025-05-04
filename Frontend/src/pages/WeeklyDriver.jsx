@@ -88,7 +88,7 @@ const WeeklyDriver = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/api/booking", bookingData, {
+      const response = await axios.post("http://65.0.163.37:8000/api/booking", bookingData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -18,7 +18,7 @@ const DriverProfile = () => {
 
     const fetchProfileData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/profile/${driverId}`, {
+        const response = await axios.get(`http://65.0.163.37:8000/api/profile/${driverId}`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Pass the token in the Authorization header
           },

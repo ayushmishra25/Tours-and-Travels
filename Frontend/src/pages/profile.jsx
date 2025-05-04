@@ -11,7 +11,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/profile/${userId}`, {
+        const response = await axios.get(`http://65.0.163.37:8000/api/profile/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
