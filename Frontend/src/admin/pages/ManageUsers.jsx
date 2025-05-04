@@ -7,10 +7,12 @@ const ManageUsers = () => {
   const [loading, setLoading] = useState(true); // optional loading state
   const [error, setError] = useState(null); // optional error handling
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/listUsers", {
+        const response = await axios.get(`${baseURL}/api/listUsers`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}` // if the route is protected
           }

@@ -6,10 +6,12 @@ const ManageDrivers = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/listUsers?role=1", {
+        const response = await axios.get(`${baseURL}/api/listUsers?role=1`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

@@ -127,7 +127,7 @@ const TermsAndConditions = () => {
         </p>
       </section>
 
-      <p className="last-updated">Last updated: March 2025</p>
+      <p className="last-updated">Last updated: May 2025</p>
     </div>
   );
 };

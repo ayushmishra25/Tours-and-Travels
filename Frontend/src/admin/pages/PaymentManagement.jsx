@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/bookings", {
+        const response = await fetch(`${baseURL}/api/bookings`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
