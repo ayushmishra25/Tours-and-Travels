@@ -31,7 +31,7 @@ const BookingConfirmation = () => {
     const pollDriver = async () => {
       try {
         const resp = await axios.get(
-          `http://65.0.163.37:8000/api/booking/${bookingId}`,
+          `http://localhost:8000/api/booking/${bookingId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("pollDriver response:", resp.data);

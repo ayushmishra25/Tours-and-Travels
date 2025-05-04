@@ -15,28 +15,19 @@ const Bookings = () => {
           return;
         }
 
-        const response = await axios.get(`http://65.0.163.37:8000/api/booking/${userId}`, {
+        const response = await axios.get(`http://localhost:8000/api/booking/${userId}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         });
 
-        console.log("Raw API response:", response.data);
+        console.log("Bookings API Response:", response.data);
 
-        // Since the response is a single booking object, access it directly
-        const data = response.data.booking;
-
-        // If the booking object exists, wrap it in an array
-        if (data) {
-          setBookings([data]);
-        } else {
-          console.warn("Unexpected API format or no booking found");
-          setBookings([]);
-        }
-
+        // Safely set bookings, fallback to empty array if undefined
+        setBookings(response.data.bookings || []);
       } catch (error) {
         console.error("Error fetching bookings:", error);
-        setBookings([]);
+        setBookings([]); // fallback on error
       }
     };
 
@@ -47,10 +38,10 @@ const Bookings = () => {
     <div className="bookings-container">
       <h2>My Bookings</h2>
       <ul>
-        {bookings.length > 0 ? (
-          bookings.map((booking, index) => (
-            <li key={booking.id || index}>
-              <strong>{booking.booking_type}</strong> — From <strong>{booking.source_location}</strong> to <strong>{booking.destination_location}</strong> — <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
+        {Array.isArray(bookings) && bookings.length > 0 ? (
+          bookings.map((booking) => (
+            <li key={booking.id}>
+              {booking.type.charAt(0).toUpperCase() + booking.type.slice(1)} Driver - {booking.details}
             </li>
           ))
         ) : (

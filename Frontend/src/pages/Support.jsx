@@ -22,7 +22,7 @@ const Support = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://65.0.163.37:8000/api/support',
+        'http://localhost:8000/api/support',
         { subject, message },
         {
           headers: {

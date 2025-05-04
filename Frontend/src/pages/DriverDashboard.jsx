@@ -17,7 +17,7 @@ const DriverDashboard = () => {
     Accept: "application/json",
     "Content-Type": "application/json"
   };
-  const BASE_URL = "http://65.0.163.37:8000/api";
+  const BASE_URL = "http://localhost:8000/api";
 
   useEffect(() => {
     const fetchDashboardData = async () => {

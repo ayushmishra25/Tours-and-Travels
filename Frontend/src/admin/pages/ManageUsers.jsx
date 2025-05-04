@@ -10,7 +10,7 @@ const ManageUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://65.0.163.37:8000/api/listUsers", {
+        const response = await axios.get("http://localhost:8000/api/listUsers", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}` // if the route is protected
           }

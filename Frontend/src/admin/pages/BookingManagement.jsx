@@ -9,7 +9,7 @@ const BookingManagement = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch("http://65.0.163.37:8000/api/bookings", {
+        const response = await fetch("http://localhost:8000/api/bookings", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

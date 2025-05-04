@@ -11,7 +11,7 @@ const DriverRides = () => {
     const fetchRides = async () => {
       try {
         const resp = await axios.get(
-          "http://65.0.163.37:8000/api/driver/rides",
+          "http://localhost:8000/api/driver/rides",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setRides(resp.data.rides || []);

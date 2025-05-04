@@ -9,7 +9,7 @@ const ManageDrivers = () => {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await axios.get("http://65.0.163.37:8000/api/listUsers?role=1", {
+        const response = await axios.get("http://localhost:8000/api/listUsers?role=1", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

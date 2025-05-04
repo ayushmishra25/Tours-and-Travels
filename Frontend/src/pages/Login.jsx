@@ -32,7 +32,7 @@ const Login = () => {
     if (!validateForm()) return;
   
     try {
-      const response = await axios.post("http://65.0.163.37:8000/api/login", {
+      const response = await axios.post("http://localhost:8000/api/login", {
         email,
         password,
       }, {
