@@ -91,9 +91,11 @@ const DriverDetailsUpload = () => {
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
 
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/driver-details",
+        `${baseURL}/api/driver-details`,
         formDataToSend,
         {
           headers: {

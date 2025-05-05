@@ -7,13 +7,14 @@ const DriverRides = () => {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   useEffect(() => {
     const fetchRides = async () => {
       try {
-        const resp = await axios.get(
-          "http://localhost:8000/api/driver/rides",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const resp = await axios.get(`${baseURL}/api/driver/rides`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setRides(resp.data.rides || []);
       } catch (err) {
         console.error("Error fetching rides:", err);

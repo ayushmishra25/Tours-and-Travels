@@ -17,7 +17,7 @@ const DriverDashboard = () => {
     Accept: "application/json",
     "Content-Type": "application/json"
   };
-  const BASE_URL = "http://localhost:8000/api";
+  const BASE_URL =import.meta.env.VITE_REACT_APP_BASE_URL ;
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -28,7 +28,7 @@ const DriverDashboard = () => {
       }
 
       try {
-        const slotsRes = await axios.get(`${BASE_URL}/drivers/${driverId}/slots`, { headers });
+        const slotsRes = await axios.get(`${BASE_URL}/api/drivers/${driverId}/slots`, { headers });
         setTimeSlots(slotsRes.data);
       } catch (error) {
         console.error("Error loading dashboard data:", error);
@@ -44,7 +44,7 @@ const DriverDashboard = () => {
   const toggleAvailability = async () => {
     try {
       const res = await axios.post(
-        `${BASE_URL}/drivers/${driverId}/toggle-availability`,
+        `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
         {},
         { headers }
       );
@@ -64,7 +64,7 @@ const DriverDashboard = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${BASE_URL}/drivers/${driverId}/add-slot`,
+        `${BASE_URL}/api/drivers/${driverId}/add-slot`,
         newSlot,
         { headers }
       );

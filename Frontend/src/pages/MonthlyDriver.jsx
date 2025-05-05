@@ -127,9 +127,11 @@ const MonthlyDriver = () => {
       booking_datetime: formattedDatetime,
       payment: totalAmount
     };
+     
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
-      const response = await axios.post("http://localhost:8000/api/booking", bookingData, {
+      const response = await axios.post(`${baseURL}/api/booking`, bookingData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"

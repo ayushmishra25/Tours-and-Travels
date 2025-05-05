@@ -14,8 +14,9 @@ const Bookings = () => {
           console.error("Token or User ID not found in localStorage");
           return;
         }
+        const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-        const response = await axios.get(`http://localhost:8000/api/booking/${userId}`, {
+        const response = await axios.get(`${baseURL}/api/booking/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

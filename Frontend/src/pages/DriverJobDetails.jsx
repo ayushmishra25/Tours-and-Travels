@@ -18,9 +18,11 @@ const DriverJobDetails = () => {
       return;
     }
 
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
     const checkDriverDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/drivers/${driverId}/details`, {
+        const response = await axios.get(`${baseURL}/api/drivers/${driverId}/details`, {
           headers: {
             "Authorization": `Bearer ${token}`, // Pass the token in the header
           },
@@ -35,6 +37,7 @@ const DriverJobDetails = () => {
       } catch (error) {
         console.error("Error checking driver details:", error);
         setLoading(false); // Stop loading in case of error
+        setErrorMsg("Failed to load driver details. Please try again later."); // Display error
       }
     };
 

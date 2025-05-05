@@ -30,9 +30,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   
     try {
-      const response = await axios.post("http://localhost:8000/api/login", {
+      const response = await axios.post(`${baseURL}/api/login`, {
         email,
         password,
       }, {
