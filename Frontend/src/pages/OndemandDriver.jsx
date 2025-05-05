@@ -18,8 +18,7 @@ const OndemandDriver = () => {
   const [fieldError, setFieldError] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user")) || {
-    name: "John Doe",
-    phone: "+91 9876543210",
+    message: "User not authenticated!"
   };
 
   const baseFare = 50;
