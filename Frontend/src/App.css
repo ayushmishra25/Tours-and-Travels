@@ -2505,3 +2505,119 @@ fieldset.account-details legend {
     padding: 1.5rem;
   }
 }
+
+/* About.css */
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.page-content {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 40px;
+}
+
+.about h2,
+.about h3 {
+  color: #333333;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.about p {
+  color: #555555;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.about ul {
+  list-style: none;
+  margin: 0 0 24px 0;
+  padding: 0;
+}
+
+.about ul > li {
+  margin-bottom: 16px;
+}
+
+.about ul > li > strong {
+  display: block;
+  color: #222222;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.about ul ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.about ul ul li {
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.about ul ul li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #007ACC;
+}
+
+.price-note {
+  margin-top: 32px;
+  font-size: 0.9rem;
+  color: #777777;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px 10px;
+  }
+
+  .page-content {
+    padding: 20px;
+  }
+
+  .about h2 {
+    font-size: 1.6rem;
+  }
+
+  .about h3 {
+    font-size: 1.3rem;
+  }
+
+  .about p,
+  .about ul ul li {
+    font-size: 0.95rem;
+  }
+
+  .about ul > li > strong {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-content {
+    padding: 16px;
+  }
+
+  .about h2 {
+    font-size: 1.4rem;
+  }
+
+  .about h3 {
+    font-size: 1.1rem;
+  }
+
+  .about p,
+  .about ul ul li {
+    font-size: 0.9rem;
+  }
+}

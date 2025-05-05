@@ -29,16 +29,6 @@ function About() {
               <ul>
                 <li><em>Maid Services</em> — Daily, part-time, or full-time household cleaning.</li>
                 <li><em>Cook Services</em> — In-home cooks for daily meals, special occasions, or weekly meal-prep.</li>
-                <li><em>Caregivers & Babysitters</em> — Background-verified professionals you can trust.</li>
-              </ul>
-            </li>
-
-            <li>
-              <strong>Tour & Travel</strong>  
-              <ul>
-                <li><em>Local Sightseeing</em> — Curated day-trips in and around your city with English-speaking guides.</li>
-                <li><em>Outstation Packages</em> — Multi-day itineraries including driver, vehicle, and accommodations.</li>
-                <li><em>Customized Adventures</em> — Tailor-made holiday plans for families, couples, or solo travelers.</li>
               </ul>
             </li>
 
