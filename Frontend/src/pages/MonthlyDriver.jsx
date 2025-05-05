@@ -70,13 +70,7 @@ const MonthlyDriver = () => {
   const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
 
   // Replace this with your actual pricing logic
-  const monthlyPricing = {
-    Delhi: {
-      22: { 8: 15000 },
-      26: { 10: 20000 }
-    }
-    // Add more cities and pricing as needed
-  };
+  
 
   const calculateFare = () => {
     if (!location) return 0;
