@@ -79,13 +79,12 @@ class BookingController extends Controller
     }
 
 
-    public function show($id)
+    public function show($user_id)
     {
-        $booking = Booking::findOrFail($id);
-        return response()->json(['booking' => $booking]);
+        $bookings = Booking::where('user_id', $user_id)->get();
+
+        return response()->json(['bookings' => $bookings]);
     }
-
-
 
     // my rides page details
     public function getRidesForDriver()

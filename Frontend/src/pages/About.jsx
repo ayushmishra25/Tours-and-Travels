@@ -24,7 +24,7 @@ function About() {
             </li>
 
             <li>
-            <h3>UpComing Services</h3>
+            <h3>Upcoming Services</h3>
               <strong>Home Help</strong>  
               <ul>
                 <li><em>Maid Services</em> — Daily, part-time, or full-time household cleaning.</li>

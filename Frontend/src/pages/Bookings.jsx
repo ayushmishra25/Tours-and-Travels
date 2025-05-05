@@ -14,9 +14,11 @@ const Bookings = () => {
           console.error("Token or User ID not found in localStorage");
           return;
         }
+
+        // Base URL should end without slash, unless you ensure it in env file
         const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-        const response = await axios.get(`${baseURL}/api/booking/${userId}`, {
+        const response = await axios.get(`${baseURL}/api/bookings/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -24,14 +26,13 @@ const Bookings = () => {
 
         console.log("Raw API response:", response.data);
 
-        // Since the response is a single booking object, access it directly
-        const data = response.data.booking;
+        // Laravel returns: { bookings: [...] }
+        const data = response.data.bookings;
 
-        // If the booking object exists, wrap it in an array
-        if (data) {
-          setBookings([data]);
+        if (Array.isArray(data)) {
+          setBookings(data);
         } else {
-          console.warn("Unexpected API format or no booking found");
+          console.warn("Unexpected API format");
           setBookings([]);
         }
 
