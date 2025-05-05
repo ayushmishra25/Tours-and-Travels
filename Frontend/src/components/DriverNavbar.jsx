@@ -11,11 +11,13 @@ const DriverNavbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:8000/api/logout',
+        `${baseURL}/api/logout`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

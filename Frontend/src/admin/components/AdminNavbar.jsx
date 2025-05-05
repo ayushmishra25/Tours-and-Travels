@@ -11,11 +11,13 @@ const AdminNavbar = () => {
     setIsOpen(prev => !prev);
   };
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   const handleLogout = async () => {
     const token = localStorage.getItem("adminToken");
     try {
       await axios.post(
-        "http://localhost:8000/api/logout",
+        `${baseURL}/api/logout`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

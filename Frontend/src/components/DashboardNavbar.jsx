@@ -9,12 +9,14 @@ const DashboardNavbar = () => {
   const isLoggedIn = Boolean(localStorage.getItem("token"));
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   // ✅ Dynamic logout
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        "http://localhost:8000/api/logout",
+        `${baseURL}/api/logout`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
