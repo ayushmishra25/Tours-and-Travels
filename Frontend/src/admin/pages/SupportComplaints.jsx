@@ -10,11 +10,13 @@ const SupportComplaints = () => {
   // Optional: include auth if required
   const token = localStorage.getItem("token");
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/support",
+          `${baseURL}/api/support`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : undefined,

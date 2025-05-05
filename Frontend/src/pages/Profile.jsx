@@ -8,10 +8,12 @@ const Profile = () => {
   const userId = localStorage.getItem("userId"); // From login
   const token = localStorage.getItem("token");   // Auth token
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/profile/${userId}`, {
+        const response = await axios.get(`${baseURL}/api/profile/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",

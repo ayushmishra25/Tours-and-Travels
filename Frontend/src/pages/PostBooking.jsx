@@ -27,11 +27,13 @@ const BookingConfirmation = () => {
       return;
     }
 
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
     // Helper: fetch booking and check for driver fields
     const pollDriver = async () => {
       try {
         const resp = await axios.get(
-          `http://localhost:8000/api/booking/${bookingId}`,
+          `${baseURL}/api/booking/${bookingId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("pollDriver response:", resp.data);
