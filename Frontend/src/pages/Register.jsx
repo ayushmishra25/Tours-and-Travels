@@ -72,7 +72,7 @@ function Register() {
 
     if (validateForm()) {
       try {
-        const response = await axios.post("http://localhost:8000/api/register", {
+        const response = await axios.post("http://65.0.163.37:8000/api/register", {
           name: formData.userName,
           email: formData.userEmail,
           phone: formData.userContact,
