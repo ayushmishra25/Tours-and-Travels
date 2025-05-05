@@ -15,12 +15,12 @@ function Services() {
         <h2>Book Now Pay Later</h2>
         <div className="service-cards">
           <div className="service-card" onClick={handleDriverServiceClick} style={{ cursor: 'pointer' }}>
-            <img src="/taxi_image.jpg" alt="Driver Services" />
+            <img src="taxi_image.jpg" alt="Driver Services" />
             <h2>Driver Services</h2>
             <p>Hire professional drivers on a weekly, hourly, monthly, or daily basis.</p>
           </div>
           <div className="service-card">
-            <img src="/cook_image.jpg" alt="Maid Services" />
+            <img src="cook_image.jpg" alt="Maid Services" />
             <h2>Maid & Cook Services</h2>
             <h3>Coming Soon...</h3>
             <p>Find trusted maids and cooks to assist with household chores and meals.</p>
