@@ -77,8 +77,10 @@ const OndemandDriver = () => {
       payment: totalAmount,
     };
 
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
     try {
-      const resp = await axios.post("http://localhost:8000/api/booking", payload, {
+      const resp = await axios.post(`${baseURL}/api/booking`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

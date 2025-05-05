@@ -18,11 +18,13 @@ const Support = () => {
       setFeedback('Both subject and message are required.');
       return;
     }
+
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:8000/api/support',
+        `${baseURL}/api/support`,
         { subject, message },
         {
           headers: {
