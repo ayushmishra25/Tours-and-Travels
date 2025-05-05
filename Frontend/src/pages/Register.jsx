@@ -70,9 +70,11 @@ function Register() {
     setApiError("");
     setSuccessMessage("");
 
+    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
     if (validateForm()) {
       try {
-        const response = await axios.post("http://65.0.163.37:8000/api/register", {
+        const response = await axios.post(`${baseURL}/api/register`, {
           name: formData.userName,
           email: formData.userEmail,
           phone: formData.userContact,
