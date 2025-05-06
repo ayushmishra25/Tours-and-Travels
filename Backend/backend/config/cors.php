@@ -7,10 +7,12 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-    'http://65.0.163.37',
-    'http://65.0.163.37:4173',
-    'http://localhost:5173'
-],
+        'http://65.0.163.37',
+        'http://65.0.163.37:4173',
+        'http://localhost:5173',
+        'https://sahyogforce.com',
+        'http://sahyogforce.com'
+    ],
 
     'allowed_origins_patterns' => [],
 
