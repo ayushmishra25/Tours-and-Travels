@@ -7,25 +7,17 @@ const AdminDashboard = () => {
       <section className="dashboard-section">
         <h2>Quick Links</h2>
         <div className="cards-grid">
-          <a href="/admin/manage-drivers" className="card">
+          <a href="/admin/drivers" className="card">
             <h3>Manage Drivers</h3>
             <p>Add, edit or deactivate driver profiles.</p>
           </a>
-          <a href="/admin/manage-users" className="card">
+          <a href="/admin/users" className="card">
             <h3>Manage Users</h3>
             <p>View or ban passenger accounts.</p>
           </a>
-          <a href="/admin/settings" className="card">
-            <h3>Platform Settings</h3>
-            <p>Configure pricing, zones, notifications.</p>
-          </a>
-          <a href="/admin/support-tickets" className="card">
+          <a href="/admin/support-complaints" className="card">
             <h3>Support Tickets</h3>
             <p>Review and resolve incoming issues.</p>
-          </a>
-          <a href="/admin/documentation" className="card">
-            <h3>Documentation</h3>
-            <p>Read API docs, user guides and policies.</p>
           </a>
         </div>
       </section>
