@@ -14,12 +14,12 @@ function Footer() {
         <div className="footer-section">
           <h2>Follow Us</h2>
           <div className="social-links">
-              <a href="https://www.facebook.com/share/196oNQ1qkF/"  target="_blank" rel="noopener noreferrer"> <img src="facebook.jpg" alt="Facebook" /></a>
-              <a href="https://twitter.com/YourHandle" target="_blank" rel="noopener noreferrer" > <img src="twitter.jpg" alt="Twitter" /></a>
+              <a href="https://www.facebook.com/profile.php?id=61575965612981"  target="_blank" rel="noopener noreferrer"> <img src="facebook.jpg" alt="Facebook" /></a>
+              <a href="https://x.com/sahyogforce" target="_blank" rel="noopener noreferrer" > <img src="twitter.jpg" alt="Twitter" /></a>
               <a href="https://www.instagram.com/sahyogforce?igsh=cjY2bzQ3MzA0ZTI1"  target="_blank"  rel="noopener noreferrer" > <img src="instagram.jpg" alt="Instagram" /></a>
           </div>
-          <p> contact@sahyogforce.com</p>
-          <p> support@sahyogforce.com</p>
+          <p><a href="mailto:contact@sahyogforce.com">contact@sahyogforce.com</a></p>
+          <p><a href="mailto:support@sahyogforce.com">support@sahyogforce.com</a></p>
         </div>
       </div>
       <div className="footer-bottom">
