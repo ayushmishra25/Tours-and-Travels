@@ -304,6 +304,7 @@ input:focus, textarea:focus, select:focus {
 
 .footer-section p {
   font-size: 14px;
+  color: white;
 }
 
 .social-links img {
