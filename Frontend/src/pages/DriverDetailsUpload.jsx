@@ -162,6 +162,7 @@ const DriverDetailsUpload = () => {
             <option value="manual">Manual</option>
             <option value="automatic">Automatic</option>
             <option value="luxury">Luxury</option>
+            <option value="All of the above">All of the above</option>
           </select>
         </div>
         

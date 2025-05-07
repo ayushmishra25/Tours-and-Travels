@@ -82,7 +82,7 @@ const DriverJobDetails = () => {
           <li><strong>On-Demand Bookings</strong>: Round trips for 1 to 12 hours or one-way trips of 1 to 80 KM.</li>
         </ul>
         <p>
-          The company commission on local and outstation bookings ranges from 20% to 10% (applied on the remaining bill after GST deduction). Overtime is also charged, and a night charge of Rs 200 is applied for driving at night.
+          The company commission on local and outstation bookings is 15% commission + 5% GST . Overtime is also charged, and a night charge of Rs 300 is applied for driving at night.
         </p>
       </section>
 
