@@ -30,7 +30,7 @@ const DriverDetailsUpload = () => {
     aadharFront: null,
     aadharBack: null,
     passbook: null,
-    policeDoc: null // police verification document
+    policeDoc: null 
   });
   
   // Police verification state
@@ -90,6 +90,8 @@ const DriverDetailsUpload = () => {
     if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
+    if (files.passbook) formDataToSend.append("police_doc", files.policeDoc);
+
 
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -216,7 +218,7 @@ const DriverDetailsUpload = () => {
     <input
       type="file"
       name="policeDoc"
-      accept="application/pdf,image/*"
+      accept="image/*"
       onChange={handleFileChange}
       required
     />

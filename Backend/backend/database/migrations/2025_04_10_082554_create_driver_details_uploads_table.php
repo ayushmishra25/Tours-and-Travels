@@ -24,6 +24,7 @@ return new class extends Migration
         $table->string('car_driving_experience');
         $table->string('driving_licence_front')->nullable();
         $table->string('driving_licence_back')->nullable();
+        $table->string('police_doc')->nullable();
         $table->string('type_of_driving_licence');
         $table->string('aadhar_card_front')->nullable();
         $table->string('aadhar_card_back')->nullable();
