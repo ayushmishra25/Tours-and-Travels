@@ -7,8 +7,8 @@ function Footer() {
       <div className="footer-container">
         <div className="footer-section">
           <h2>Contact Us</h2>
-          <p>No.25 block b EXTN Bhagwati garden, near by dwarka</p>
-          <p>mod metro station, uttam Nagar, New Delhi-110059</p>
+          <p>No.25 block b EXTN, near by dwarka mod metro station,</p>
+          <p>uttam Nagar, New Delhi-110059</p>
           <p>Phone: +91 9220922268</p>
         </div>
         <div className="footer-section">
