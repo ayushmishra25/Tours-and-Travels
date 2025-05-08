@@ -96,7 +96,7 @@ const DriverDetailsUpload = () => {
     if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
-    if (files.passbook) formDataToSend.append("police_doc", files.policeDoc);
+    if (files.policeDoc) formDataToSend.append("police_doc", files.policeDoc);
 
 
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
