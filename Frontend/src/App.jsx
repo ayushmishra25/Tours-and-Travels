@@ -60,12 +60,7 @@ const MainContent = () => {
         <Route path="/register" element={<Register />} />
 
         {/* Login only after registration */}
-        <Route
-          path="/login"
-          element={
-              <Login />
-          }
-        />
+        <Route path="/login" element={ <ProtectedRoute step="login"> <Login /></ProtectedRoute>} />
 
         {/* User dashboard (you can wrap similarly if needed) */}
         <Route path="/dashboard/*" element={<UserDashboard />} />
@@ -79,51 +74,37 @@ const MainContent = () => {
         <Route path="/ondemand-driver" element={<OndemandDriver />} />
 
         {/* Driver-only flow */}
-        <Route
-          path="/driverjobdetails"
-          element={
-              <DriverJobDetails />
-          }
-        />
+        <Route path="/driverjobdetails" element={<ProtectedRoute allowedRoles={[1]} step="jobdetails"> <driverjobdetails /> </ProtectedRoute>}/>
 
-        <Route
-          path="/driver-details-upload"
-          element={
-              <DriverDetailsUpload />
-          }
-        />
+        <Route path="/driver-details-upload" element={<ProtectedRoute allowedRoles={[1]} step="upload">  <DriverDetailsUpload /> </ProtectedRoute>}/>
 
-        <Route
-          path="/driver-dashboard"
-          element={
-              <DriverDashboard />
-          }
-        />
+        <Route path="/driver-dashboard" element={<ProtectedRoute allowedRoles={[1]} step="dashboard"> <DriverDashboard /> </ProtectedRoute>} />
         
-        <Route path="/earnings" element={<Earnings /> } />
+        <Route path="/earnings" element={ <ProtectedRoute allowedRoles={[1]}> <Earnings /> </ProtectedRoute> }/>
+
         {/* My Rides page */}
-       <Route
-          path="/trip-history"
-          element={
-             <DriverRides />
-            }
-        />
+        <Route path="/trip-history" element={<ProtectedRoute allowedRoles={[1]}> <DriverRides />  {/* ← PROTECTED */}</ProtectedRoute> }/>
         
         {/* My Rides page */}
-       <Route
-          path="/support"
-          element={
-             <Support />
-            }
-        />
+        <Route path="/support"element={<ProtectedRoute allowedRoles={[1]}> <Support /> {/* ← PROTECTED */}</ProtectedRoute>}/>
 
         <Route
           path="/driver-profile"
           element={
-              <DriverProfile />
+            <ProtectedRoute allowedRoles={[1]}>
+              <DriverProfile />      {/* ← PROTECTED */}
+            </ProtectedRoute>
           }
         />
-        <Route path="/post-booking" element={<PostBooking />} />
+
+        <Route
+          path="/post-booking"
+          element={
+            <ProtectedRoute>
+              <PostBooking />        {/* ← PROTECTED */}
+            </ProtectedRoute>
+          }
+        />
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />
