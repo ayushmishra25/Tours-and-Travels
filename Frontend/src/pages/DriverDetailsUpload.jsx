@@ -64,12 +64,12 @@ const DriverDetailsUpload = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage(""); // ★ CHANGED
-    setErrorMessage("");   // ★ CHANGED
+    setSuccessMessage(""); 
+    setErrorMessage("");   
   
     const token = localStorage.getItem("token"); 
     if (!token) {
-      setErrorMessage("Please register and login first."); // ★ CHANGED
+      setErrorMessage("Please register and login first."); 
       return;
     }
 
@@ -209,33 +209,33 @@ const DriverDetailsUpload = () => {
         </div>
 
         {/* Police Verification Section */}
-<div className="form-group">
-  <label>Police Verification Done?</label>
-  <select
-    name="policeVerified"
-    value={policeVerified}
-    onChange={(e) => setPoliceVerified(e.target.value)}
-    required
-  >
-    <option value="">Select</option>
-    <option value="yes">Yes</option>
-    <option value="no">No</option>
-  </select>
-</div>
+        <div className="form-group">
+          <label>Police Verification Done?</label>
+          <select
+            name="policeVerified"
+            value={policeVerified}
+            onChange={(e) => setPoliceVerified(e.target.value)}
+            required
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
 
-{/* Conditionally show police doc upload */}
-{policeVerified === "yes" && (
-  <div className="form-group">
-    <label>Upload Police Verification Document:</label>
-    <input
-      type="file"
-      name="policeDoc"
-      accept="image/*"
-      onChange={handleFileChange}
-      required
-    />
-  </div>
-)}
+        {/* Conditionally show police doc upload */}
+        {policeVerified === "yes" && (
+          <div className="form-group">
+            <label>Upload Police Verification Document:</label>
+            <input
+              type="file"
+              name="policeDoc"
+              accept="image/*"
+              onChange={handleFileChange}
+              required
+            />
+          </div>
+        )}
 
 
         <fieldset className="account-details">
