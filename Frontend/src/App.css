@@ -1631,6 +1631,16 @@ button.login-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.success-message {
+  color: green;
+  margin: 1rem 0;
+}
+
+.error-message {
+  color: red;
+  margin: 1rem 0;
+}
+
 .driver-details-container h1 {
   text-align: center;
   color: var(--primary-color, #002855);
