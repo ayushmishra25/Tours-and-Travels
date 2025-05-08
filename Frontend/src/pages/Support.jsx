@@ -34,7 +34,7 @@ const Support = () => {
         }
       );
   
-      if (response.status === 200) {
+      if (response.status === 201) {
         setFeedback('Your request has been submitted. Our support team will contact you soon.');
         setSubject('');
         setMessage('');

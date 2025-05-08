@@ -1,4 +1,4 @@
-// src/admin/AdminApp.jsx
+ // src/admin/AdminApp.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import BookingManagement from './pages/BookingManagement';
 import PaymentManagement from './pages/PaymentManagement';
 import Reports from './pages/Reports';
 import AdminSettings from './pages/AdminSettings';
-
+import ProtectedRoute from '../components/ProtectedRoute';
 import './AdminApp.css';
 import SupportComplaints from './pages/SupportComplaints';
 
@@ -25,15 +25,72 @@ const AdminApp = () => {
         {/* Public Admin Login */}
         <Route path="login" element={<AdminLogin />} />
 
-        {/* All admin pages now directly accessible */}
-        <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="users" element={<ManageUsers />} />
-        <Route path="drivers" element={<ManageDrivers />} />
-        <Route path="bookings" element={<BookingManagement />} />
-        <Route path="payments" element={<PaymentManagement />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="settings" element={<AdminSettings />} />
-        <Route path="support-complaints" element={<SupportComplaints />}/>
+        {/* Protected Admin Routes */}
+        <Route
+          path="dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="users"
+          element={
+            <ProtectedRoute>
+              <ManageUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="drivers"
+          element={
+            <ProtectedRoute>
+              <ManageDrivers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="bookings"
+          element={
+            <ProtectedRoute>
+              <BookingManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="payments"
+          element={
+            <ProtectedRoute>
+              <PaymentManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="reports"
+          element={
+            <ProtectedRoute>
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="settings"
+          element={
+            <ProtectedRoute>
+              <AdminSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="support-complaints"
+          element={
+            <ProtectedRoute>
+              <SupportComplaints />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Routes>
@@ -42,4 +99,3 @@ const AdminApp = () => {
 };
 
 export default AdminApp;
-

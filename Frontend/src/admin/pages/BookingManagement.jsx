@@ -17,7 +17,6 @@ const BookingManagement = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
- // 
         if (!response.ok) throw new Error("Failed to fetch bookings");
 
         const data = await response.json();
@@ -77,7 +76,7 @@ const BookingManagement = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/bookings/${id}/assign-driver`, {
+      const response = await fetch(`${baseURL}/api/bookings/${id}/assign-driver`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

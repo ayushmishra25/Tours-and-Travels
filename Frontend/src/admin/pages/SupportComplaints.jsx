@@ -63,7 +63,7 @@ const SupportComplaints = () => {
   const updatedComplaint = updatedComplaints.find(c => c.id === id);
   try {
     await axios.put(
-      `http://localhost:8000/api/support-requests/${id}/resolve`,
+      `${baseURL}/api/support-requests/${id}/resolve`,
       { is_resolved: updatedComplaint.resolved },
       {
         headers: {
