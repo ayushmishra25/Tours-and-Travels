@@ -35,6 +35,10 @@ const DriverDetailsUpload = () => {
   
   // Police verification state
   const [policeVerified, setPoliceVerified] = useState("");
+  
+  // ★ CHANGED: inline feedback messages
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Error state for validation
   const [fieldError, setFieldError] = useState("");
@@ -60,10 +64,12 @@ const DriverDetailsUpload = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage(""); // ★ CHANGED
+    setErrorMessage("");   // ★ CHANGED
   
     const token = localStorage.getItem("token"); 
     if (!token) {
-      alert("Please register and login first.");
+      setErrorMessage("Please register and login first."); // ★ CHANGED
       return;
     }
 
@@ -107,13 +113,13 @@ const DriverDetailsUpload = () => {
         }
       );
   
-      alert("Driver details submitted successfully!");
+      setSuccessMessage("Driver details submitted successfully!");
       console.log("Response from API:", response.data);
       localStorage.setItem("driverUploaded", "true");
-      navigate("/driver-dashboard");
+      setTimeout(() => navigate("/driver-dashboard"), 1500);
     } catch (error) {
       console.error("API Error:", error.response?.data || error.message);
-      alert("Failed to submit. Please check the form and try again.");
+      setErrorMessage("Failed to submit. Please check the form and try again.");
     }
   };
   
@@ -121,6 +127,12 @@ const DriverDetailsUpload = () => {
   return (
     <div className="driver-details-container">
       <h1>Upload Your Details</h1>
+
+      {/* ★ CHANGED: display inline messages */}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+
       <form onSubmit={handleSubmit} className="driver-details-form">
         <div className="form-group">
           <label>Upload Photo:</label>
