@@ -74,7 +74,7 @@ const MainContent = () => {
         <Route path="/ondemand-driver" element={<OndemandDriver />} />
 
         {/* Driver-only flow */}
-        <Route path="/driverjobdetails" element={<ProtectedRoute allowedRoles={[1]} step="jobdetails"> <driverjobdetails /> </ProtectedRoute>}/>
+        <Route path="/driverjobdetails" element={<ProtectedRoute allowedRoles={[1]} step="jobdetails"> <DriverJobDetails /> </ProtectedRoute>}/>
 
         <Route path="/driver-details-upload" element={<ProtectedRoute allowedRoles={[1]} step="upload">  <DriverDetailsUpload /> </ProtectedRoute>}/>
 
