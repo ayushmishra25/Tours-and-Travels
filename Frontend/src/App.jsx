@@ -117,4 +117,3 @@ const MainContent = () => {
 };
 
 export default App;
-

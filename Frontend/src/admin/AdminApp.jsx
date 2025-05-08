@@ -1,4 +1,4 @@
-// src/admin/AdminApp.jsx
+ // src/admin/AdminApp.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -99,4 +99,3 @@ const AdminApp = () => {
 };
 
 export default AdminApp;
-
