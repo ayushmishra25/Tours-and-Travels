@@ -48,7 +48,7 @@ const DriverDashboard = () => {
         {},
         { headers }
       );
-      setIsAvailable(res.data.available);
+      setIsAvailable(res.data.available === "Active");
     } catch (error) {
       console.error("Error toggling availability:", error);
       setErrorMsg("Failed to toggle availability. Please try again.");

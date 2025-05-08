@@ -116,7 +116,7 @@ const DriverDetailsUpload = () => {
       setSuccessMessage("Driver details submitted successfully!");
       console.log("Response from API:", response.data);
       localStorage.setItem("driverUploaded", "true");
-      setTimeout(() => navigate("/driver-dashboard"), 1500);
+      setTimeout(() => navigate("/driver-dashboard"), 500);
     } catch (error) {
       console.error("API Error:", error.response?.data || error.message);
       setErrorMessage("Failed to submit. Please check the form and try again.");
