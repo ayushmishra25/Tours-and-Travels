@@ -14,6 +14,7 @@ import AdminSettings from './pages/AdminSettings';
 import ProtectedRoute from '../components/ProtectedRoute';
 import './AdminApp.css';
 import SupportComplaints from './pages/SupportComplaints';
+import DriverDetails from './pages/Driverdetails';
 
 const AdminApp = () => {
   return (
@@ -90,6 +91,8 @@ const AdminApp = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route path="drivers/:id" element={<DriverDetails />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
