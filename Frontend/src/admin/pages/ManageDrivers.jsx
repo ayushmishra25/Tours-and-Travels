@@ -1,5 +1,7 @@
+// src/admin/pages/ManageDrivers.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";               // ← CHANGED: import Link
 
 const ManageDrivers = () => {
   const [drivers, setDrivers] = useState([]);
@@ -16,7 +18,7 @@ const ManageDrivers = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setDrivers(response.data.users); // API returns { users: [...] }
+        setDrivers(response.data.users);
       } catch (err) {
         console.error("Failed to fetch drivers:", err);
         setError("Could not fetch drivers.");
@@ -44,6 +46,7 @@ const ManageDrivers = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Contact</th>                            {/* ← CHANGED: added Contact */}
               <th>Location</th>
               <th>Status</th>
             </tr>
@@ -52,8 +55,13 @@ const ManageDrivers = () => {
             {drivers.map((driver) => (
               <tr key={driver.id}>
                 <td>{driver.id}</td>
-                <td>{driver.name}</td>
+                <td>
+                  <Link to={`/admin/drivers/${driver.id}`}>{/* ← CHANGED: clickable name */}
+                    {driver.name}
+                  </Link>
+                </td>
                 <td>{driver.email}</td>
+                <td>{driver.phone || "N/A"}</td>            {/* ← CHANGED: show contact */}
                 <td>{driver.location || "N/A"}</td>
                 <td>{driver.is_available ? "Active" : "Inactive"}</td>
               </tr>
