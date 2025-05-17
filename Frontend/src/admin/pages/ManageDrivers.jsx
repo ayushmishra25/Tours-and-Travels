@@ -1,7 +1,6 @@
-// src/admin/pages/ManageDrivers.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";               // ← CHANGED: import Link
+import { Link } from "react-router-dom";
 
 const ManageDrivers = () => {
   const [drivers, setDrivers] = useState([]);
@@ -18,7 +17,7 @@ const ManageDrivers = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setDrivers(response.data.users);
+        setDrivers(response.data.users || []);
       } catch (err) {
         console.error("Failed to fetch drivers:", err);
         setError("Could not fetch drivers.");
@@ -46,23 +45,23 @@ const ManageDrivers = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Contact</th>                            {/* ← CHANGED: added Contact */}
+              <th>Contact</th>
               <th>Location</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {drivers.map((driver) => (
-              <tr key={driver.id}>
-                <td>{driver.id}</td>
+              <tr key={driver.id || driver._id}>
+                <td>{driver.id || driver._id}</td>
                 <td>
-                  <Link to={`/admin/drivers/${driver.id}`}>{/* ← CHANGED: clickable name */}
-                    {driver.name}
+                  <Link to={`/admin/drivers/${driver.id || driver._id}`}>
+                    {driver.name ?? "No Name"}
                   </Link>
                 </td>
-                <td>{driver.email}</td>
-                <td>{driver.phone || "N/A"}</td>            {/* ← CHANGED: show contact */}
-                <td>{driver.location || "N/A"}</td>
+                <td>{driver.email ?? "N/A"}</td>
+                <td>{driver.phone ?? "N/A"}</td>
+                <td>{driver.location ?? "N/A"}</td>
                 <td>{driver.is_available ? "Active" : "Inactive"}</td>
               </tr>
             ))}

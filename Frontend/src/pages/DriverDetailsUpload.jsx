@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const token = localStorage.getItem("token");
 import axios from "axios";
 
 const DriverDetailsUpload = () => {
   const navigate = useNavigate();
-  
+
   // Form state for text/number inputs
   const [formData, setFormData] = useState({
     education: "",
@@ -21,7 +20,7 @@ const DriverDetailsUpload = () => {
     ifsc: "",
     accountHolderName: ""
   });
-  
+
   // File state for uploads
   const [files, setFiles] = useState({
     photo: null,
@@ -30,12 +29,8 @@ const DriverDetailsUpload = () => {
     aadharFront: null,
     aadharBack: null,
     passbook: null,
-    policeDoc: null 
   });
-  
-  // Police verification state
-  const [policeVerified, setPoliceVerified] = useState("");
-  
+
   // ★ CHANGED: inline feedback messages
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,13 +40,9 @@ const DriverDetailsUpload = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "policeVerified") {
-      setPoliceVerified(value);
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleFileChange = (e) => {
     const { name } = e.target;
     const file = e.target.files[0];
@@ -61,21 +52,20 @@ const DriverDetailsUpload = () => {
     }));
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage(""); 
-    setErrorMessage("");   
-  
-    const token = localStorage.getItem("token"); 
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    const token = localStorage.getItem("token");
     if (!token) {
-      setErrorMessage("Please register and login first."); 
+      setErrorMessage("Please register and login first.");
       return;
     }
 
     // Create a FormData object
     const formDataToSend = new FormData();
-  
+
     // Append all text fields
     formDataToSend.append("education", formData.education);
     formDataToSend.append("age", formData.age);
@@ -89,15 +79,13 @@ const DriverDetailsUpload = () => {
     formDataToSend.append("bank_name", formData.bankName);
     formDataToSend.append("ifsc_code", formData.ifsc);
     formDataToSend.append("account_holder_name", formData.accountHolderName);
-  
+
     if (files.photo) formDataToSend.append("photo", files.photo);
     if (files.licenseFront) formDataToSend.append("driving_licence_front", files.licenseFront);
     if (files.licenseBack) formDataToSend.append("driving_licence_back", files.licenseBack);
     if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
     if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
-    if (files.policeDoc) formDataToSend.append("police_doc", files.policeDoc);
-
 
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -112,7 +100,7 @@ const DriverDetailsUpload = () => {
           },
         }
       );
-  
+
       setSuccessMessage("Driver details submitted successfully!");
       console.log("Response from API:", response.data);
       localStorage.setItem("driverUploaded", "true");
@@ -122,7 +110,6 @@ const DriverDetailsUpload = () => {
       setErrorMessage("Failed to submit. Please check the form and try again.");
     }
   };
-  
 
   return (
     <div className="driver-details-container">
@@ -132,43 +119,42 @@ const DriverDetailsUpload = () => {
       {successMessage && <p className="success-message">{successMessage}</p>}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-
       <form onSubmit={handleSubmit} className="driver-details-form">
         <div className="form-group">
           <label>Upload Photo:</label>
           <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
         </div>
-        
+
         <div className="form-group">
           <label>Education:</label>
           <input type="text" name="education" value={formData.education} onChange={handleChange} placeholder="Enter your education" />
         </div>
-        
+
         <div className="form-group">
           <label>Age:</label>
           <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Enter your age" />
         </div>
-        
+
         <div className="form-group">
           <label>Exact Location:</label>
           <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="Enter your full address" />
         </div>
-        
+
         <div className="form-group">
           <label>Pincode:</label>
           <input type="text" inputMode="numeric" pattern="\d*" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Enter pincode" />
         </div>
-        
+
         <div className="form-group">
           <label>Zone:</label>
           <input type="text" name="zone" value={formData.zone} onChange={handleChange} placeholder="Enter your zone/area" />
         </div>
-        
+
         <div className="form-group">
           <label>Driving Experience (in years):</label>
           <input type="number" name="drivingExperienceYears" value={formData.drivingExperienceYears} onChange={handleChange} placeholder="e.g., 3" />
         </div>
-        
+
         <div className="form-group">
           <label>Car Driving Experience:</label>
           <select name="drivingExperienceType" value={formData.drivingExperienceType} onChange={handleChange}>
@@ -179,13 +165,12 @@ const DriverDetailsUpload = () => {
             <option value="All of the above">All of the above</option>
           </select>
         </div>
-        
+
         <div className="form-group">
           <label>Upload Driving License (Both Side):</label>
           <input type="file" name="licenseFront" accept="image/*" onChange={handleFileChange} />
         </div>
-        
-        
+
         <div className="form-group">
           <label>Type of Driving License:</label>
           <select name="licenseType" value={formData.licenseType} onChange={handleChange}>
@@ -197,46 +182,16 @@ const DriverDetailsUpload = () => {
             {/* Add more options as per your requirements */}
           </select>
         </div>
-        
+
         <div className="form-group">
           <label>Upload Aadhar Card (Both Side):</label>
           <input type="file" name="aadharFront" accept="image/*" onChange={handleFileChange} />
         </div>
-        
+
         <div className="form-group">
           <label>Upload Passbook Front Page:</label>
           <input type="file" name="passbook" accept="image/*" onChange={handleFileChange} />
         </div>
-
-        {/* Police Verification Section */}
-        <div className="form-group">
-          <label>Police Verification Done?</label>
-          <select
-            name="policeVerified"
-            value={policeVerified}
-            onChange={(e) => setPoliceVerified(e.target.value)}
-            required
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-
-        {/* Conditionally show police doc upload */}
-        {policeVerified === "yes" && (
-          <div className="form-group">
-            <label>Upload Police Verification Document:</label>
-            <input
-              type="file"
-              name="policeDoc"
-              accept="image/*"
-              onChange={handleFileChange}
-              required
-            />
-          </div>
-        )}
-
 
         <fieldset className="account-details">
           <legend>Account Details</legend>
@@ -257,7 +212,7 @@ const DriverDetailsUpload = () => {
             <input type="text" name="accountHolderName" value={formData.accountHolderName} onChange={handleChange} placeholder="Enter account holder name" />
           </div>
         </fieldset>
-        
+
         <div className="form-group">
           <button type="submit" className="submit-btn">Submit Details</button>
         </div>

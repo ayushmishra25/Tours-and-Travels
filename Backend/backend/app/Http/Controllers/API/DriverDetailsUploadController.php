@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\DriverDetailsUpload;
 use Illuminate\Support\Facades\Auth;
 
-
 class DriverDetailsUploadController extends Controller
 {
     // List all driver records
@@ -16,17 +15,45 @@ class DriverDetailsUploadController extends Controller
         return DriverDetailsUpload::all();
     }
 
-    // details api 
-    public function checkDetails($id)
+    // Show driver details by user ID
+    public function show($id)
     {
-        $detailsExist = DriverDetailsUpload::where('user_id', $id)->exists();
+        $details = DriverDetailsUpload::where('user_id', $id)->first();
+
+        if (!$details) {
+            return response()->json([
+                'message' => 'Details not found',
+                'detailsExist' => false
+            ], 404);
+        }
+
+        // Convert file paths to full URLs
+        $convertToUrl = fn($filePath) => $filePath ? asset("storage/{$filePath}") : null;
 
         return response()->json([
-            'detailsExist' => $detailsExist
+            'detailsExist' => true,
+            'photo' => $convertToUrl($details->photo),
+            'education' => $details->education,
+            'age' => $details->age,
+            'exact_location' => $details->exact_location,
+            'pincode' => $details->pincode,
+            'zone' => $details->zone,
+            'driving_experience' => $details->driving_experience,
+            'car_driving_experience' => $details->car_driving_experience,
+            'driving_licence_front' => $convertToUrl($details->driving_licence_front),
+            'driving_licence_back' => $convertToUrl($details->driving_licence_back),
+            'type_of_driving_licence' => $details->type_of_driving_licence,
+            'aadhar_card_front' => $convertToUrl($details->aadhar_card_front),
+            'aadhar_card_back' => $convertToUrl($details->aadhar_card_back),
+            'passbook_front' => $convertToUrl($details->passbook_front),
+            'account_number' => $details->account_number,
+            'bank_name' => $details->bank_name,
+            'ifsc_code' => $details->ifsc_code,
+            'account_holder_name' => $details->account_holder_name,
         ]);
     }
 
-    // Store a new driver record
+    // Store new driver details
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -40,7 +67,6 @@ class DriverDetailsUploadController extends Controller
             'car_driving_experience' => 'required|string',
             'driving_licence_front' => 'required|image',
             'driving_licence_back' => 'nullable|image',
-            'police_doc' => 'nullable| image',
             'type_of_driving_licence' => 'required|string',
             'aadhar_card_front' => 'nullable|image',
             'aadhar_card_back' => 'nullable|image',
@@ -51,11 +77,15 @@ class DriverDetailsUploadController extends Controller
             'account_holder_name' => 'required|string',
         ]);
 
-        // After validation, manually add user_id
         $validatedData['user_id'] = Auth::id();
 
-        // Handling file uploads
-        foreach (['photo', 'driving_licence_front', 'driving_licence_back', 'aadhar_card_front', 'aadhar_card_back', 'passbook_front'] as $field) {
+        // Handle file uploads
+        $fileFields = [
+            'photo', 'driving_licence_front', 'driving_licence_back',
+            'aadhar_card_front', 'aadhar_card_back', 'passbook_front'
+        ];
+
+        foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $validatedData[$field] = $request->file($field)->store('uploads/driver', 'public');
             }
@@ -63,7 +93,10 @@ class DriverDetailsUploadController extends Controller
 
         $driver = DriverDetailsUpload::create($validatedData);
 
-        return response()->json($driver, 201);
+        return response()->json([
+            'message' => 'Driver details saved successfully',
+            'data' => $driver
+        ], 201);
     }
 
     // Update a driver record
@@ -92,14 +125,35 @@ class DriverDetailsUploadController extends Controller
             'account_holder_name' => 'sometimes|string',
         ]);
 
-        foreach (['photo', 'driving_licence_front', 'driving_licence_back', 'aadhar_card_front', 'aadhar_card_back', 'passbook_front'] as $field) {
+        // Update file fields
+        $fileFields = [
+            'photo', 'driving_licence_front', 'driving_licence_back',
+            'aadhar_card_front', 'aadhar_card_back', 'passbook_front'
+        ];
+
+        foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $data[$field] = $request->file($field)->store('uploads/driver', 'public');
             }
         }
 
         $driver->update($data);
-        return response()->json($driver);
+
+        return response()->json([
+            'message' => 'Driver details updated successfully',
+            'data' => $driver
+        ]);
+    }
+
+    // check details 
+    // details api 
+    public function checkDetails($id)
+    {
+        $detailsExist = DriverDetailsUpload::where('user_id', $id)->exists();
+
+        return response()->json([
+            'detailsExist' => $detailsExist
+        ]);
     }
 
     // Delete a driver record
@@ -108,7 +162,8 @@ class DriverDetailsUploadController extends Controller
         $driver = DriverDetailsUpload::findOrFail($id);
         $driver->delete();
 
-        return response()->json(['message' => 'Driver details deleted successfully']);
+        return response()->json([
+            'message' => 'Driver details deleted successfully'
+        ]);
     }
 }
-

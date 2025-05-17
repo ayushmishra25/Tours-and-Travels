@@ -26,7 +26,6 @@ class DriverDetailsUpload extends Model
         'aadhar_card_front',
         'aadhar_card_back',
         'passbook_front',
-        'police_doc',
         'account_number',
         'bank_name',
         'ifsc_code',
