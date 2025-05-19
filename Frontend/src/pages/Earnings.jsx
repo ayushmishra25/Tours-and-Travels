@@ -1,7 +1,7 @@
 // src/pages/Earnings.jsx
 import React, { useEffect, useState } from "react";
 import DriverNavbar from "../components/DriverNavbar";
-
+import { Helmet } from "react-helmet";
 
 const Earnings = () => {
   const [earnings, setEarnings] = useState([

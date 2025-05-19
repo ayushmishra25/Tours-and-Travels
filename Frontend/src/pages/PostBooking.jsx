@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardNavbar from "../components/DashboardNavbar";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 const BookingConfirmation = () => {
   const navigate = useNavigate();

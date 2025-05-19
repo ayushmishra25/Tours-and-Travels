@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://sahyogforce.com/</loc>
+    <priority>1.00</priority>
+  </url>
+
+  <!-- Main Pages -->
+  <url>
+    <loc>https://sahyogforce.com/about</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://sahyogforce.com/services</loc>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://sahyogforce.com/booking</loc>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://sahyogforce.com/contact</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://sahyogforce.com/login</loc>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://sahyogforce.com/register</loc>
+    <priority>0.60</priority>
+  </url>
+
+  <!-- Driver/User Dashboards (optional: if public and crawlable) -->
+  <url>
+    <loc>https://sahyogforce.com/user-dashboard</loc>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://sahyogforce.com/driver-dashboard</loc>
+    <priority>0.50</priority>
+  </url>
+
+  <!-- Terms and Conditions -->
+  <url>
+    <loc>https://sahyogforce.com/terms-and-conditions</loc>
+    <priority>0.40</priority>
+  </url>
+
+</urlset>

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import DriverNavbar from '../components/DriverNavbar';
 import axios from 'axios';
+import { Helmet } from "react-helmet";
 
 const Support = () => {
   const [subject, setSubject] = useState('');

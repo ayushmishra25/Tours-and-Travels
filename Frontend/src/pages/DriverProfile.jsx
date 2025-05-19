@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DriverNavbar from '../components/DriverNavbar';
+import { Helmet } from "react-helmet";
 
 const DriverProfile = () => {
   const [user, setUser] = useState({});
