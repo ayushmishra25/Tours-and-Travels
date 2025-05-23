@@ -2641,3 +2641,123 @@ fieldset.account-details legend {
     font-size: 0.9rem;
   }
 }
+/* css for the Invoice page */
+.invoice-wrapper {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.company-logo {
+  height: 80px;
+  object-fit: contain;
+  align-self: flex-start;
+}
+
+.company-info h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #2c3e50;
+}
+
+.brand-subtext {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.invoice-metadata {
+  margin-top: 1rem;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.section-title {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.invoice-details p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+}
+
+.billing-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.billing-table th, .billing-table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.total-row td {
+  background: #f7f7f7;
+  font-weight: bold;
+}
+
+.footer-note {
+  margin-top: 2rem;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.pdf-button-container {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.pdf-download-btn {
+  background-color: #2e86de;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.pdf-download-btn:hover {
+  background-color: #1e70bf;
+}
+/* Remove column layout on mobile */
+@media (max-width: 600px) {
+  .invoice-header {
+    flex-direction: row !important; /* Keep it row */
+    align-items: flex-start;
+  }
+
+  .company-logo {
+    height: 60px;
+    margin-top: 0;
+    margin-left: auto; /* Push logo to the right */
+  }
+
+  .billing-table th,
+  .billing-table td {
+    font-size: 0.85rem;
+  }
+  
+}

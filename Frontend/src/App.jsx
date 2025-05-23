@@ -25,6 +25,7 @@ import DriverRides from './pages/DriverRides';
 import Support from './pages/Support';
 import DriverProfile from './pages/DriverProfile';
 import PostBooking from './pages/PostBooking';
+import InvoicePage from './pages/InvoicePage';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -124,6 +125,7 @@ const MainContent = () => {
           }
         />
         <Route path="/post-booking" element={<PostBooking />} />
+        <Route path="/invoice" element={<InvoicePage/>} />
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />
