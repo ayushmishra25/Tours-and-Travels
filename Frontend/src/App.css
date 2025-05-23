@@ -745,61 +745,117 @@ button.login-btn:hover {
 }
 
 /* Profile Page CSS */
-
 .profile-container {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(20,20,20,20.1);
-  text-align: center;
-  height: 100px;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .profile-container h2 {
-  color: #002855;
-  font-size: 26px;
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
 }
 
 .profile-container p {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 10px;
+  margin: 0.8rem 0;
+  font-size: 1rem;
+  color: #555;
 }
 
-.profile-container button {
-  background-color: #002855;
-  color: #ffffff;
+.profile-container strong {
+  display: inline-block;
+  width: 100px;
+  color: #222;
+}
+
+.profile-container input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: calc(100% - 120px);
+  max-width: 300px;
+  margin-left: 1rem;
+}
+
+.edit-btn,
+.save-btn,
+.discard-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.profile-container button:hover {
-  background-color: #004a99;
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+  margin-top: 1rem;
 }
 
-@media (max-width: 768px) {
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.discard-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.discard-btn:hover {
+  background-color: #c82333;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
   .profile-container {
-      width: 90%;
-      padding: 15px;
-      margin: 20px auto;
+    padding: 1rem;
   }
-  
-  .profile-container h2 {
-      font-size: 22px;
+
+  .profile-container p {
+    display: flex;
+    flex-direction: column;
   }
-  
-  .profile-container p,
-  .profile-container button {
-      font-size: 14px;
+
+  .profile-container strong {
+    width: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-container input {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .save-btn,
+  .discard-btn {
+    width: 100%;
+    margin-top: 1rem;
   }
 }
+
 /* Hourly Driver Page CSS */
 
 .hourly-driver-container {
