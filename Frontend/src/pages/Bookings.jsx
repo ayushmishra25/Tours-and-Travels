@@ -52,8 +52,18 @@ const Bookings = () => {
       <ul>
         {bookings.length > 0 ? (
           bookings.map((booking, index) => (
-            <li key={booking.id || index}>
-              <strong>{booking.booking_type}</strong> — From <strong>{booking.source_location}</strong> to <strong>{booking.destination_location}</strong> — <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
+            <li key={booking.id || index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}> {/* 🔥 Added inline style for right corner */}
+              <div>
+                <strong>{booking.booking_type}</strong> — From <strong>{booking.source_location}</strong> to <strong>{booking.destination_location}</strong> — <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
+              </div>
+              <a
+                href={`/invoice/${booking.id}`}  // 🔥 Added
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none", color: "#2e86de", fontWeight: "bold" }}
+              >
+                View Bill
+              </a>
             </li>
           ))
         ) : (

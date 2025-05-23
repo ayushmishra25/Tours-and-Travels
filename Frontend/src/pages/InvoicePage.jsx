@@ -14,7 +14,7 @@ const InvoicePage = () => {
     serviceType: "Hourly Driver Service",
     startDateTime: "2025-05-01T10:00:00",
     endDateTime: "2025-05-01T14:00:00",
-    totalAmount: 1180,
+    totalAmount: 100,
     paymentDate: "2025-05-01",
     GSTIN: "07ABCDE1234F2Z5",
     invoiceNumber: "SF-2025-0421",
@@ -22,8 +22,8 @@ const InvoicePage = () => {
     paymentMethod: "UPI",
     transactionId: "TXN1234567890",
     paymentStatus: "Paid",
-    subtotal: 1000,
-    taxAmount: 180,
+    subtotal: 95,
+    taxAmount: 5,
   };
 
   const {
@@ -116,7 +116,7 @@ const InvoicePage = () => {
               <td>₹{subtotal}</td>
             </tr>
             <tr>
-              <td>GST (18%)</td>
+              <td>GST (5%)</td>
               <td>₹{taxAmount}</td>
             </tr>
             <tr className="total-row">
