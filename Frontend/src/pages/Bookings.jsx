@@ -56,14 +56,12 @@ const Bookings = () => {
               <div>
                 <strong>{booking.booking_type}</strong> — From <strong>{booking.source_location}</strong> to <strong>{booking.destination_location}</strong> — <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
               </div>
-              <a
-                href={`/invoice/${booking.id}`}  // 🔥 Added
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none", color: "#2e86de", fontWeight: "bold" }}
+              <Link
+              to={`/invoice/${booking.id}`}
+              style={{ textDecoration: "none", color: "#2e86de", fontWeight: "bold" }}
               >
-                View Bill
-              </a>
+              View Bill
+              </Link>
             </li>
           ))
         ) : (
