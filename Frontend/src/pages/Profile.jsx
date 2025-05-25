@@ -81,11 +81,11 @@ const Profile = () => {
           </p>
           <p>
             <strong>Email:</strong>
-            <input type="email" name="email" value={formData.email || ""} onChange={handleChange} />
+            <input type="email" name="email" value={formData.email || ""} onChange={handleChange} readOnly />
           </p>
           <p>
             <strong>Phone:</strong>
-            <input type="text" name="phone" value={formData.phone || ""} onChange={handleChange} />
+            <input type="text" name="phone" value={formData.phone || ""} onChange={handleChange} readOnly/>
           </p>
           <p>
             <strong>Location:</strong>
