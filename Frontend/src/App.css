@@ -1760,55 +1760,52 @@ fieldset.account-details legend {
   background-color: var(--secondary-color, #004a99);
 }
 
-.button-container {
+.form-group {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px; /* Space between buttons */
+  margin-top: 20px;
 }
 
-.discard-btn,
-.save-btn {
-  flex: 1 1 45%;
-  max-width: 200px;
+.submit-btn,
+.discard-btn {
+  width: 100%;
+  max-width: 300px;
   padding: 10px 20px;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease;
+}
+
+.submit-btn {
+  background-color: #28a745; /* Green */
+  color: white;
 }
 
 .discard-btn {
-  background-color: #e74c3c;
+  background-color: #dc3545; /* Red */
   color: white;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
 }
 
 .discard-btn:hover {
-  background-color: #c0392b;
+  background-color: #c82333;
 }
 
-.save-btn {
-  background-color: #2ecc71;
-  color: white;
-}
-
-.save-btn:hover {
-  background-color: #27ae60;
-}
-
-@media (max-width: 600px) {
-  .button-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .discard-btn,
-  .save-btn {
-    max-width: 100%;
+@media (max-width: 480px) {
+  .submit-btn,
+  .discard-btn {
+    font-size: 0.95rem;
+    padding: 10px 16px;
   }
 }
+
 
 
 @media (max-width: 768px) {
