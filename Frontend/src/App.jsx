@@ -125,7 +125,7 @@ const MainContent = () => {
           }
         />
         <Route path="/post-booking" element={<PostBooking />} />
-        <Route path="/invoice/:id" element={<Invoice />} />
+        <Route path="/invoice/:id" element={<InvoicePage />} />
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />

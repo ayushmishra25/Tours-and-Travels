@@ -140,26 +140,13 @@ const HourlyDriver = () => {
   useEffect(() => {
   setTotalAmount(calculateFare());
 }, [pickup, destination, hours]);
-  
+
 
   return (
     <>
       <DashboardNavbar />
       <div className="hourly-driver-container">
-        <div className="trip-selection">
-          <div
-            className={`trip-option ${tripType === "roundtrip" ? "selected" : ""}`}
-            onClick={() => setTripType("roundtrip")}
-          >
-            <p>Round Trip</p>
-          </div>
-          <div
-            className={`trip-option ${tripType === "oneway" ? "selected" : ""}`}
-            onClick={() => setTripType("oneway")}
-          >
-            <p>One Way Drop</p>
-          </div>
-        </div>
+        
 
         <div className="booking-form">
           <div className="left-section">
