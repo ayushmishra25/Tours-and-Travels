@@ -152,15 +152,18 @@ const OndemandDriver = () => {
             <p>Name: {user.name}</p>
             <p>Phone: {user.phone}</p>
             <h2>₹ {totalAmount}</h2>
-            <p className="price-note">
-              Please note: On-demand services may have surge pricing during peak hours.
-              Extra charges for food, accommodation, and night stays may apply.
-              Pricing is negotiable.
-              You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
-            </p>
+
+
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
             </button>
+
+            <p className="price-note">
+              Please note: On-demand services may have surge pricing during peak hours.
+              Extra charges for food, accommodation, and night stays may apply.
+              An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹300 will be applicable. 
+              You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
+            </p>
 
             {authError && <p className="error-message">{authError}</p>}
             {!authError && fieldError && <p className="error-message">{fieldError}</p>}

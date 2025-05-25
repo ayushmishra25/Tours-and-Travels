@@ -192,9 +192,9 @@ const HourlyDriver = () => {
           {authError && <p className="error-message">{authError}</p>}
 
             <p className="price-note">
-            You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
+              Please note: You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
               For distances above 80 km, an additional charge of ₹10/km will be applied, including food,
-              accommodation, and convenience. Night charges apply if an overnight stay is required.
+              accommodation, and convenience. An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹300 will be applicable. Thank you for your understanding.
             </p>
           </div>
         </div>
