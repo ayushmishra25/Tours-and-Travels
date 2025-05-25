@@ -42,8 +42,8 @@ const MainContent = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
   // Paths where we want to hide navbar/footer
-  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice/:booking_id'];
-  const hideShell = noShellPaths.includes(location.pathname);
+  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice'];
+  const hideShell = noShellPaths.some(path => location.pathname.startsWith(path));
 
   return (
     <>

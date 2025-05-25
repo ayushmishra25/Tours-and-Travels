@@ -11,7 +11,6 @@ const BookingConfirmation = () => {
     bookingId,
     pickupLocation,
     bookingType,
-    tripType,
     bookingDatetime,
     totalAmount,
   } = state || {};
@@ -123,7 +122,7 @@ const BookingConfirmation = () => {
       <section className="confirmation-right">
         <h2>Booking &amp; Billing</h2>
         <ul className="booking-summary">
-          <li><strong>Booking Type:</strong> {bookingType} / {tripType}</li>
+          <li><strong>Booking Type:</strong> {bookingType}</li>
           <li><strong>Pickup:</strong> {pickupLocation}</li>
           <li><strong>Date &amp; Time:</strong> {bookingDatetime}</li>
         </ul>
