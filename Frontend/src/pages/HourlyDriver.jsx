@@ -62,14 +62,10 @@ const HourlyDriver = () => {
   const user = JSON.parse(localStorage.getItem("user")) ||  "User not authenticated" ;
 
   const calculateFare = () => {
-    if (!pickup || !destination) return 0;
-    const city = getCityFromAddress(pickup);
-    if (tripType === "roundtrip") {
-      return hourlyPricing[city]?.[hours - 1] ?? 0;
-    } else {
-      return distancePricing[city]?.[distance] ?? 0;
-    }
-  };
+  if (!pickup || !destination) return 0;
+  const city = getCityFromAddress(pickup);
+  return hourlyPricing[city]?.[hours - 1] ?? 0;
+};
 
   const handleBookNow = async () => {
     if (!token) {
@@ -88,11 +84,10 @@ const HourlyDriver = () => {
     const payload = {
       user_id: parseInt(localStorage.getItem("userId")),
       booking_type: "Hourly",
-      trip_type: tripType,
+      trip_type: "roundtrip",
       source_location: pickup,
       destination_location: destination,
-      hours: tripType === "roundtrip" ? hours : undefined,
-      distance: tripType === "oneway" ? distance : undefined,
+      hours,
       payment: totalAmount,
       booking_datetime,
     };
@@ -143,8 +138,8 @@ const HourlyDriver = () => {
   }, []);
 
   useEffect(() => {
-    setTotalAmount(calculateFare());
-  }, [pickup, destination, tripType, hours, distance]);
+  setTotalAmount(calculateFare());
+}, [pickup, destination, hours]);
   
 
   return (
@@ -168,24 +163,15 @@ const HourlyDriver = () => {
 
         <div className="booking-form">
           <div className="left-section">
-            <h3>Select {tripType === "roundtrip" ? "Hours" : "Distance"}</h3>
-            {tripType === "roundtrip" ? (
-              <select value={hours} onChange={(e) => setHours(+e.target.value)}>
-                {[...Array(12).keys()].map((h) => (
-                  <option key={h + 1} value={h + 1}>
-                    {h + 1} Hour(s)
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <select value={distance} onChange={(e) => setDistance(+e.target.value)}>
-                {[5, 10, 15, 20, 30, 40, 50, 60, 70].map((d) => (
-                  <option key={d} value={d}>
-                    {d} km
-                  </option>
-                ))}
-              </select>
-            )}
+            <h3>Select Hours</h3>
+            <select value={hours} onChange={(e) => setHours(+e.target.value)}>
+              {[...Array(12).keys()].map((h) => (
+              <option key={h + 1} value={h + 1}>
+              {h + 1} Hour(s)
+              </option>
+              ))}
+            </select>
+
 
             <input
               type="text"
