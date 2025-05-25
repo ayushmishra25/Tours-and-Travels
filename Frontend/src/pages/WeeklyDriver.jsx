@@ -17,6 +17,8 @@ const WeeklyDriver = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [authError, setAuthError] = useState(""); 
   const [fieldError, setFieldError] = useState("");
+  const [workingHoursPerDay, setWorkingHoursPerDay] = useState("");
+
 
   const user = JSON.parse(localStorage.getItem("user")) ||  "User not authenticated" ;
   // Function to extract city from the entered location (manual input)
@@ -39,7 +41,7 @@ const WeeklyDriver = () => {
   useEffect(() => {
     const fare = calculateFare();
     setTotalAmount(fare);
-  }, [location, workingDays]);
+  }, [location, workingDays, workingHoursPerDay]);
 
   const handleBookNow = async () => {
     if (!token) {
@@ -61,6 +63,11 @@ const WeeklyDriver = () => {
       setFieldError("Working days selection is required");
       return;
     }
+    if (!workingHoursPerDay) {
+      setFieldError("Working hours per day selection is required");
+      return;
+    }
+
     if (!date) {
       setFieldError("Date is required");
       return;
@@ -80,9 +87,9 @@ const WeeklyDriver = () => {
       trip_type: `${workingDays} days`,
       source_location: pickupLocation,
       destination_location: destinationLocation,
-      hours: workingDays * 8,
-      working_days: workingDays, // Send as an array
-      working_hours_per_day: 8,
+      hours: workingDays * workingHoursPerDay,
+      working_days: workingDays, // Still fine as is
+      working_hours_per_day: parseInt(workingHoursPerDay, 10),
       payment: totalAmount,
       start_date: date,
       booking_datetime: bookingDatetime,
@@ -177,6 +184,25 @@ const WeeklyDriver = () => {
               </select>
             </label>
             <label>
+              Working Hours Per Day:
+              <select
+                value={workingHoursPerDay}
+                onChange={(e) => setWorkingHoursPerDay(e.target.value)}
+              >
+              <option value="">Select Hours</option>
+              <option value="4"> 4 Hours</option>
+              <option value="5"> 5 Hours</option>
+              <option value="6"> 6 Hours</option>
+              <option value="7"> 7 Hours</option>
+              <option value="8"> 8 Hours</option>
+              <option value="9"> 9 Hours</option>
+              <option value="10">10 Hours</option>
+              <option value="11"> 11 Hours</option>
+              <option value="12">12 Hours</option>
+              </select>
+            </label>
+
+            <label>
               Date:
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </label>
@@ -190,14 +216,16 @@ const WeeklyDriver = () => {
             <p>Name: {user.name}</p>
             <p>Phone: {user.phone}</p>
             <h2>₹ {totalAmount}</h2>
+
+            <button className="book-now-btn" onClick={handleBookNow}>
+              Book Now
+            </button>
+
             <p className="price-note">
               Please note: You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
               For each night stay, an extra charge of ₹300 applies, along with food and accommodation costs. Pricing is negotiable; we will contact you soon to confirm the details.
               An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹300 will be applicable. Thank you for your understanding
             </p>
-            <button className="book-now-btn" onClick={handleBookNow}>
-              Book Now
-            </button>
 
             {/* Display either auth errors or field validation errors */}
             {authError && <p className="error-message">{authError}</p>}
