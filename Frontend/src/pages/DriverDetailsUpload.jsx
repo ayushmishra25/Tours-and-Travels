@@ -193,13 +193,13 @@ const DriverDetailsUpload = () => {
         </div>
 
         <div className="form-group">
-          <label>Upload Aadhar Card (Both Side):</label>
+          <label>Upload Aadhar Card (Front):</label>
           <input type="file" name="aadharFront" accept="image/*" onChange={handleFileChange} disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
-          <label>Upload Passbook Front Page:</label>
-          <input type="file" name="passbook" accept="image/*" onChange={handleFileChange} disabled={!isEditing}/>
+          <label>Upload Aadhar Card (Back):</label>
+          <input type="file" name="aadharBack" accept="image/*" onChange={handleFileChange} disabled={!isEditing}/>
         </div>
 
         <fieldset className="account-details">
