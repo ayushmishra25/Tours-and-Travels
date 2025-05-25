@@ -38,7 +38,7 @@ const DashboardNavbar = () => {
   return (
     <header className="dashboard-header">
       <div className="logo-title">
-        <img src="logo.jpg" alt="Sahyog Force Logo" className="navbar-logo" />
+        <img src="logo.webp" alt="Sahyog Force Logo" className="navbar-logo" />
         <h1>USER DASHBOARD</h1>
       </div>
 

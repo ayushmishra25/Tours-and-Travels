@@ -78,7 +78,7 @@ const InvoicePage = () => {
             <p>Phone: +91-9220922268</p>
           </div>
           <img
-            src="logo.jpg" // Path to logo
+            src="logo.webp" // Path to logo
             alt="Company Logo"
             className="company-logo"
           />

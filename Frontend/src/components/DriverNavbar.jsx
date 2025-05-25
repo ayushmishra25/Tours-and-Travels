@@ -37,7 +37,7 @@ const DriverNavbar = () => {
   return (
     <header className="driver-navbar">
        <div className="logo-title">
-        <img src="logo.jpg" alt="Sahyog Force Logo" className="navbar-logo" />
+        <img src="logo.webp" alt="Sahyog Force Logo" className="navbar-logo" />
         <h1>DRIVER DASHBOARD</h1>
       </div>
       <div className="hamburger" onClick={toggleMenu}>
