@@ -49,7 +49,7 @@ const DriverProfile = () => {
   };
 
   const handleEditClick = () => {
-    navigate('/edit-driver-profile'); // ⬅️ Route to editable form
+    navigate("/driver-details-upload"); // ⬅️ Route to editable form
   };
 
   return (
