@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import { Helmet } from "react-helmet";
 import html2pdf from "html2pdf.js";
+import DashboardNavbar from "../components/DashboardNavbar"; // add this at the top
+
 
 const InvoicePage = () => {
   const invoiceRef = useRef();
@@ -60,6 +62,7 @@ const InvoicePage = () => {
 
   return (
     <>
+    <DashboardNavbar />
       <Helmet>
         <title>Invoice | Sahyog Force</title>
       </Helmet>
