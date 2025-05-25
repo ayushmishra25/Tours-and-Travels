@@ -222,14 +222,14 @@ const DriverDetailsUpload = () => {
           </div>
         </fieldset>
 
-        <div className="form-group">
+        <div className="form-group-driverdetails-edit">
           {isEditing ? (
             <>
-              <button type="submit" className="submit-btn">Save</button> {/* ★ ADDED */}
-              <button type="button" onClick={handleDiscard} className="discard-btn">Discard</button> {/* ★ ADDED */}
+              <button type="submit" className="submit-btn">Save</button> 
+              <button type="button" onClick={handleDiscard} className="discard-btn">Discard</button> 
             </>
           ) : (
-            <button type="button" onClick={() => setIsEditing(true)} className="edit-btn">Edit Details</button> // ★ ADDED
+            <button type="button" onClick={() => setIsEditing(true)} className="edit-btn">Edit Details</button> 
           )}
         </div>
       </form>

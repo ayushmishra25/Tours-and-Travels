@@ -1760,11 +1760,11 @@ fieldset.account-details legend {
   background-color: var(--secondary-color, #004a99);
 }
 
-.form-group {
+.form-group-driverdetails-edit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px; /* Space between buttons */
+  gap: 12px; 
   margin-top: 20px;
 }
 
