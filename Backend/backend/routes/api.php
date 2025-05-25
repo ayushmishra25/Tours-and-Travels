@@ -7,6 +7,7 @@ use App\Http\Controllers\API\DriverDetailsUploadController;
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\SupportRequestController;
 use App\Http\Controllers\API\DriverController;
+use App\Http\Controllers\API\InvoiceController;
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/driver/rides', [BookingController::class, 'getRidesForDriver']);
     Route::get('/bookings/{user_id}', [BookingController::class, 'show']);
     Route::get('/drivers/{id}/details', [DriverDetailsUploadController::class, 'checkDetails']);
+    Route::get('/invoice/{booking_id}', [InvoiceController::class, 'getInvoice']);
 
 
 
