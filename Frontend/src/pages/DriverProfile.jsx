@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DriverNavbar from '../components/DriverNavbar';
 import { Helmet } from "react-helmet";
+import { useNavigate } from 'react-router-dom';
 
 const DriverProfile = () => {
   const [user, setUser] = useState({});
   const [stats, setStats] = useState({ rides: 0, earnings: 0 });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true); // ✅ ADD THIS LINE
-
+  const navigate = useNavigate(); 
   const driverId = localStorage.getItem('userId');
   const token = localStorage.getItem('token');
 
@@ -47,6 +48,10 @@ const DriverProfile = () => {
     return date.toLocaleDateString();
   };
 
+  const handleEditClick = () => {
+    navigate('/edit-driver-profile'); // ⬅️ Route to editable form
+  };
+
   return (
     <>
       <DriverNavbar />
@@ -63,6 +68,7 @@ const DriverProfile = () => {
               <p><strong>Phone:</strong> {user.phone}</p>
               <p><strong>Location:</strong> {user.location}</p>
               <p><strong>Joined:</strong> {formatDate(user.created_at)}</p>
+              <button onClick={handleEditClick} className="edit-button">Edit Profile</button> {/* ✅ Add this */}
             </div>
           </div>
         )}

@@ -39,6 +39,9 @@ const DriverDetailsUpload = () => {
   // Error state for validation
   const [fieldError, setFieldError] = useState("");
 
+  // edit mode state
+  const [isEditing, setIsEditing] = useState(true);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -112,6 +115,11 @@ const DriverDetailsUpload = () => {
     }
   };
 
+  // ★ ADDED: discard handler
+  const handleDiscard = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="driver-details-container">
       <h1>Upload Your Details</h1>
@@ -123,42 +131,42 @@ const DriverDetailsUpload = () => {
       <form onSubmit={handleSubmit} className="driver-details-form">
         <div className="form-group">
           <label>Upload Photo:</label>
-          <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
+          <input type="file" name="photo" accept="image/*" onChange={handleFileChange} disabled={!isEditing} />
         </div>
 
         <div className="form-group">
           <label>Education:</label>
-          <input type="text" name="education" value={formData.education} onChange={handleChange} placeholder="Enter your education" />
+          <input type="text" name="education" value={formData.education} onChange={handleChange} placeholder="Enter your education" disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Age:</label>
-          <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Enter your age" />
+          <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Enter your age" disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Exact Location:</label>
-          <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="Enter your full address" />
+          <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="Enter your full address" disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Pincode:</label>
-          <input type="text" inputMode="numeric" pattern="\d*" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Enter pincode" />
+          <input type="text" inputMode="numeric" pattern="\d*" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Enter pincode" disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Zone:</label>
-          <input type="text" name="zone" value={formData.zone} onChange={handleChange} placeholder="Enter your zone/area" />
+          <input type="text" name="zone" value={formData.zone} onChange={handleChange} placeholder="Enter your zone/area" disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Driving Experience (in years):</label>
-          <input type="number" name="drivingExperienceYears" value={formData.drivingExperienceYears} onChange={handleChange} placeholder="e.g., 3" />
+          <input type="number" name="drivingExperienceYears" value={formData.drivingExperienceYears} onChange={handleChange} placeholder="e.g., 3" disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Car Driving Experience:</label>
-          <select name="drivingExperienceType" value={formData.drivingExperienceType} onChange={handleChange}>
+          <select name="drivingExperienceType" value={formData.drivingExperienceType} onChange={handleChange}disabled={!isEditing}>
             <option value="">Select experience type</option>
             <option value="manual">Manual</option>
             <option value="automatic">Automatic</option>
@@ -169,12 +177,12 @@ const DriverDetailsUpload = () => {
 
         <div className="form-group">
           <label>Upload Driving License (Both Side):</label>
-          <input type="file" name="licenseFront" accept="image/*" onChange={handleFileChange} />
+          <input type="file" name="licenseFront" accept="image/*" onChange={handleFileChange} disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Type of Driving License:</label>
-          <select name="licenseType" value={formData.licenseType} onChange={handleChange}>
+          <select name="licenseType" value={formData.licenseType} onChange={handleChange} disabled={!isEditing}>
             <option value="">Select License Type</option>
             <option value="LMV">Light Motor Vehicle (LMV)</option>
             <option value="MCWG">Motor Car With Gear (MCWG)</option>
@@ -186,36 +194,43 @@ const DriverDetailsUpload = () => {
 
         <div className="form-group">
           <label>Upload Aadhar Card (Both Side):</label>
-          <input type="file" name="aadharFront" accept="image/*" onChange={handleFileChange} />
+          <input type="file" name="aadharFront" accept="image/*" onChange={handleFileChange} disabled={!isEditing}/>
         </div>
 
         <div className="form-group">
           <label>Upload Passbook Front Page:</label>
-          <input type="file" name="passbook" accept="image/*" onChange={handleFileChange} />
+          <input type="file" name="passbook" accept="image/*" onChange={handleFileChange} disabled={!isEditing}/>
         </div>
 
         <fieldset className="account-details">
           <legend>Account Details</legend>
           <div className="form-group">
             <label>Account Number:</label>
-            <input type="text" name="accountNumber" value={formData.accountNumber} onChange={handleChange} placeholder="Enter account number" />
+            <input type="text" name="accountNumber" value={formData.accountNumber} onChange={handleChange} placeholder="Enter account number" disabled={!isEditing}/>
           </div>
           <div className="form-group">
             <label>Bank Name:</label>
-            <input type="text" name="bankName" value={formData.bankName} onChange={handleChange} placeholder="Enter bank name" />
+            <input type="text" name="bankName" value={formData.bankName} onChange={handleChange} placeholder="Enter bank name" disabled={!isEditing}/>
           </div>
           <div className="form-group">
             <label>IFSC Code:</label>
-            <input type="text" name="ifsc" value={formData.ifsc} onChange={handleChange} placeholder="Enter IFSC code" />
+            <input type="text" name="ifsc" value={formData.ifsc} onChange={handleChange} placeholder="Enter IFSC code" disabled={!isEditing}/>
           </div>
           <div className="form-group">
             <label>Account Holder Name:</label>
-            <input type="text" name="accountHolderName" value={formData.accountHolderName} onChange={handleChange} placeholder="Enter account holder name" />
+            <input type="text" name="accountHolderName" value={formData.accountHolderName} onChange={handleChange} placeholder="Enter account holder name" disabled={!isEditing}/>
           </div>
         </fieldset>
 
         <div className="form-group">
-          <button type="submit" className="submit-btn">Submit Details</button>
+          {isEditing ? (
+            <>
+              <button type="submit" className="submit-btn">Save</button> {/* ★ ADDED */}
+              <button type="button" onClick={handleDiscard} className="discard-btn">Discard</button> {/* ★ ADDED */}
+            </>
+          ) : (
+            <button type="button" onClick={() => setIsEditing(true)} className="edit-btn">Edit Details</button> // ★ ADDED
+          )}
         </div>
       </form>
     </div>
