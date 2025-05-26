@@ -30,7 +30,7 @@ class InvoiceController extends Controller
             'email' => $booking->user->email,
             'contact' => $booking->user->phone,
             'service_type' => $booking->booking_type,
-            'start_date' => $booking->start_date,
+            'booking_datetime' => $booking->booking_datetime,
             'payment_date' => $booking->payment_date,
             'payment' => $totalAmount,
             'subtotal' => $subtotal,

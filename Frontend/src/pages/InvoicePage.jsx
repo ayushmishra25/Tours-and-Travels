@@ -55,8 +55,8 @@ const InvoicePage = () => {
     email,
     contact,
     service_type,
-    start_date,
-    paymentDate,
+    booking_datetime,
+    payment_date,
     GSTIN,
     invoiceNumber,
     invoiceDate,
@@ -107,7 +107,7 @@ const InvoicePage = () => {
         <h2 className="section-title">Service Details</h2>
         <div className="invoice-details">
           <p><strong>Service Type:</strong> {service_type}</p>
-          <p><strong>Start:</strong> {new Date(start_date).toLocaleString()}</p>
+          <p><strong>Start:</strong> {new Date(booking_datetime).toLocaleString()}</p>
         </div>
 
         <h2 className="section-title">Billing Summary</h2>
@@ -136,7 +136,7 @@ const InvoicePage = () => {
 
         <h2 className="section-title">Payment Info</h2>
         <div className="invoice-details">
-          <p><strong>Payment Date:</strong> {new Date(start_date).toLocaleDateString()}</p>
+          <p><strong>Payment Date:</strong> {new Date(booking_datetime).toLocaleDateString()}</p>
           {/* <p><strong>Payment Method:</strong> {paymentMethod}</p> */}
           {/* {transactionId && <p><strong>Transaction ID:</strong> {transactionId}</p>} */}
         </div>
