@@ -25,8 +25,11 @@ const FinalTnC = () => {
       </div>
 
       <div className="proceed-btn-container">
-        <button className="proceed-btn" onClick={handleProceed}>
-          I Agree & Proceed to Payment
+        <button className="proceed-btn-cash" onClick={handleProceed}>
+          I Agree & Proceed to Cash Payment
+        </button>
+        <button className="proceed-btn-upi" onClick={handleProceed}>
+          I Agree & Proceed to UPI Payment
         </button>
       </div>
     </div>
