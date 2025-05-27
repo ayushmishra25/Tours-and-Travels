@@ -61,7 +61,6 @@ const DriverDetails = () => {
             src={driver.photo}
             alt="Driver"
             className="driver-photo"
-            style={{ maxWidth: "200px", marginBottom: "10px" }}
           />
           <br />
           <a
