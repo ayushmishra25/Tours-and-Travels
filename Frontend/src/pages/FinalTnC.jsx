@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const FinalTnC = () => {
   const navigate = useNavigate();
 
-  const handleProceed = () => {
-    // Navigate to actual payment logic/summary page
-    navigate('/invoice/your-booking-id'); // Replace with dynamic route if required
+  const [selectedMethod, setSelectedMethod] = useState('');
+  const [isPaid, setIsPaid] = useState(false);
+
+  // Example: dynamically fetched amount
+  const payableAmount = 1250; // Replace this with actual dynamic value if available
+
+  const handleProceed = (method) => {
+    setSelectedMethod(method);
+  };
+
+  const handleConfirmPayment = () => {
+    setIsPaid(true);
+    navigate('/invoice/your-booking-id'); // Replace with dynamic booking id if needed
   };
 
   return (
@@ -25,13 +35,27 @@ const FinalTnC = () => {
       </div>
 
       <div className="proceed-btn-container">
-        <button className="proceed-btn-cash" onClick={handleProceed}>
+        <button className="proceed-btn-cash" onClick={() => handleProceed('cash')}>
           I Agree & Proceed to Cash Payment
         </button>
-        <button className="proceed-btn-upi" onClick={handleProceed}>
+        <button className="proceed-btn-upi" onClick={() => handleProceed('upi')}>
           I Agree & Proceed to UPI Payment
         </button>
       </div>
+
+      {selectedMethod === 'cash' && !isPaid && (
+        <div className="payment-info">
+          <p className="payment-msg">Please pay ₹{payableAmount} to the driver in <strong>cash</strong>.</p>
+          <button className="confirm-btn" onClick={handleConfirmPayment}>Yes, Paid</button>
+        </div>
+      )}
+
+      {selectedMethod === 'upi' && !isPaid && (
+        <div className="payment-info">
+          <p className="payment-msg">Please pay ₹{payableAmount} to the driver via <strong>UPI</strong>.</p>
+          <button className="confirm-btn" onClick={handleConfirmPayment}>Yes, Paid Now</button>
+        </div>
+      )}
     </div>
   );
 };

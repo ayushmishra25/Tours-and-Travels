@@ -70,7 +70,7 @@ const Profile = () => {
   if (!userData) return <div>Loading profile...</div>;
 
   return (
-    <div className="profile-container">
+    <div className="profile-container-user">
       <h2>User Profile</h2>
 
       {editing ? (
@@ -93,8 +93,8 @@ const Profile = () => {
           </p>
 
           <div style={{ marginTop: "1rem" }}>
-            <button onClick={handleSave} className="save-btn">Save</button>
-            <button onClick={handleDiscard} className="discard-btn" style={{ marginLeft: "1rem" }}>
+            <button onClick={handleSave} className="save-btn-user">Save</button>
+            <button onClick={handleDiscard} className="discard-btn-user" style={{ marginLeft: "1rem" }}>
               Discard
             </button>
           </div>
@@ -105,7 +105,7 @@ const Profile = () => {
           <p><strong>Email:</strong> {userData.email}</p>
           <p><strong>Phone:</strong> {userData.phone}</p>
           <p><strong>Location:</strong> {userData.location}</p>
-          <button onClick={() => setEditing(true)} className="edit-btn">Edit Profile</button>
+          <button onClick={() => setEditing(true)} className="edit-btn-user">Edit Profile</button>
         </>
       )}
     </div>
