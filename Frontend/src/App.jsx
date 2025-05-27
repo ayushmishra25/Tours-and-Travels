@@ -26,6 +26,7 @@ import Support from './pages/Support';
 import DriverProfile from './pages/DriverProfile';
 import PostBooking from './pages/PostBooking';
 import InvoicePage from './pages/InvoicePage';
+import FinalTnC from './pages/FinalTnC';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -42,7 +43,7 @@ const MainContent = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
   // Paths where we want to hide navbar/footer
-  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice'];
+  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice','/final-tnc'];
   const hideShell = noShellPaths.some(path => location.pathname.startsWith(path));
 
   return (
@@ -126,6 +127,7 @@ const MainContent = () => {
         />
         <Route path="/post-booking" element={<PostBooking />} />
         <Route path="/invoice/:booking_id" element={<InvoicePage />} />
+        <Route path="/final-tnc" element={<FinalTnC />} />
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />

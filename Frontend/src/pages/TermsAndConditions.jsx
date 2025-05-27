@@ -17,14 +17,14 @@ const TermsAndConditions = () => {
           This includes court record verification, work history reviews, document
           verifications, and mandatory physical verification. Only individuals who
           meet our high standards are approved to work. All employees are skilled,
-          trained, and reliable, with a minimum of 5 years of experience.
+          trained and reliable.
         </p>
       </section>
 
       <section>
         <h2>2. Workplace & Equipment Maintenance</h2>
         <p>
-          For drivers, all company vehicles undergo regular maintenance and safety inspections.
+          For drivers, all vehicles undergo regular maintenance and safety inspections.
           For cooks and maids, all work equipment and tools must be regularly cleaned and
           maintained to meet safety and hygiene standards.
         </p>
@@ -69,7 +69,7 @@ const TermsAndConditions = () => {
         <h2>7. Easy Booking Process</h2>
         <p>
           Customers can book a service through our website or phone. Booking confirmation
-          details will be sent via SMS or email. Additional features include:
+          details will be sent on the website itself. Additional features include:
         </p>
         <ul>
           <ul>One-click cancellation and rescheduling</ul>
@@ -80,17 +80,19 @@ const TermsAndConditions = () => {
 
       <section>
         <h2>8. Transparent Pricing</h2>
-        <p>
-          Service pricing estimates are provided upfront, and customers will never be charged hidden fees.
-          Any applicable surcharges (e.g., peak hours) will be clearly communicated before booking confirmation.
-        </p>
+        <p>Service pricing estimates are provided upfront, and customers will never be charged hidden fees.</p>
+        <p>Any applicable surcharges (e.g., peak hours) will be clearly communicated before booking confirmation.</p>
+        <p>For distances above 80 km, an additional charge of ₹10/km will be applied, including food, accommodation, and convenience.</p>
+        <p>An additional service charge of ₹120 per hour will apply for extended hours. </p>
+        <p>For services provided after 10:00 PM, a night charge of ₹300 will be applicable. </p>
+        
       </section>
 
       <section>
         <h2>9. Cancellation Policy</h2>
         <ul>
-          <ul>Customers may cancel a service within 30 minutes of booking without a cancellation fee.</ul>
-          <ul>Cancellations made within 45 minutes of the scheduled service may be subject to a cancellation charge.</ul>
+          <p>You may cancel your ride up to one hour before the scheduled start time without any charge. 
+            Cancellations made within one hour of service will incur a ₹100 fee. </p>
         </ul>
       </section>
 
@@ -127,7 +129,7 @@ const TermsAndConditions = () => {
         </p>
       </section>
 
-      <p className="last-updated">Last updated: March 2025</p>
+      <p className="last-updated">Last updated: May 2025</p>
     </div>
   );
 };

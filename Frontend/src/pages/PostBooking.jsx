@@ -77,14 +77,12 @@ const BookingConfirmation = () => {
   };
 
   const handlePayCash = () => {
-    alert(`Please pay ₹${totalAmount} in cash to your driver.`);
-    navigate("/dashboard");
+    navigate('/final-tnc');
   };
 
   const handleUPIClick = () => setShowUPIScanner(true);
   const handleUPISuccess = () => {
-    alert("UPI payment successful!");
-    navigate("/dashboard");
+    navigate('/final-tnc');
   };
 
   // If we haven't even loaded the booking info yet, show a loader
