@@ -126,21 +126,42 @@ class AuthController extends Controller
     // listing API of users and drivers 
     public function listUsers(Request $request)
     {
-    $role = $request->query('role'); 
+        $role = $request->query('role'); 
 
-    if ($role == 0) {
-        $users = User::where('role', 0)->get();
-    } elseif ($role == 1) {
-        $users = User::where('role', 1)->get();
-    } else {
-        $users = User::all();
+        if ($role == 0) {
+            $users = User::where('role', 0)->get();
+        } elseif ($role == 1) {
+            $users = User::where('role', 1)->get();
+        } else {
+            $users = User::all();
+        }
+
+        return response()->json([
+            'users' => $users
+        ], 200);
     }
 
-    return response()->json([
-        'users' => $users
-    ], 200);
-}
+    public function updateProfile(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+        ]);
 
+        $user = User::find($id);
 
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->name = $request->name;
+        $user->location = $request->location;
+        $user->save();
+
+        return response()->json([
+            'message' => 'User profile updated successfully.',
+            'user' => $user
+        ]);
+    }
 
 }

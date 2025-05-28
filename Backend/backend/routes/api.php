@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Auth-related
     Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
+    Route::put('/profile/{id}', [AuthController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Booking-related
