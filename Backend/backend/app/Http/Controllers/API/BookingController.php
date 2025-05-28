@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Events\BookingCreated;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,16 @@ class BookingController extends Controller
         ]);
 
         return response()->json(['message' => 'Booking successful', 'booking' => $booking], 201);
+
+         // Fire the BookingCreated event
+        event(new BookingCreated([
+            'user_name' => auth()->user()->name,
+            'booking_id' => $booking->id,
+            'source' => $booking->source_location,
+            'destination' => $booking->destination_location,
+            'booking_type' => $booking->booking_type,
+            'timestamp' => now()->toDateTimeString()
+        ]));
     }
 
     public function index()
@@ -116,5 +127,7 @@ class BookingController extends Controller
 
         return response()->json(['rides' => $rides], 200);
     }
+
+    
 
 }

@@ -14,20 +14,7 @@ const hourlyPricing = {
   greater_noida: [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
 };
 
-// Distance-based pricing table
-const distancePricing = {
-  south_delhi: { 5: 321, 10: 345, 15: 396, 20: 422, 30: 496, 40: 551, 50: 629, 60: 662, 70: 704 },
-  gurugram: { 5: 297, 10: 322, 15: 372, 20: 399, 30: 473, 40: 528, 50: 606, 60: 638, 70: 681 },
-  faridabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  manesar: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  ghaziabad: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  greater_noida: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  east_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  north_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-  central_delhi: { 5: 226, 10: 250, 15: 301, 20: 327, 30: 401, 40: 456, 50: 534, 60: 563, 70: 609 },
-};
-
+// Address to city mapping
 const getCityFromAddress = (address) => {
   const lower = address.toLowerCase();
   if (lower.includes("south delhi")) return "south_delhi";
@@ -52,27 +39,27 @@ const HourlyDriver = () => {
   const [maxDate, setMaxDate] = useState("");
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
-  const [tripType, setTripType] = useState("roundtrip");
+  const [tripType] = useState("roundtrip");
   const [hours, setHours] = useState(5);
-  const [distance, setDistance] = useState(5);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [authError, setAuthError] = useState("");
-  const user = JSON.parse(localStorage.getItem("user")) ||  "User not authenticated" ;
+  const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
 
+  // Calculate hourly fare
   const calculateFare = () => {
-  if (!pickup || !destination) return 0;
-  const city = getCityFromAddress(pickup);
-  return hourlyPricing[city]?.[hours - 1] ?? 0;
-};
+    if (!pickup || !destination) return 0;
+    const city = getCityFromAddress(pickup);
+    return hourlyPricing[city]?.[hours - 1] ?? 0;
+  };
 
+  // Handle booking + notifications
   const handleBookNow = async () => {
     if (!token) {
       setAuthError("Please register and login first to book a driver.");
       return;
     }
-    setAuthError("");
 
     if (!date || !time) {
       setAuthError("Please select both a date and a time.");
@@ -84,7 +71,7 @@ const HourlyDriver = () => {
     const payload = {
       user_id: parseInt(localStorage.getItem("userId")),
       booking_type: "Hourly",
-      trip_type: "roundtrip",
+      trip_type: tripType,
       source_location: pickup,
       destination_location: destination,
       hours,
@@ -101,23 +88,41 @@ const HourlyDriver = () => {
 
       const { booking } = resp.data;
 
+      // ✅ Browser Notification
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          new Notification("Booking Confirmed!", {
+            body: `Your booking for ${hours} hour(s) is confirmed. Driver will reach at ${pickup}.`,
+          });
+        } else if (Notification.permission !== "denied") {
+          Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              new Notification("Booking Confirmed!", {
+                body: `Your booking for ${hours} hour(s) is confirmed. Driver will reach at ${pickup}.`,
+              });
+            }
+          });
+        }
+      }
+
       navigate("/post-booking", {
         state: {
-        bookingId: booking.id,
-        pickupLocation: booking.source_location,
+          bookingId: booking.id,
+          pickupLocation: booking.source_location,
           bookingType: booking.booking_type,
           tripType: booking.trip_type,
           bookingDatetime: booking.booking_datetime,
           totalAmount: booking.payment,
           user,
-      },
-    });
+        },
+      });
     } catch (err) {
       console.error("Booking error:", err);
       setAuthError("Booking failed. Please try again.");
     }
   };
 
+  // Format YYYY-MM-DD
   const formatDateLocal = (d) => {
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, "0");
@@ -125,6 +130,7 @@ const HourlyDriver = () => {
     return `${year}-${month}-${day}`;
   };
 
+  // Set min/max date on mount
   useEffect(() => {
     const today = new Date();
     const tomorrow = new Date(today);
@@ -137,28 +143,29 @@ const HourlyDriver = () => {
     setMaxDate(formatDateLocal(nextWeek));
   }, []);
 
+  // Recalculate amount when pickup/destination/hours change
   useEffect(() => {
-  setTotalAmount(calculateFare());
-}, [pickup, destination, hours]);
-
+    setTotalAmount(calculateFare());
+  }, [pickup, destination, hours]);
 
   return (
     <>
+      <Helmet>
+        <title>Hourly Driver Booking</title>
+      </Helmet>
+
       <DashboardNavbar />
       <div className="hourly-driver-container">
-        
-
         <div className="booking-form">
           <div className="left-section">
             <h3>Select Hours</h3>
             <select value={hours} onChange={(e) => setHours(+e.target.value)}>
               {[...Array(12).keys()].map((h) => (
-              <option key={h + 1} value={h + 1}>
-              {h + 1} Hour(s)
-              </option>
+                <option key={h + 1} value={h + 1}>
+                  {h + 1} Hour(s)
+                </option>
               ))}
             </select>
-
 
             <input
               type="text"
@@ -166,7 +173,6 @@ const HourlyDriver = () => {
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
             />
-
             <input
               type="text"
               placeholder="Enter Destination Address"
@@ -175,8 +181,18 @@ const HourlyDriver = () => {
             />
 
             <div className="date-time-container">
-              <input type="date" value={date} min={minDate} max={maxDate} onChange={(e) => setDate(e.target.value)} />
-              <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <input
+                type="date"
+                value={date}
+                min={minDate}
+                max={maxDate}
+                onChange={(e) => setDate(e.target.value)}
+              />
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
             </div>
           </div>
 
@@ -187,14 +203,19 @@ const HourlyDriver = () => {
 
             <h2>₹ {totalAmount}</h2>
             <button className="book-now-btn" onClick={handleBookNow}>
-            Book Now
-          </button>
-          {authError && <p className="error-message">{authError}</p>}
+              Book Now
+            </button>
+            {authError && <p className="error-message">{authError}</p>}
 
             <p className="price-note">
-              Please note: You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
-              For distances above 80 km, an additional charge of ₹10/km will be applied, including food,
-              accommodation, and convenience. An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹300 will be applicable. Thank you for your understanding.
+              Please note: You may cancel your ride up to one hour before the
+              scheduled start time without any charge. Cancellations made within
+              one hour of service will incur a ₹100 fee. For distances above 80
+              km, an additional charge of ₹10/km will be applied, including
+              food, accommodation, and convenience. An additional service charge
+              of ₹120 per hour will apply for extended hours. For services
+              provided after 10:00 PM, a night charge of ₹300 will be
+              applicable. Thank you for your understanding.
             </p>
           </div>
         </div>
