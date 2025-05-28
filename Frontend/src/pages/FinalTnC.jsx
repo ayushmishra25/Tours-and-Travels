@@ -16,7 +16,7 @@ const FinalTnC = () => {
 
   const handleConfirmPayment = () => {
     setIsPaid(true);
-    navigate('/invoice/your-booking-id'); // Replace with dynamic booking id if needed
+    navigate('/dashboard/bookings'); // Replace with dynamic booking id if needed
   };
 
   return (

@@ -72,10 +72,6 @@ const BookingConfirmation = () => {
     return () => clearInterval(interval);
   }, [bookingId, token]);
 
-  const handleCancel = () => {
-    navigate("/dashboard/bookings");
-  };
-
   const handlePayCash = () => {
     navigate('/final-tnc');
   };
@@ -111,10 +107,6 @@ const BookingConfirmation = () => {
         ) : (
           <p className="waiting-msg">Waiting for driver assignment...</p>
         )}
-
-        <button className="cancel-btn" onClick={handleCancel}>
-          Cancel Ride
-        </button>
       </section>
 
       <section className="confirmation-right">

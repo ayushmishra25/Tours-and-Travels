@@ -31,11 +31,15 @@ const WeeklyDriver = () => {
 
   // Calculate fare: if city is Hyderabad/Bangalore daily rate = 1400, else 1250
   const calculateFare = () => {
-    if (!location || !workingDays) return 0;
-    const city = getCityFromAddress(location);
+    if (!workingDays || !workingHoursPerDay) return 0;
+
     const days = parseInt(workingDays, 10);
-    let dailyRate = 1250;
-    return dailyRate * days;
+    const hours = parseInt(workingHoursPerDay, 10);
+
+    const baseRateFor12Hours = 1250;
+    const ratePerHour = baseRateFor12Hours / 12;
+
+    return Math.round(ratePerHour * hours * days); // Final bill
   };
 
   useEffect(() => {
@@ -190,6 +194,8 @@ const WeeklyDriver = () => {
                 onChange={(e) => setWorkingHoursPerDay(e.target.value)}
               >
               <option value="">Select Hours</option>
+              <option value="2"> 2 Hours</option>
+              <option value="3"> 3 Hours</option>
               <option value="4"> 4 Hours</option>
               <option value="5"> 5 Hours</option>
               <option value="6"> 6 Hours</option>
