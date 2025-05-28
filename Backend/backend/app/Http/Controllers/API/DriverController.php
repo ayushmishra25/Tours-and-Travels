@@ -11,14 +11,19 @@ use App\Models\FutureRide;
 
 class DriverController extends Controller
 {
-    // Toggle driver's availability status
-    public function toggleAvailability(Request $request, $driverId)
+   public function toggleAvailability(Request $request, $driverId)
     {
-        // Find the user by driverId
         $user = User::findOrFail($driverId);
 
-        // Toggle the is_available status
         $user->is_available = !$user->is_available;
+
+        // Save location and coordinates
+        if ($request->has(['latitude', 'longitude', 'location'])) {
+            $user->latitude = $request->latitude;
+            $user->longitude = $request->longitude;
+            $user->location = $request->location;
+        }
+
         $user->save();
 
         return response()->json([
@@ -26,7 +31,6 @@ class DriverController extends Controller
             'available' => $user->is_available ? 'Active' : 'Inactive'
         ]);
     }
-
 
 
     public function getAvailability($driverId)

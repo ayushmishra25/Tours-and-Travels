@@ -18,7 +18,8 @@ const DriverDashboard = () => {
     Accept: "application/json",
     "Content-Type": "application/json"
   };
-  const BASE_URL =import.meta.env.VITE_REACT_APP_BASE_URL ;
+
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -43,22 +44,63 @@ const DriverDashboard = () => {
   }, [driverId, token]);
 
   const toggleAvailability = async () => {
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
-        {},
-        { headers }
+    if (!isAvailable) {
+      // Going from Inactive ➝ Active: Fetch location
+      if (!navigator.geolocation) {
+        setErrorMsg("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          try {
+            // Step 1: Reverse Geocoding
+            const locationRes = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            const locationData = await locationRes.json();
+            const location = locationData.display_name;
+
+            // Step 2: Send location + toggle request
+            const res = await axios.post(
+              `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
+              { latitude, longitude, location },
+              { headers }
+            );
+
+            setIsAvailable(res.data.available === "Active");
+          } catch (error) {
+            console.error("Error toggling availability:", error);
+            setErrorMsg("Failed to toggle availability. Please try again.");
+          }
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          setErrorMsg("Please turn on your location, refresh the page, and try again.");
+        }
       );
-      setIsAvailable(res.data.available === "Active");
-    } catch (error) {
-      console.error("Error toggling availability:", error);
-      setErrorMsg("Failed to toggle availability. Please try again.");
+    } else {
+      // Going from Active ➝ Inactive: Just toggle
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
+          {},
+          { headers }
+        );
+        setIsAvailable(res.data.available === "Active");
+      } catch (error) {
+        console.error("Error toggling availability:", error);
+        setErrorMsg("Failed to toggle availability. Please try again.");
+      }
     }
   };
 
   const handleNewSlotChange = (e) => {
     const { name, value } = e.target;
-    setNewSlot(prev => ({ ...prev, [name]: value }));
+    setNewSlot((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddSlot = async (e) => {
@@ -69,7 +111,7 @@ const DriverDashboard = () => {
         newSlot,
         { headers }
       );
-      setTimeSlots(prev => [...prev, res.data]);
+      setTimeSlots((prev) => [...prev, res.data]);
       setNewSlot({ date: "", start: "", end: "" });
     } catch (error) {
       console.error("Error adding slot:", error);
@@ -79,12 +121,20 @@ const DriverDashboard = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Driver Dashboard</title>
+      </Helmet>
+
       <DriverNavbar />
+
       <div className="driver-dashboard-container">
         <h1>Driver Dashboard</h1>
 
         {errorMsg && <p className="error-message">{errorMsg}</p>}
-        {isLoading ? <p>Loading...</p> : (
+
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
           <>
             <section className="availability-section">
               <h2>Availability</h2>
@@ -102,10 +152,14 @@ const DriverDashboard = () => {
                 <input type="time" name="end" value={newSlot.end} onChange={handleNewSlotChange} required />
                 <button type="submit">Add Slot</button>
               </form>
-              {timeSlots.length === 0 ? <p>No slots added.</p> : (
+              {timeSlots.length === 0 ? (
+                <p>No slots added.</p>
+              ) : (
                 <ul>
                   {timeSlots.map((s, i) => (
-                    <li key={i}>{s.date} {s.start} - {s.end}</li>
+                    <li key={i}>
+                      {s.date} {s.start} - {s.end}
+                    </li>
                   ))}
                 </ul>
               )}

@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique()->nullable(); 
             $table->string('phone')->unique();
-            $table->string('location')->nullable(); 
+            $table->text('location')->nullable(); 
             $table->tinyInteger('role')->default(1);
-            $table->boolean('is_available')->default(false); 
+            $table->boolean('is_available')->default(false);
+            $table->decimal('latitude', 10, 6)->nullable();
+            $table->decimal('longitude', 10, 6)->nullable(); 
             $table->string('password')->nullable(); 
             $table->rememberToken(); 
             $table->timestamps();
