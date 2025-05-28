@@ -30,6 +30,11 @@ const DriverDashboard = () => {
       }
 
       try {
+        // ✅ Get current availability status
+        const availabilityRes = await axios.get(`${BASE_URL}/api/drivers/${driverId}/toggle-availability`, { headers });
+        setIsAvailable(availabilityRes.data.available === "Active");
+
+        // ✅ Get time slots
         const slotsRes = await axios.get(`${BASE_URL}/api/drivers/${driverId}/slots`, { headers });
         setTimeSlots(slotsRes.data);
       } catch (error) {

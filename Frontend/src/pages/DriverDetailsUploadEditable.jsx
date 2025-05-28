@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const DriverDetailUpload_Editable = () => {
+const DriverDetailUploadEditable = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -32,15 +32,17 @@ const DriverDetailUpload_Editable = () => {
   const [initialData, setInitialData] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [previewUrls, setPreviewUrls] = useState({});
 
   const token = localStorage.getItem("token");
+  const driverId = localStorage.getItem("userId");
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
     // Fetch existing driver details
     const fetchDriverData = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/driver-details/me`, {
+        const response = await axios.get(`${baseURL}/api/driver-details/${driverId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -79,38 +81,45 @@ const DriverDetailUpload_Editable = () => {
 
   const handleFileChange = (e) => {
     const { name, files: selectedFile } = e.target;
-    setFiles((prev) => ({ ...prev, [name]: selectedFile[0] }));
+    const file = selectedFile[0];
+    setFiles((prev) => ({ ...prev, [name]: file }));
+
+    // Generate preview URL
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewUrls((prev) => ({ ...prev, [name]: previewUrl }));
+    }
   };
 
   const handleDiscard = () => {
-  setFormData({
-    education: "",
-    age: "",
-    location: "",
-    pincode: "",
-    zone: "",
-    drivingExperienceYears: "",
-    drivingExperienceType: "",
-    licenseType: "",
-    accountNumber: "",
-    bankName: "",
-    ifsc: "",
-    accountHolderName: ""
-  });
+    setFormData({
+      education: "",
+      age: "",
+      location: "",
+      pincode: "",
+      zone: "",
+      drivingExperienceYears: "",
+      drivingExperienceType: "",
+      licenseType: "",
+      accountNumber: "",
+      bankName: "",
+      ifsc: "",
+      accountHolderName: ""
+    });
 
-  setFiles({
-    photo: null,
-    licenseFront: null,
-    licenseBack: null,
-    aadharFront: null,
-    aadharBack: null,
-    passbook: null
-  });
+    setFiles({
+      photo: null,
+      licenseFront: null,
+      licenseBack: null,
+      aadharFront: null,
+      aadharBack: null,
+      passbook: null
+    });
 
-  setSuccessMessage("Form cleared.");
-  setErrorMessage("");
-};
-
+    setPreviewUrls({});
+    setSuccessMessage("Form cleared.");
+    setErrorMessage("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -128,7 +137,7 @@ const DriverDetailUpload_Editable = () => {
     });
 
     try {
-      await axios.put(`${baseURL}/api/driver-details/update`, formDataToSend, {
+      await axios.put(`${baseURL}/api/driver-details/edit/${driverId}`, formDataToSend, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data"
@@ -142,6 +151,18 @@ const DriverDetailUpload_Editable = () => {
     }
   };
 
+  const renderImagePreview = (name, label, existingUrlKey) => (
+    <div className="form-group">
+      <label>{label}:</label>
+      {previewUrls[name] ? (
+        <img src={previewUrls[name]} alt={label} style={{ maxWidth: "150px", marginBottom: "10px" }} />
+      ) : initialData?.[existingUrlKey] ? (
+        <img src={initialData[existingUrlKey]} alt={label} style={{ maxWidth: "150px", marginBottom: "10px" }} />
+      ) : null}
+      <input type="file" name={name} onChange={handleFileChange} />
+    </div>
+  );
+
   return (
     <div className="driver-edit-form-container">
       <h1>Edit Your Details</h1>
@@ -150,10 +171,7 @@ const DriverDetailUpload_Editable = () => {
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       <form onSubmit={handleSubmit} className="driver-edit-form">
-        <div className="form-group">
-          <label>Photo:</label>
-          <input type="file" name="photo" onChange={handleFileChange} />
-        </div>
+        {renderImagePreview("photo", "Photo", "photo")}
 
         <div className="form-group">
           <label>Education:</label>
@@ -196,10 +214,8 @@ const DriverDetailUpload_Editable = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label>Driving License (Front):</label>
-          <input type="file" name="licenseFront" onChange={handleFileChange} />
-        </div>
+        {renderImagePreview("licenseFront", "Driving License (Front)", "driving_licence_front")}
+        {renderImagePreview("licenseBack", "Driving License (Back)", "driving_licence_back")}
 
         <div className="form-group">
           <label>Driving License Type:</label>
@@ -212,15 +228,8 @@ const DriverDetailUpload_Editable = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label>Aadhar Front:</label>
-          <input type="file" name="aadharFront" onChange={handleFileChange} />
-        </div>
-
-        <div className="form-group">
-          <label>Aadhar Back:</label>
-          <input type="file" name="aadharBack" onChange={handleFileChange} />
-        </div>
+        {renderImagePreview("aadharFront", "Aadhar Front", "aadhar_card_front")}
+        {renderImagePreview("aadharBack", "Aadhar Back", "aadhar_card_back")}
 
         <fieldset>
           <legend>Bank Details</legend>
@@ -255,4 +264,4 @@ const DriverDetailUpload_Editable = () => {
   );
 };
 
-export default DriverDetailUpload_Editable;
+export default DriverDetailUploadEditable;

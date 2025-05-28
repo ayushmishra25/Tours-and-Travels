@@ -8,7 +8,7 @@ const DriverProfile = () => {
   const [user, setUser] = useState({});
   const [stats, setStats] = useState({ rides: 0, earnings: 0 });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // ✅ ADD THIS LINE
+  const [loading, setLoading] = useState(true); 
   const navigate = useNavigate(); 
   const driverId = localStorage.getItem('userId');
   const token = localStorage.getItem('token');
@@ -16,7 +16,7 @@ const DriverProfile = () => {
   useEffect(() => {
     if (!driverId) {
       setError('Driver not authenticated');
-      setLoading(false); // ✅ stop loading
+      setLoading(false);
       return;
     }
 
@@ -31,12 +31,12 @@ const DriverProfile = () => {
         });
         setUser(response.data.user);
         setStats(response.data.stats || { rides: 0, earnings: 0 });
-        setError(''); // ✅ Clear previous error
+        setError(''); 
       } catch (error) {
         console.error('Error fetching user profile:', error);
         setError('Failed to load profile data');
       } finally {
-        setLoading(false); // ✅ Always stop loading
+        setLoading(false); 
       }
     };
 
@@ -49,7 +49,7 @@ const DriverProfile = () => {
   };
 
   const handleEditClick = () => {
-    navigate("/driver-details-upload"); // ⬅️ Route to editable form
+    navigate("/driver-details-upload-editable"); 
   };
 
   return (

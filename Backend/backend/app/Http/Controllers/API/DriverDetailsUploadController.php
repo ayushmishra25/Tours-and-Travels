@@ -101,49 +101,54 @@ class DriverDetailsUploadController extends Controller
 
     // Update a driver record
     public function update(Request $request, $id)
-    {
-        $driver = DriverDetailsUpload::findOrFail($id);
+{
+    $driver = DriverDetailsUpload::where('user_id', $id)->first();
 
-        $data = $request->validate([
-            'photo' => 'nullable|image',
-            'education' => 'sometimes|string',
-            'age' => 'sometimes|integer',
-            'exact_location' => 'sometimes|string',
-            'pincode' => 'sometimes|string',
-            'zone' => 'sometimes|string',
-            'driving_experience' => 'sometimes|integer',
-            'car_driving_experience' => 'sometimes|integer',
-            'driving_licence_front' => 'nullable|image',
-            'driving_licence_back' => 'nullable|image',
-            'type_of_driving_licence' => 'sometimes|string',
-            'aadhar_card_front' => 'nullable|image',
-            'aadhar_card_back' => 'nullable|image',
-            'passbook_front' => 'nullable|image',
-            'account_number' => 'sometimes|string',
-            'bank_name' => 'sometimes|string',
-            'ifsc_code' => 'sometimes|string',
-            'account_holder_name' => 'sometimes|string',
-        ]);
-
-        // Update file fields
-        $fileFields = [
-            'photo', 'driving_licence_front', 'driving_licence_back',
-            'aadhar_card_front', 'aadhar_card_back', 'passbook_front'
-        ];
-
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
-                $data[$field] = $request->file($field)->store('uploads/driver', 'public');
-            }
-        }
-
-        $driver->update($data);
-
-        return response()->json([
-            'message' => 'Driver details updated successfully',
-            'data' => $driver
-        ]);
+    if (!$driver) {
+        return response()->json(['message' => 'Driver details not found.'], 404);
     }
+
+    $data = $request->validate([
+        'photo' => 'nullable|image',
+        'education' => 'sometimes|string',
+        'age' => 'sometimes|integer',
+        'exact_location' => 'sometimes|string',
+        'pincode' => 'sometimes|string',
+        'zone' => 'sometimes|string',
+        'driving_experience' => 'sometimes|integer',
+        'car_driving_experience' => 'sometimes|integer',
+        'driving_licence_front' => 'nullable|image',
+        'driving_licence_back' => 'nullable|image',
+        'type_of_driving_licence' => 'sometimes|string',
+        'aadhar_card_front' => 'nullable|image',
+        'aadhar_card_back' => 'nullable|image',
+        'passbook_front' => 'nullable|image',
+        'account_number' => 'sometimes|string',
+        'bank_name' => 'sometimes|string',
+        'ifsc_code' => 'sometimes|string',
+        'account_holder_name' => 'sometimes|string',
+    ]);
+
+    // Handle file uploads
+    $fileFields = [
+        'photo', 'driving_licence_front', 'driving_licence_back',
+        'aadhar_card_front', 'aadhar_card_back', 'passbook_front'
+    ];
+
+    foreach ($fileFields as $field) {
+        if ($request->hasFile($field)) {
+            $data[$field] = $request->file($field)->store('uploads/driver', 'public');
+        }
+    }
+
+    $driver->update($data);
+
+    return response()->json([
+        'message' => 'Driver details updated successfully',
+        'data' => $driver
+    ]);
+}
+
 
     // check details 
     // details api 

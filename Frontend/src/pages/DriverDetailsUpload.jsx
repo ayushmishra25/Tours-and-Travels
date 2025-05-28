@@ -14,8 +14,8 @@ const DriverDetailsUpload = () => {
     pincode: "",
     zone: "",
     drivingExperienceYears: "",
-    drivingExperienceType: "", // manual, automatic, luxury
-    licenseType: "", // options for license type
+    drivingExperienceType: "", 
+    licenseType: "", 
     accountNumber: "",
     bankName: "",
     ifsc: "",
@@ -215,10 +215,7 @@ const DriverDetailsUpload = () => {
         </fieldset>
 
         <div className="form-group-driverdetails-edit">
-          
               <button type="submit" className="submit-btn">Save</button> 
-              
-            
         </div>
       </form>
     </div>

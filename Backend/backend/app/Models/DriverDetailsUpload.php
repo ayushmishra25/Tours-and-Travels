@@ -31,4 +31,6 @@ class DriverDetailsUpload extends Model
         'ifsc_code',
         'account_holder_name',
     ];
+
+    
 }

@@ -14,9 +14,9 @@ function Footer() {
         <div className="footer-section">
           <h2>Follow Us</h2>
           <div className="social-links">
-              <a href="https://www.facebook.com/profile.php?id=61575965612981"  target="_blank" rel="noopener noreferrer"> <img src="facebook.webp" alt="Facebook" /></a>
-              <a href="https://x.com/sahyogforce" target="_blank" rel="noopener noreferrer" > <img src="twitter.webp" alt="Twitter" /></a>
-              <a href="https://www.instagram.com/sahyogforce?igsh=cjY2bzQ3MzA0ZTI1"  target="_blank"  rel="noopener noreferrer" > <img src="instagram.webp" alt="Instagram" /></a>
+              <a href="https://www.facebook.com/profile.php?id=61575965612981"  target="_blank" rel="noopener noreferrer"> <img src="/facebook.webp" alt="Facebook" /></a>
+              <a href="https://x.com/sahyogforce" target="_blank" rel="noopener noreferrer" > <img src="/twitter.webp" alt="Twitter" /></a>
+              <a href="https://www.instagram.com/sahyogforce?igsh=cjY2bzQ3MzA0ZTI1"  target="_blank"  rel="noopener noreferrer" > <img src="/instagram.webp" alt="Instagram" /></a>
           </div>
           <p><a href="mailto:contact@sahyogforce.com">contact@sahyogforce.com</a></p>
           <p><a href="mailto:support@sahyogforce.com">support@sahyogforce.com</a></p>

@@ -27,7 +27,7 @@ import DriverProfile from './pages/DriverProfile';
 import PostBooking from './pages/PostBooking';
 import InvoicePage from './pages/InvoicePage';
 import FinalTnC from './pages/FinalTnC';
-import DriverDetailUpload_Editable from './pages/DriverDetailsUpload_Editable';
+import DriverDetailUploadEditable from './pages/DriverDetailsUploadEditable';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -99,7 +99,7 @@ const MainContent = () => {
         <Route
           path="/driver-details-upload-editable"
           element={
-              <DriverDetailUpload_Editable />
+              <DriverDetailUploadEditable />
           }
         />
 
