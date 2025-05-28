@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom"; 
-
+import { Link } from "react-router-dom";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -18,7 +17,6 @@ const Bookings = () => {
           return;
         }
 
-        // Base URL should end without slash, unless you ensure it in env file
         const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
         const response = await axios.get(`${baseURL}/api/bookings/${userId}`, {
@@ -27,11 +25,7 @@ const Bookings = () => {
           },
         });
 
-        console.log("Raw API response:", response.data);
-
-        // Laravel returns: { bookings: [...] }
         const data = response.data.bookings;
-
         if (Array.isArray(data)) {
           setBookings(data);
         } else {
@@ -50,20 +44,55 @@ const Bookings = () => {
 
   return (
     <div className="bookings-container">
+      <Helmet>
+        <title>My Bookings</title>
+      </Helmet>
       <h2>My Bookings</h2>
       <ul>
         {bookings.length > 0 ? (
           bookings.map((booking, index) => (
-            <li key={booking.id || index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}> {/* 🔥 Added inline style for right corner */}
+            <li
+              key={booking.id || index}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #ccc",
+                padding: "10px 0",
+              }}
+            >
               <div>
-                <strong>{booking.booking_type}</strong> — From <strong>{booking.source_location}</strong> to <strong>{booking.destination_location}</strong> — <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
+                <strong>{booking.booking_type}</strong> — From{" "}
+                <strong>{booking.source_location}</strong> to{" "}
+                <strong>{booking.destination_location}</strong> —{" "}
+                <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
               </div>
-              <Link
-              to={`/invoice/${booking.id}`}
-              style={{ textDecoration: "none", color: "#2e86de", fontWeight: "bold" }}
-              >
-              View Bill
-              </Link>
+
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <Link
+                  to={`/final-tnc`}
+                  title="View Payment Details"
+                  style={{ textDecoration: "none", fontSize: "18px" }}
+                >
+                  💳
+                </Link>
+
+                <Link
+                  to={`/driver/${booking.driver_id}`}
+                  title="View Driver Details"
+                  style={{ textDecoration: "none", fontSize: "18px" }}
+                >
+                  👨‍✈️
+                </Link>
+
+                <Link
+                  to={`/invoice/${booking.id}`}
+                  title="View Bill"
+                  style={{ textDecoration: "none", fontSize: "18px", color: "#2e86de", fontWeight: "bold", }}
+                >
+                   🧾
+                </Link>
+              </div>
             </li>
           ))
         ) : (

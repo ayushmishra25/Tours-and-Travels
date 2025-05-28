@@ -49,7 +49,7 @@ const DashboardNavbar = () => {
       <nav className={isOpen ? "dashboard-nav open" : "dashboard-nav"}>
         <ul>
           <li><Link to="/dashboard" onClick={toggleMenu}>Home</Link></li>
-          <li><Link to="/dashboard/profile" onClick={toggleMenu}>User Profile</Link></li>
+          <li><Link to="/dashboard/profile" onClick={toggleMenu}>My Profile</Link></li>
           <li><Link to="/dashboard/bookings" onClick={toggleMenu}>My Bookings</Link></li>
 
           {isLoggedIn && (

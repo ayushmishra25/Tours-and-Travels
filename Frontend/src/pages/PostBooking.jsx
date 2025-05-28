@@ -72,14 +72,6 @@ const BookingConfirmation = () => {
     return () => clearInterval(interval);
   }, [bookingId, token]);
 
-  const handlePayCash = () => {
-    navigate('/final-tnc');
-  };
-
-  const handleUPIClick = () => setShowUPIScanner(true);
-  const handleUPISuccess = () => {
-    navigate('/final-tnc');
-  };
 
   // If we haven't even loaded the booking info yet, show a loader
   if (!bookingId) {
@@ -92,21 +84,14 @@ const BookingConfirmation = () => {
       <DashboardNavbar />
     <div className="confirmation-wrapper">
       <section className="confirmation-left">
-        <h1>Booking Confirmed</h1>
         <p>
           Our team will contact you shortly to confirm the driver details and
           preferences.
         </p>
+        <p>
+          After sometime you can check you assigned driver on you my bookings page.
+        </p>
 
-        {assignedDriver ? (
-          <div className="driver-details">
-            <h2>Driver Assigned</h2>
-            <p><strong>Name:</strong> {assignedDriver.name}</p>
-            <p><strong>Phone:</strong> {assignedDriver.phone}</p>
-          </div>
-        ) : (
-          <p className="waiting-msg">Waiting for driver assignment...</p>
-        )}
       </section>
 
       <section className="confirmation-right">
@@ -117,26 +102,11 @@ const BookingConfirmation = () => {
           <li><strong>Date &amp; Time:</strong> {bookingDatetime}</li>
         </ul>
         <p className="total-amount">Total Fare: ₹ {totalAmount}</p>
+        <p>
+          If you want to cancel you ride you can proceed to my bookings page.
+        </p>
 
-        <div className="payment-methods">
-          <h3>Choose Payment Method</h3>
-          <button className="pay-btn" onClick={handlePayCash}>
-            Pay via Cash
-          </button>
-          <button className="pay-btn" onClick={handleUPIClick}>
-            Pay via UPI
-          </button>
-        </div>
-
-        {showUPIScanner && (
-          <div className="upi-scanner">
-            <h4>Scan to Pay</h4>
-            <img src="/upi-qr.png" alt="UPI QR Code" />
-            <button className="pay-btn" onClick={handleUPISuccess}>
-              I’ve Paid
-            </button>
-          </div>
-        )}
+        
       </section>
     </div>
     </>

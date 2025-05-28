@@ -52,8 +52,7 @@ const FinalTnC = () => {
 
       {selectedMethod === 'upi' && !isPaid && (
         <div className="payment-info">
-          <p className="payment-msg">Please pay ₹{payableAmount} to the driver via <strong>UPI</strong>.</p>
-          <button className="confirm-btn" onClick={handleConfirmPayment}>Yes, Paid Now</button>
+          <p>Our team is working on it.....currently not available </p>
         </div>
       )}
     </div>
