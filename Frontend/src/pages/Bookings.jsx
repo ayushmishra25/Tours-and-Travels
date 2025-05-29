@@ -76,10 +76,7 @@ const Bookings = () => {
                 </Link>
 
                 <Link
-                  to={`/driver/${booking.driver_id}`}
-                  onClick={() =>
-                    localStorage.setItem("currentBookingId", booking.id)
-                  }
+                  to={`/assigned-driver/${booking.id}`}
                   title="View Driver Details"
                   style={{ textDecoration: "none", fontSize: "18px" }}
                 >

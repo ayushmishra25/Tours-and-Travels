@@ -19,7 +19,6 @@ const BookingConfirmation = () => {
   const token = localStorage.getItem("token");
 
   const [assignedDriver, setAssignedDriver] = useState(null);
-  const [showUPIScanner, setShowUPIScanner] = useState(false);
 
   useEffect(() => {
     if (!bookingId) {
@@ -91,6 +90,7 @@ const BookingConfirmation = () => {
         <p>
           After sometime you can check you assigned driver on you my bookings page.
         </p>
+        
 
       </section>
 

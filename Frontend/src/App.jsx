@@ -28,7 +28,7 @@ import PostBooking from './pages/PostBooking';
 import InvoicePage from './pages/InvoicePage';
 import FinalTnC from './pages/FinalTnC';
 import DriverDetailUploadEditable from './pages/DriverDetailsUploadEditable';
-import AssignedDriver from './admin/pages/AssignedDriver';
+import AssignedDriver from './pages/AssignedDriver';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -136,8 +136,8 @@ const MainContent = () => {
         />
         <Route path="/post-booking" element={<PostBooking />} />
         <Route path="/invoice/:booking_id" element={<InvoicePage />} />
-        <Route path="/final-tnc" element={<FinalTnC />} />
-        <Route path="/assigned-driver" element={<AssignedDriver />} />
+        <Route path="/final-tnc/:booking_id" element={<FinalTnC />} />
+        <Route path="/assigned-driver/:booking_id" element={<AssignedDriver />} />
         
 
         {/* Any unmatched goes home */}
