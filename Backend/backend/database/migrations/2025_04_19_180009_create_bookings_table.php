@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('booking_type', ['Hourly', 'Weekly', 'Monthly', 'On demand']);
             $table->string('trip_type');
             $table->string('source_location');
+            $table->string('source_pincode', 6);
             $table->string('zone')->nullable();
             $table->string('destination_location')->nullablle();
             $table->integer('hours')->nullable(); // For hourly

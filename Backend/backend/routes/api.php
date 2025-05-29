@@ -24,11 +24,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Booking-related
-    Route::apiResource('booking', BookingController::class);
+    Route::apiResource('bookings', BookingController::class);
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/{user_id}', [BookingController::class, 'show']);
     Route::post('/bookings/{id}/assign-driver', [BookingController::class, 'assignDriver']);
+    Route::get('/booking/{booking_id}', [BookingController::class, 'getDriverDetails']);
     Route::get('/driver/rides', [BookingController::class, 'getRidesForDriver']);
+    
 
     // Support-related
     Route::apiResource('support', SupportRequestController::class);
@@ -41,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Invoice
     Route::get('/invoice/{booking_id}', [InvoiceController::class, 'getInvoice']);
+    Route::get('/booking/{booking_id}/payment', [InvoiceController::class, 'getPayment']);
+
 
     // Driver Rides
     Route::post('/driver-rides', [DriverRideController::class, 'store']);

@@ -40,4 +40,17 @@ class InvoiceController extends Controller
             'invoiceDate' => now()->toDateString(), 
         ]);
     }
+
+    public function getPayment($booking_id)
+    {
+        $booking = Booking::find($booking_id);
+
+        if (!$booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
+        }
+
+        return response()->json([
+            'payment' => $booking->payment
+        ]);
+    }
 }

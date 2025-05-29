@@ -16,6 +16,7 @@ class Booking extends Model
         'trip_type',
         'zone',
         'source_location',
+        'source_pincode',
         'destination_location',
         'hours',
         'working_days',
