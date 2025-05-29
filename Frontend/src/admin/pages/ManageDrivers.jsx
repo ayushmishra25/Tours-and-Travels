@@ -61,7 +61,6 @@ const ManageDrivers = () => {
         style={{
           margin: "10px 0 20px 0",
           padding: "10px",
-          width: "100%",
           maxWidth: "400px",
           fontSize: "16px",
           border: "1px solid #ccc",

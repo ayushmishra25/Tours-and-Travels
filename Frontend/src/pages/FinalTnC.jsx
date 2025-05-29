@@ -3,12 +3,28 @@ import { useNavigate } from 'react-router-dom';
 
 const FinalTnC = () => {
   const navigate = useNavigate();
+  const { booking_id } = useParams(); // assuming booking_id is in the route param
 
   const [selectedMethod, setSelectedMethod] = useState('');
   const [isPaid, setIsPaid] = useState(false);
+  const [payableAmount, setPayableAmount] = useState(null);
 
-  // Example: dynamically fetched amount
-  const payableAmount = 1250; // Replace this with actual dynamic value if available
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    const fetchPayment = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/booking/${booking_id}/payment`);
+        setPayableAmount(response.data.payment); // adjust if API response structure differs
+      } catch (error) {
+        console.error('Error fetching payment:', error);
+      }
+    };
+
+    if (booking_id) {
+      fetchPayment();
+    }
+  }, [booking_id]);
 
   const handleProceed = (method) => {
     setSelectedMethod(method);
@@ -16,7 +32,7 @@ const FinalTnC = () => {
 
   const handleConfirmPayment = () => {
     setIsPaid(true);
-    navigate('/dashboard/bookings'); // Replace with dynamic booking id if needed
+    navigate('/dashboard/bookings'); // Use booking_id if needed
   };
 
   return (
