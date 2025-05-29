@@ -18,7 +18,6 @@ const Bookings = () => {
         }
 
         const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
-
         const response = await axios.get(`${baseURL}/api/bookings/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -32,7 +31,6 @@ const Bookings = () => {
           console.warn("Unexpected API format");
           setBookings([]);
         }
-
       } catch (error) {
         console.error("Error fetching bookings:", error);
         setBookings([]);
@@ -78,7 +76,10 @@ const Bookings = () => {
                 </Link>
 
                 <Link
-                  to={"/assigned-driver"}
+                  to={`/driver/${booking.driver_id}`}
+                  onClick={() =>
+                    localStorage.setItem("currentBookingId", booking.id)
+                  }
                   title="View Driver Details"
                   style={{ textDecoration: "none", fontSize: "18px" }}
                 >
@@ -88,9 +89,14 @@ const Bookings = () => {
                 <Link
                   to={`/invoice/${booking.id}`}
                   title="View Bill"
-                  style={{ textDecoration: "none", fontSize: "18px", color: "#2e86de", fontWeight: "bold", }}
+                  style={{
+                    textDecoration: "none",
+                    fontSize: "18px",
+                    color: "#2e86de",
+                    fontWeight: "bold",
+                  }}
                 >
-                   🧾
+                  🧾
                 </Link>
               </div>
             </li>

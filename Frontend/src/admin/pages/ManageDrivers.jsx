@@ -57,7 +57,15 @@ const ManageDrivers = () => {
         placeholder="Search by name, email, phone, location, or pincode"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="search-bar"
+        style={{
+          margin: "10px 0 20px 0",
+          padding: "10px",
+          maxWidth: "400px",
+          fontSize: "16px",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+          width: "200%",
+        }}
       />
 
       {loading ? (
