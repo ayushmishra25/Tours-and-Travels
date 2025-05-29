@@ -10,6 +10,7 @@ const WeeklyDriver = () => {
 
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
+  const [pickupPincode, setpickupPincode] = useState("");
   const [destinationLocation, setDestinationLocation] = useState("");
   const [workingDays, setWorkingDays] = useState("");
   const [date, setDate] = useState("");
@@ -160,6 +161,12 @@ const WeeklyDriver = () => {
                 placeholder="Enter Pickup Location"
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Enter Pickup Area Pincode"
+                value={pickupPincode}
+                onChange={(e) => setPickupPincode(e.target.value)}
               />
             </label>
             {/* New destination field */}

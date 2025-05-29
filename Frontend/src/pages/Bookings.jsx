@@ -78,7 +78,7 @@ const Bookings = () => {
                 </Link>
 
                 <Link
-                  to={`/driver/${booking.driver_id}`}
+                  to={"/assigned-driver"}
                   title="View Driver Details"
                   style={{ textDecoration: "none", fontSize: "18px" }}
                 >

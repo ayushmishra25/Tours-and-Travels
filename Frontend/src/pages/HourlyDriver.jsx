@@ -38,6 +38,7 @@ const HourlyDriver = () => {
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
   const [pickup, setPickup] = useState("");
+  const [pickupPincode , setpickupPincode] = useState("");
   const [destination, setDestination] = useState("");
   const [tripType] = useState("roundtrip");
   const [hours, setHours] = useState(5);
@@ -173,6 +174,14 @@ const HourlyDriver = () => {
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
             />
+
+            <input
+              type="text"
+              placeholder="Enter Pickup Area Pincode"
+              value={pickupPincode}
+              onChange={(e) => setPickupPincode(e.target.value)}
+            />
+            
             <input
               type="text"
               placeholder="Enter Destination Address"

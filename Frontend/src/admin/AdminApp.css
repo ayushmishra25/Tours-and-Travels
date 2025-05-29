@@ -261,57 +261,117 @@
 
   /* ManageDrivers.css - Manage Drivers Page Styles */
 
+/* ManageDrivers.css */
+
 .manage-drivers-container {
-    margin: 80px auto 20px;
-    padding: 20px;
-    max-width: 1200px;
-    background-color: var(--background-color);
-  }
   
-  .manage-drivers-container h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 20px;
+  padding-top: 60px;
+  padding-bottom: 20px;
+  max-width: 1000px;
+  margin: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  margin: 0 auto 20px;
+  display: block;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.search-bar:focus {
+  border-color: #2980b9;
+}
+
+.status-text {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.status-text.error {
+  color: red;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.drivers-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.drivers-table th,
+.drivers-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.drivers-table th {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.drivers-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.drivers-table tr:hover {
+  background-color: #eaeaea;
+}
+
+.drivers-table a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+.drivers-table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-bar {
+    max-width: 100%;
   }
-  
-  .drivers-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: var(--white);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
+
   .drivers-table th,
   .drivers-table td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    font-size: 14px;
   }
-  
-  .drivers-table th {
-    background-color: var(--primary-color);
-    color: var(--white);
+
+  .heading {
+    font-size: 20px;
   }
-  
-  .drivers-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .drivers-table th,
-    .drivers-table td {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
-  }
+}
+
 /* BookingManagement.css - Booking Management Page Styles */
 
 /* src/admin/pages/BookingManagement.css */
 .booking-management-container {
-  padding: 2rem;
+  padding-top: 50px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   background: #f5f5f5;
 }
 .booking-management-container h2 {
@@ -376,7 +436,10 @@
 /* src/admin/pages/PaymentManagement.css */
 
 .payment-management-container {
-  padding: 2rem;
+  padding-top: 50px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   background: #f5f7fa;
   min-height: 100vh;
 }
@@ -663,7 +726,10 @@
 }
 /* support complaint section */
 .support-complaints-container {
-  padding: 20px;
+  padding-top: 50px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   max-width: 100%;
   overflow-x: auto;
 }
@@ -735,7 +801,10 @@
 /* driver details page */
 /* Add to your admin CSS */
 .driver-details-wrapper {
-  padding: 2rem;
+  padding-top: 50px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   max-width: 1100px;
   margin: auto;
   font-family: 'Segoe UI', sans-serif;
@@ -758,16 +827,63 @@
 }
 
 .photo-box {
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  margin-top: 15px;
 }
-
 .driver-photo {
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 10px;
-  border: 2px solid #aaa;
-  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+}
+
+.download-btn {
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-right: 80px;
+  padding-left: 10px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #0056b3;
+}
+
+/* ✅ Responsive Design */
+@media screen and (max-width: 768px) {
+  .driver-photo {
+    width: 160px;
+    height: 160px;
+  }
+
+  .download-btn {
+    padding: 8px 20px;
+    padding-right: 55px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .driver-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .download-btn {
+    padding: 7px 18px;
+    padding-right: 55px;
+    font-size: 13px;
+  }
 }
 
 .details-section {
@@ -812,16 +928,4 @@
   margin-bottom: 8px;
 }
 
-.download-btn {
-  padding: 6px 14px;
-  font-size: 14px;
-  background: #3498db;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
 
-.download-btn:hover {
-  background: #2980b9;
-}

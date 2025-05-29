@@ -9,6 +9,7 @@ const OndemandDriver = () => {
   const token = localStorage.getItem("token");
 
   const [pickup, setPickup] = useState("");
+  const [pickupPincode, setpickupPincode] = useState("");
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
   const [date, setDate] = useState("");
@@ -118,6 +119,12 @@ const OndemandDriver = () => {
                 placeholder="Enter Pickup Address"
                 value={pickup}
                 onChange={(e) => setPickup(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Enter Pickup Area Pincode"
+                value={pickupPincode}
+                onChange={(e) => setPickupPincode(e.target.value)}
               />
             </label>
             <label>
