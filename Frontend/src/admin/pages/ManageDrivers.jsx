@@ -65,6 +65,7 @@ const ManageDrivers = () => {
           border: "1px solid #ccc",
           borderRadius: "5px",
           width: "200%",
+          
         }}
       />
 
