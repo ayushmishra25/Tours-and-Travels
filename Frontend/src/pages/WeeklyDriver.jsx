@@ -91,6 +91,7 @@ const WeeklyDriver = () => {
       booking_type: "Weekly",
       trip_type: `${workingDays} days`,
       source_location: pickupLocation,
+      source_pincode:pickupPincode,
       destination_location: destinationLocation,
       hours: workingDays * workingHoursPerDay,
       working_days: workingDays, // Still fine as is
@@ -166,7 +167,7 @@ const WeeklyDriver = () => {
                 type="text"
                 placeholder="Enter Pickup Area Pincode"
                 value={pickupPincode}
-                onChange={(e) => setPickupPincode(e.target.value)}
+                onChange={(e) => setpickupPincode(e.target.value)}
               />
             </label>
             {/* New destination field */}

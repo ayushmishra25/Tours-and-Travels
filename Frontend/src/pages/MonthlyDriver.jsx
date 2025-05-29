@@ -116,6 +116,7 @@ const MonthlyDriver = () => {
       trip_type: "M", 
       source_location: pickupLocation,
       destination_location: destinationLocation,
+      source_pincode:pickupPincode,
       hours: null,
       working_days: parseInt(workingDays),
       working_hours_per_day: parseInt(workingHours),
@@ -154,9 +155,6 @@ const MonthlyDriver = () => {
     }
   };
 
-  
-
-
   return (
     <>
       <DashboardNavbar />
@@ -190,7 +188,7 @@ const MonthlyDriver = () => {
                 type="text"
                 placeholder="Enter Pickup Area Pincode"
                 value={pickupPincode}
-                onChange={(e) => setPickupPincode(e.target.value)}
+                onChange={(e) => setpickupPincode(e.target.value)}
               />
             </label>
             <label>

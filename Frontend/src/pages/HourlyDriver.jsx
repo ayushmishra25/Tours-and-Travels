@@ -74,6 +74,7 @@ const HourlyDriver = () => {
       booking_type: "Hourly",
       trip_type: tripType,
       source_location: pickup,
+      source_pincode:pickupPincode,
       destination_location: destination,
       hours,
       payment: totalAmount,
@@ -83,7 +84,7 @@ const HourlyDriver = () => {
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
-      const resp = await axios.post(`${baseURL}/api/booking`, payload, {
+      const resp = await axios.post(`${baseURL}/api/bookings`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -179,7 +180,7 @@ const HourlyDriver = () => {
               type="text"
               placeholder="Enter Pickup Area Pincode"
               value={pickupPincode}
-              onChange={(e) => setPickupPincode(e.target.value)}
+              onChange={(e) => setpickupPincode(e.target.value)}
             />
             
             <input

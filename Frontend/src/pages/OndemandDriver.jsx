@@ -72,6 +72,7 @@ const OndemandDriver = () => {
       booking_type: "On demand", // Ensure this value is accepted by your database
       trip_type: "one-way", // Ensure this value is accepted by your database
       source_location: pickup,
+      source_pincode:pickupPincode,
       destination_location: destination,
       distance: parseFloat(distance),
       booking_datetime: bookingDatetime,
@@ -124,7 +125,7 @@ const OndemandDriver = () => {
                 type="text"
                 placeholder="Enter Pickup Area Pincode"
                 value={pickupPincode}
-                onChange={(e) => setPickupPincode(e.target.value)}
+                onChange={(e) => setpickupPincode(e.target.value)}
               />
             </label>
             <label>
