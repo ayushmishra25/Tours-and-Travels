@@ -59,7 +59,7 @@ const Bookings = () => {
       }
     } catch (error) {
       console.error("Error checking payment status:", error);
-      alert("Unable to check payment status. Please try again later.");
+      alert("First Go to payment page and confirm your payment method and make the payment.");
     }
   };
 
