@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class DriverRideController extends Controller
 {
     /**
-     * Store a new driver ride.
+     * Store or update a driver ride based on booking_id.
      */
     public function store(Request $request)
     {
@@ -20,34 +20,40 @@ class DriverRideController extends Controller
             'payment_status' => 'nullable|boolean',
         ]);
 
-        // Prevent duplicate ongoing ride for a booking
-        $existingRide = DriverRide::where('booking_id', $validated['booking_id'])
-            ->whereNull('end_ride')
-            ->first();
-
-        if ($existingRide) {
-            return response()->json([
-                'message' => 'This booking already has an ongoing ride.'
-            ], 422);
-        }
+        // Check if a ride already exists for the booking_id
+        $existingRide = DriverRide::where('booking_id', $validated['booking_id'])->first();
 
         $data = [
-            'booking_id' => $validated['booking_id'],
-            'start_ride' => now(),
             'payment_type' => $validated['payment_type'] ?? null,
             'payment_received' => $validated['payment_received'] ?? false,
             'payment_status' => $validated['payment_status'] ?? false,
         ];
 
-        $ride = DriverRide::create($data);
+        if ($existingRide) {
+            // Update existing ride
+            $existingRide->update($data);
 
-        return response()->json([
-            'message' => 'Ride started',
-            'ride' => $ride,
-        ]);
+            return response()->json([
+                'message' => 'Ride updated successfully',
+                'ride' => $existingRide,
+            ]);
+        } else {
+            // Insert new ride
+            $ride = DriverRide::create(array_merge([
+                'booking_id' => $validated['booking_id'],
+                'start_ride' => now(),
+            ], $data));
+
+            return response()->json([
+                'message' => 'Ride started',
+                'ride' => $ride,
+            ]);
+        }
     }
 
-    // Update API
+    /**
+     * Update an existing driver ride by ride ID.
+     */
     public function update(Request $request, $id)
     {
         $ride = DriverRide::findOrFail($id);
@@ -85,4 +91,22 @@ class DriverRideController extends Controller
         ]);
     }
 
+    /**
+     * Get ride details by booking_id.
+     */
+    public function show($booking_id)
+    {
+        $ride = DriverRide::where('booking_id', $booking_id)->first();
+
+        if (!$ride) {
+            return response()->json([
+                'message' => 'No ride found for the given booking ID.',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Ride details retrieved successfully.',
+            'ride' => $ride,
+        ]);
+    }
 }

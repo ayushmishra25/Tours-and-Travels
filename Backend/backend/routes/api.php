@@ -47,8 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Driver Rides
-    Route::post('/driver-rides', [DriverRideController::class, 'store']);
-    Route::put('/driver-rides/{id}', [DriverRideController::class, 'update']);
+    Route::apiResource('driver-rides', DriverRideController::class);
 
     // Driver-related Routes
     Route::prefix('drivers/{id}')->group(function () {

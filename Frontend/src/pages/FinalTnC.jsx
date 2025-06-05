@@ -1,23 +1,29 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useParams } from "react-router-dom"; 
-import axios from "axios"; 
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const FinalTnC = () => {
   const navigate = useNavigate();
-  const { booking_id } = useParams(); // assuming booking_id is in the route param
-
+  const { booking_id } = useParams();
   const [selectedMethod, setSelectedMethod] = useState('');
   const [isPaid, setIsPaid] = useState(false);
   const [payableAmount, setPayableAmount] = useState(null);
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchPayment = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/booking/${booking_id}/payment`);
-        setPayableAmount(response.data.payment); // adjust if API response structure differs
+        const response = await axios.get(
+          `${BASE_URL}/api/booking/${booking_id}/payment`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        setPayableAmount(response.data.payment);
       } catch (error) {
         console.error('Error fetching payment:', error);
       }
@@ -28,13 +34,33 @@ const FinalTnC = () => {
     }
   }, [booking_id]);
 
-  const handleProceed = (method) => {
-    setSelectedMethod(method);
+  const handleConfirmPayment = async () => {
+    try {
+      await axios.post(
+        `${BASE_URL}/api/driver-rides`,
+        {
+          booking_id,
+          payment_type: selectedMethod,
+          payment_received: false,
+          payment_status: true
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setIsPaid(true);
+      navigate('/dashboard/bookings');
+    } catch (error) {
+      console.error('Payment confirmation failed:', error);
+      alert('Failed to confirm payment. Please try again.');
+    }
   };
 
-  const handleConfirmPayment = () => {
-    setIsPaid(true);
-    navigate('/dashboard/bookings'); // Use booking_id if needed
+  const handleProceed = (method) => {
+    setSelectedMethod(method);
   };
 
   return (
@@ -70,7 +96,7 @@ const FinalTnC = () => {
 
       {selectedMethod === 'upi' && !isPaid && (
         <div className="payment-info">
-          <p>Our team is working on it.....currently not available </p>
+          <p>Our team is working on it... currently not available.</p>
         </div>
       )}
     </div>

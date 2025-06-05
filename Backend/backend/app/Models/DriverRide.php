@@ -31,7 +31,7 @@ class DriverRide extends Model
     }
 
     protected $casts = [
-    'payment_received' => 'boolean',
-    'payment_status' => 'boolean',
+        'payment_received' => 'boolean',
+        'payment_status' => 'boolean',
     ];
 }

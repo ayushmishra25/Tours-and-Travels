@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
+
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
 
         if (!token || !userId) {
@@ -17,8 +20,7 @@ const Bookings = () => {
           return;
         }
 
-        const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
-        const response = await axios.get(`${baseURL}/api/bookings/${userId}`, {
+        const response = await axios.get(`${BASE_URL}/api/bookings/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -39,6 +41,27 @@ const Bookings = () => {
 
     fetchBookings();
   }, []);
+
+  const handleInvoiceClick = async (bookingId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/driver-rides/${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const ride = response.data.ride;
+
+      if (ride && ride.payment_received) {
+        navigate(`/invoice/${bookingId}`);
+      } else {
+        alert("Please complete the payment to view the bill.");
+      }
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+      alert("Unable to check payment status. Please try again later.");
+    }
+  };
 
   return (
     <div className="bookings-container">
@@ -83,18 +106,20 @@ const Bookings = () => {
                   👨‍✈️
                 </Link>
 
-                <Link
-                  to={`/invoice/${booking.id}`}
+                <button
+                  onClick={() => handleInvoiceClick(booking.id)}
                   title="View Bill"
                   style={{
-                    textDecoration: "none",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
                     fontSize: "18px",
                     color: "#2e86de",
                     fontWeight: "bold",
                   }}
                 >
                   🧾
-                </Link>
+                </button>
               </div>
             </li>
           ))
