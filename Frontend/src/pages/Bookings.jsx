@@ -68,7 +68,7 @@ const Bookings = () => {
 
               <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                 <Link
-                  to={`/final-tnc`}
+                  to={`/final-tnc/${booking.id}`}
                   title="View Payment Details"
                   style={{ textDecoration: "none", fontSize: "18px" }}
                 >
