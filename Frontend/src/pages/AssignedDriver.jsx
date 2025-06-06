@@ -32,7 +32,7 @@ const AssignedDriver = () => {
   }, [booking_id, baseURL, token]);
 
   if (loading) return <p>Loading Driver Details...</p>;
-  if (!driverData) return <p>No Driver data found for booking ID: {booking_id}</p>;
+  if (!driverData) return <h2 className="no-driver-assigned" >No Driver is assigned yet for booking ID: {booking_id}, wait for few minutes.</h2>;
 
   // Corrected key mapping from API response
   const {

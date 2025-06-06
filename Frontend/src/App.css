@@ -802,11 +802,13 @@ button.login-btn:hover {
 .save-btn-user {
   background-color: #28a745;
   color: #fff;
+  margin-left: 16px;
 }
 
 .discard-btn-user {
   background-color: #dc3545;
   color: #fff;
+  margin-top: 10px;
 }
 
 .edit-btn-user:hover,
@@ -3151,6 +3153,36 @@ legend {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+.no-driver-assigned {
+  font-size: 1.5rem;
+  color: #333;
+  background-color: #f0f4f8;
+  border: 1px solid #d1d5db;
+  padding: 1.5rem 1rem;
+  margin: 2rem auto;
+  border-radius: 8px;
+  max-width: 90%;
+  width: 600px;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .no-driver-assigned {
+    font-size: 1.2rem;
+    padding: 1.2rem;
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .no-driver-assigned {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
+
 
 /* Section Title */
 .section-title {
