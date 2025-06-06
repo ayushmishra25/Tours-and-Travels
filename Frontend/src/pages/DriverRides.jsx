@@ -8,6 +8,10 @@ const DriverRides = () => {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
 
+  // Track ride states: 'notStarted' | 'started' | 'ended' | 'completed'
+  // We'll store this in a state object keyed by rideId
+  const [rideStatus, setRideStatus] = useState({});
+
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
@@ -17,6 +21,12 @@ const DriverRides = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRides(resp.data.rides || []);
+        // Initialize rideStatus as 'notStarted' for all rides
+        const initialStatus = {};
+        (resp.data.rides || []).forEach((ride) => {
+          initialStatus[ride.id] = "notStarted";
+        });
+        setRideStatus(initialStatus);
       } catch (err) {
         console.error("Error fetching rides:", err);
       } finally {
@@ -27,10 +37,25 @@ const DriverRides = () => {
     else setLoading(false);
   }, [token]);
 
+  const handleStartRide = (rideId) => {
+    setRideStatus((prev) => ({ ...prev, [rideId]: "started" }));
+  };
+
+  const handleEndRide = (rideId) => {
+    setRideStatus((prev) => ({ ...prev, [rideId]: "ended" }));
+  };
+
+  const handlePaymentReceived = (rideId) => {
+    setRideStatus((prev) => ({ ...prev, [rideId]: "completed" }));
+  };
+
   return (
     <>
       <DriverNavbar />
       <div className="rides-page">
+        <Helmet>
+          <title>Driver Rides - My Rides</title>
+        </Helmet>
         <h1>My Rides</h1>
 
         {loading ? (
@@ -41,16 +66,71 @@ const DriverRides = () => {
           <p className="no-rides">You have no rides yet.</p>
         ) : (
           <div className="rides-list">
-            {rides.map((ride) => (
-              <div key={ride.id} className="ride-card">
-                <p><strong>Date:</strong> {new Date(ride.date).toLocaleDateString()}</p>
-                <p><strong>Time:</strong> {ride.time}</p>
-                <p><strong>From:</strong> {ride.pickup}</p>
-                <p><strong>To:</strong> {ride.destination}</p>
-                <p><strong>Type:</strong> {ride.type}</p>
-                <p><strong>Fare:</strong> ₹{ride.fare}</p>
-              </div>
-            ))}
+            {rides.map((ride) => {
+              const status = rideStatus[ride.id] || "notStarted";
+              return (
+                <div key={ride.id} className="ride-card">
+                  <div className="ride-details">
+                    <span><strong>Date:</strong> {new Date(ride.date).toLocaleDateString()}</span>
+                    <span><strong>Time:</strong> {ride.time}</span>
+                    <span><strong>From:</strong> {ride.pickup}</span>
+                    <span><strong>To:</strong> {ride.destination}</span>
+                    <span><strong>Type:</strong> {ride.type}</span>
+                    <span><strong>Fare:</strong> ₹{ride.fare}</span>
+                  </div>
+                  <div className="ride-actions">
+                    {/* Show buttons & messages based on status */}
+                    {status === "notStarted" && (
+                      <>
+                        <button className="start-ride" onClick={() => handleStartRide(ride.id)}>
+                          Start Ride
+                        </button>
+                        <button className="end-ride" disabled>
+                          End Ride
+                        </button>
+                      </>
+                    )}
+
+                    {status === "started" && (
+                      <>
+                        <button className="start-ride started" disabled>
+                          Ride Started
+                        </button>
+                        <button className="end-ride" onClick={() => handleEndRide(ride.id)}>
+                          End Ride
+                        </button>
+                        <p className="gentle-msg start-msg">Drive safely and responsibly.</p>
+                      </>
+                    )}
+
+                    {status === "ended" && (
+                      <>
+                        <button className="start-ride" disabled style={{ visibility: "hidden" }}>
+                          {/* Hide start ride button */}
+                          Start Ride
+                        </button>
+                        <button className="end-ride ended" disabled>
+                          End Ride
+                        </button>
+                        <p className="gentle-msg end-msg">
+                          Please collect ₹{ride.fare} from the customer.
+                        </p>
+                        <button
+                          className="payment-received"
+                          onClick={() => handlePaymentReceived(ride.id)}
+                        >
+                          Payment Received
+                        </button>
+                      </>
+                    )}
+
+                    {status === "completed" && (
+                      <p className="ride-completed-msg">Ride Completed</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

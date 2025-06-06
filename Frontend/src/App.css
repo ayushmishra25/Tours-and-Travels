@@ -2089,69 +2089,162 @@ fieldset.account-details legend {
   }
 }
 
-/* driver rides page css */
+/* Driver Rides Page CSS */
 
+/* Root Container */
 .rides-page {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 24px 16px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9fafb;
+  color: #1f2937;
 }
 
+/* Heading */
 .rides-page h1 {
   font-size: 1.8rem;
-  font-weight: 700;
-  color: #0d2c54;
-  margin-bottom: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
 }
 
+/* Rides List */
 .rides-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 20px;
 }
 
+/* Ride Card */
 .ride-card {
-  background-color: #f7f9fb;
-  padding: 1rem 1.2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease-in-out;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.ride-card:hover {
-  background-color: #eef4fb;
+/* Ride Details */
+.ride-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
 }
 
-.ride-card p {
-  margin: 0.3rem 0;
+.ride-details span {
   font-size: 0.95rem;
-  color: #333;
+  color: #374151;
+  line-height: 1.4;
 }
 
-.loading,
-.error-message,
-.no-rides {
+/* Action Section */
+.ride-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.ride-actions button {
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 200px;
   text-align: center;
-  color: #444;
-  margin-top: 2rem;
-  font-size: 1.1rem;
 }
 
-/* Responsive for smaller devices */
-@media (max-width: 600px) {
+.start-ride {
+  background-color: #2563eb;
+}
+
+.start-ride:hover {
+  background-color: #1e40af;
+}
+
+.start-ride.started {
+  background-color: #0ea5e9;
+  cursor: default;
+}
+
+.end-ride {
+  background-color: #dc2626;
+}
+
+.end-ride:hover {
+  background-color: #991b1b;
+}
+
+.end-ride.ended {
+  background-color: #6b7280;
+  cursor: default;
+}
+
+.payment-received {
+  background-color: #16a34a;
+}
+
+.payment-received:hover {
+  background-color: #15803d;
+}
+
+/* Message Styling */
+.gentle-msg {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.start-msg {
+  color: #0c4a6e;
+}
+
+.end-msg {
+  color: #7f1d1d;
+}
+
+.ride-completed-msg {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #065f46;
+  margin-top: 8px;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
   .ride-card {
-    padding: 0.9rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
   }
 
-  .rides-page h1 {
-    font-size: 1.5rem;
-    text-align: center;
+  .ride-details {
+    flex: 2;
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .ride-card p {
-    font-size: 0.9rem;
+  .ride-actions {
+    flex: 1;
+    align-items: flex-end;
+  }
+
+  .ride-actions button {
+    width: auto;
+  }
+
+  .gentle-msg,
+  .ride-completed-msg {
+    text-align: right;
+    width: 100%;
   }
 }
 
@@ -2479,78 +2572,6 @@ fieldset.account-details legend {
   }
 }
 
-/* Container for the myrides page */
-.rides-page {
-  max-width: 1200px;
-  margin: 0 auto;               /* center the page container */
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-/* Heading is centered */
-.rides-page h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  color: #002855;
-}
-
-/* The list wrapper: use flex to center and wrap cards */
-.rides-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;      /* center cards horizontally */
-  gap: 20px;
-}
-
-/* Individual ride card */
-.ride-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 20px;
-  width: calc(33.333% - 40px);  /* three cards per row minus gaps */
-  box-sizing: border-box;
-  transition: transform 0.2s;
-}
-
-.ride-card:hover {
-  transform: translateY(-4px);
-}
-
-/* Ride card text styling */
-.ride-card p {
-  margin: 8px 0;
-  font-size: 1rem;
-  color: #333;
-}
-
-.ride-card p strong {
-  color: #002855;
-}
-
-/* Messages (loading / no rides / error) */
-.loading,
-.no-rides,
-.error-message {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 40px;
-}
-
-/* Responsive breakpoints */
-@media (max-width: 992px) {
-  .ride-card {
-    width: calc(50% - 40px);     /* two cards per row */
-  }
-}
-
-@media (max-width: 600px) {
-  .ride-card {
-    width: 100%;                 /* one card per row */
-  }
-}
 
 /* css for contact page */
 /* src/pages/Contact.css */
