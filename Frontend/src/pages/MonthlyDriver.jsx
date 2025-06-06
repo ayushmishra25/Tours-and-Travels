@@ -128,7 +128,7 @@ const MonthlyDriver = () => {
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
-      const response = await axios.post(`${baseURL}/api/booking`, bookingData, {
+      const response = await axios.post(`${baseURL}/api/bookings`, bookingData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
