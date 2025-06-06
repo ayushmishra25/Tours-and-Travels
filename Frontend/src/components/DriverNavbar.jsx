@@ -47,6 +47,7 @@ const DriverNavbar = () => {
         <ul>
           <li><Link to="/driver-dashboard" onClick={toggleMenu}>Home</Link></li>
           <li><Link to="/trip-history" onClick={toggleMenu}>My Rides</Link></li>
+          <li><Link to="/driver-earnings" onClick={toggleMenu}>Earnings</Link></li>
           <li><Link to="/support" onClick={toggleMenu}>Support</Link></li>
           <li><Link to="/driver-profile" onClick={toggleMenu}>Driver Profile</Link></li>
           {token && (

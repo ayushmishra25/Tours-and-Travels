@@ -30,6 +30,7 @@ import FinalTnC from './pages/FinalTnC';
 import DriverDetailUploadEditable from './pages/DriverDetailsUploadEditable';
 import AssignedDriver from './pages/AssignedDriver';
 
+
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
 
@@ -138,6 +139,8 @@ const MainContent = () => {
         <Route path="/invoice/:booking_id" element={<InvoicePage />} />
         <Route path="/final-tnc/:booking_id" element={<FinalTnC />} />
         <Route path="/assigned-driver/:booking_id" element={<AssignedDriver />} />
+        <Route path="/driver-earnings" element={<Earnings />} />
+
         
 
         {/* Any unmatched goes home */}

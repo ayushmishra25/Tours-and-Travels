@@ -1993,99 +1993,93 @@ fieldset.account-details legend {
 }
 
 /* src/pages/Earnings.css */
+/* src/styles/Earnings.css */
 .earnings-container {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  background: var(--bg-color); /* from your global */
+  padding: 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+  max-width: 900px;
+  margin: auto;
 }
-.earnings-container h1 {
-  font-size: 2rem;
+
+h1 {
+  text-align: center;
   margin-bottom: 1rem;
-  color: var(--primary-text);
+  color: #333;
+}
+
+.earnings-summary, .company-share {
+  background: #f5f5f5;
+  border-left: 5px solid #4caf50;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.company-share {
+  border-left-color: #f44336;
+}
+
+.total-amount, .company-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-top: 0.5rem;
+}
+
+.earnings-table {
+  overflow-x: auto;
+}
+
+.earnings-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.earnings-table th,
+.earnings-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
   text-align: center;
 }
 
-/* Summary cards */
-
-/* Earnings table */
-/* Ensure content sits below fixed/sticky navbar */
-.earnings-container {
-  margin-top: 64px; /* adjust if navbar height differs */
-  padding: 2rem;
-  background: #f9f9f9;
-  min-height: calc(100vh - 64px);
+.earnings-table th {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
-.earnings-container h1 {
-  font-size: 2rem;
-  color: #003366;
-  margin-bottom: 1rem;
-}
-
-.earnings-list {
-  overflow-x: auto;
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.earnings-list table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px;
-}
-
-.earnings-list th,
-.earnings-list td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.earnings-list th {
-  background-color: #e8f0fe;
-  font-weight: 600;
-  color: #003366;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .earnings-container {
-    margin-top: 56px;
-    padding: 1.5rem;
+@media screen and (max-width: 600px) {
+  .total-amount, .company-amount {
+    font-size: 1.2rem;
   }
 
-  .earnings-container h1 {
-    font-size: 1.5rem;
+  .earnings-table table,
+  .earnings-table thead,
+  .earnings-table tbody,
+  .earnings-table th,
+  .earnings-table td,
+  .earnings-table tr {
+    display: block;
   }
 
-  .earnings-list table {
-    min-width: 100%;
+  .earnings-table thead tr {
+    display: none;
   }
 
-  .earnings-list th,
-  .earnings-list td {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .earnings-container {
-    margin-top: 48px;
-    padding: 1rem;
+  .earnings-table td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #ddd;
   }
 
-  .earnings-container h1 {
-    font-size: 1.25rem;
-  }
-
-  .earnings-list th,
-  .earnings-list td {
-    padding: 0.5rem;
-    font-size: 0.8rem;
+  .earnings-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    font-weight: bold;
+    text-transform: capitalize;
   }
 }
 
