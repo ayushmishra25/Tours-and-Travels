@@ -5,84 +5,59 @@ import { Helmet } from "react-helmet";
 import axios from "axios";
 
 const Earnings = () => {
-  const [earnings, setEarnings] = useState([]);
+  const [cashPayments, setCashPayments] = useState([]);
+  const [upiPayments, setUpiPayments] = useState([]);
   const token = localStorage.getItem("token");
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
     const fetchEarnings = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/driver/completed-rides`, {
+        const res = await axios.get(`${baseURL}/api/driver/earnings`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Assuming the backend returns only completed rides
-        const rides = response.data.rides || [];
+        const cash = res.data.filter((ride) => ride.paymentMode === "cash");
+        const upi = res.data.filter((ride) => ride.paymentMode === "upi");
 
-        const formatted = rides.map((ride) => ({
-          date: new Date(ride.date).toLocaleDateString(),
-          rideType: ride.type,
-          amount: ride.fare,
-          companyShare: Math.round(ride.fare * 0.2), // 20%
-        }));
-
-        setEarnings(formatted);
+        setCashPayments(cash);
+        setUpiPayments(upi);
       } catch (err) {
-        console.error("Failed to fetch earnings:", err);
+        console.error("Error fetching earnings:", err);
       }
     };
 
-    if (token) fetchEarnings();
+    fetchEarnings();
   }, [token]);
 
-  const totalEarnings = earnings.reduce((sum, e) => sum + e.amount, 0);
-  const totalCompanyShare = earnings.reduce((sum, e) => sum + e.companyShare, 0);
+  const totalCash = cashPayments.reduce((sum, r) => sum + r.fare, 0);
+  const totalUpi = upiPayments.reduce((sum, r) => sum + r.fare, 0);
+  const companyFromDriver = totalCash * 0.2;
+  const driverFromCompany = totalUpi * 0.8;
+
+  const renderSection = (title, amount) => (
+    <div className="earnings-section">
+      <h3>{title}</h3>
+      <div className="amount-box">₹{amount.toFixed(2)}</div>
+    </div>
+  );
 
   return (
     <>
-      <DriverNavbar />
       <Helmet>
-        <title>Driver Earnings</title>
+        <title> Earnings Summary </title>
       </Helmet>
-
+      <DriverNavbar />
       <div className="earnings-container">
-        <h1>My Earnings</h1>
+        <h1> Earnings Summary </h1>
 
-        {/* Section 1: Total Earnings */}
-        <section className="earnings-summary">
-          <h2>Total Amount Received</h2>
-          <p className="total-amount">₹{totalEarnings}</p>
-        </section>
-
-        {/* Section 2: Payment to Company */}
-        <section className="company-share">
-          <h2>Amount to be Paid to Company (20%)</h2>
-          <p className="company-amount">₹{totalCompanyShare}</p>
-        </section>
-
-        {/* Detailed Table */}
-        <div className="earnings-table">
-          <h3>Ride-wise Breakdown</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Ride Type</th>
-                <th>Amount Received</th>
-                <th>Company Share (20%)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {earnings.map((e, i) => (
-                <tr key={i}>
-                  <td>{e.date}</td>
-                  <td>{e.rideType}</td>
-                  <td>₹{e.amount}</td>
-                  <td>₹{e.companyShare}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="earnings-grid">
+          {renderSection("1. Payment Received to Driver (Cash)", totalCash)}
+          {renderSection("2. Payment Received to Company (UPI)", totalUpi)}
+        </div>
+        <div className="earnings-grid">
+          {renderSection("3. Driver to Pay to Company (20% of Cash)", companyFromDriver)}
+          {renderSection("4. Company to Pay to Driver (80% of UPI)", driverFromCompany)}
         </div>
       </div>
     </>
