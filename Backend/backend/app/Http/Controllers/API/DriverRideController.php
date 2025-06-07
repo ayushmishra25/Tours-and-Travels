@@ -30,7 +30,7 @@ class DriverRideController extends Controller
         ];
 
         if ($existingRide) {
-            // Update existing ride
+            // Update existing ride (do not update start_ride again)
             $existingRide->update($data);
 
             return response()->json([
@@ -38,10 +38,10 @@ class DriverRideController extends Controller
                 'ride' => $existingRide,
             ]);
         } else {
-            // Insert new ride
+            // Insert new ride with current time for start_ride
             $ride = DriverRide::create(array_merge([
                 'booking_id' => $validated['booking_id'],
-                'start_ride' => now(),
+                'start_ride' => now(), 
             ], $data));
 
             return response()->json([
@@ -54,9 +54,10 @@ class DriverRideController extends Controller
     /**
      * Update an existing driver ride by ride ID.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $booking_id)
     {
-        $ride = DriverRide::findOrFail($id);
+        // Find ride by booking_id (assuming it's unique)
+        $ride = DriverRide::where('booking_id', $booking_id)->firstOrFail();
 
         $validated = $request->validate([
             'driver_id' => 'nullable|exists:users,id',
@@ -77,7 +78,7 @@ class DriverRideController extends Controller
             $ride->end_ride = $validated['end_ride'];
         }
 
-        foreach (['payment_type', 'payment_received', 'payment_status'] as $field) {
+        foreach (['payment_type', 'payment_received', 'payment_status', 'booking_id'] as $field) {
             if ($request->has($field)) {
                 $ride->$field = $validated[$field];
             }
@@ -90,6 +91,7 @@ class DriverRideController extends Controller
             'ride' => $ride,
         ]);
     }
+
 
     /**
      * Get ride details by booking_id.

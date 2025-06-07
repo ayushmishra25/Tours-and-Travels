@@ -115,7 +115,7 @@ const BookingManagement = () => {
       <div className="booking-info">
         <p><strong>User:</strong> {b.userName} ({b.userContact})</p>
         <p><strong>Date:</strong> {b.date} <strong>Time:</strong> {b.time}</p>
-        <p><strong>Type:</strong> {b.type}</p>
+        <p><strong>Type:</strong> {b.booking_type}</p>
         <p><strong>From:</strong> {b.from} <strong>To:</strong> {b.to}</p>
         {b.driver && <p><strong>Driver:</strong> {b.driver} ({b.driverContact})</p>}
       </div>
