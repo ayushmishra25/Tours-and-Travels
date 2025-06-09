@@ -76,7 +76,7 @@ class BookingController extends Controller
 
     public function index()
     {
-        $bookings = Booking::with('user')->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with('user')->orderBy('id', 'desc')->get();
 
         $formatted = $bookings->map(function ($booking) {
             return [
@@ -96,6 +96,7 @@ class BookingController extends Controller
 
         return response()->json(['bookings' => $formatted]);
     }
+
 
     public function assignDriver(Request $request, $id)
     {
@@ -117,7 +118,7 @@ class BookingController extends Controller
 
     public function show($user_id)
     {
-        $bookings = Booking::where('user_id', $user_id)->get();
+        $bookings = Booking::with('user')->orderBy('id', 'desc')->get();
 
         return response()->json(['bookings' => $bookings]);
     }
@@ -185,6 +186,7 @@ class BookingController extends Controller
             'type_of_driving_licence' => $driverDetails->type_of_driving_licence,
             'aadhar_card_front'       => $convertToUrl($driverDetails->aadhar_card_front),
             'aadhar_card_back'        => $convertToUrl($driverDetails->aadhar_card_back),
+            'family_contacts' => $driverDetails->family_contacts ?? [],
         ]);
     }
 

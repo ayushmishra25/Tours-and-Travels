@@ -32,6 +32,7 @@ return new class extends Migration
         $table->string('bank_name');
         $table->string('ifsc_code');
         $table->string('account_holder_name');
+        $table->json('family_contacts');
         $table->timestamps();
     });
 }

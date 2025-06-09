@@ -32,24 +32,30 @@ const AssignedDriver = () => {
   }, [booking_id, baseURL, token]);
 
   if (loading) return <p>Loading Driver Details...</p>;
-  if (!driverData) return <h2 className="no-driver-assigned" >No Driver is assigned yet for booking ID: {booking_id}, wait for few minutes.</h2>;
 
-  // Destructure your existing fields
+  if (!driverData) 
+    return (
+      <h2 className="no-driver-assigned">
+        No Driver is assigned yet, wait for few minutes OR contact the admin.
+      </h2>
+    );
+
+  // Destructure with optional chaining and defaults
   const {
-    driver_name: name,
-    driver_contact: contact,
-    driver_location: location,
-    photo,
-    age,
-    location: full_address,
-    driving_experience: year,
-    car_driving_experience: driving_experience,
-    type_of_driving_licence: licence_type,
-    driving_licence_front: dl_front,
-    aadhar_card_front: aadhar_front,
-    aadhar_card_back: aadhar_back,
-    family_contacts = [],            
-  } = driverData;
+    driver_name: name = "N/A",
+    driver_contact: contact = "N/A",
+    driver_location: location = "N/A",
+    photo = "",
+    age = "N/A",
+    location: full_address = "N/A",
+    driving_experience: year = "N/A",
+    car_driving_experience: driving_experience = "N/A",
+    type_of_driving_licence: licence_type = "N/A",
+    driving_licence_front: dl_front = "",
+    aadhar_card_front: aadhar_front = "",
+    aadhar_card_back: aadhar_back = "",
+    family_contacts = Array.isArray(driverData.family_contacts) ? driverData.family_contacts : []
+    } = driverData;
 
   return (
     <div className="assigned-driver-container">
@@ -60,7 +66,11 @@ const AssignedDriver = () => {
       <h2 className="section-title">Assigned Driver Details</h2>
 
       <div className="driver-profile">
-        <img src={photo} alt="Driver" className="driver-photo" />
+        {photo ? (
+          <img src={photo} alt="Driver" className="driver-photo" />
+        ) : (
+          <div className="no-photo-placeholder">No Photo Available</div>
+        )}
         <div className="highlighted-details">
           <h3>{name}</h3>
           <p><strong>Contact:</strong> {contact}</p>
@@ -76,11 +86,19 @@ const AssignedDriver = () => {
         <div><strong>License Type:</strong> {licence_type}</div>
         <div>
           <strong>DL Front:</strong><br />
-          <img src={dl_front} alt="DL Front" className="doc-img" />
+          {dl_front ? (
+            <img src={dl_front} alt="DL Front" className="doc-img" />
+          ) : (
+            <p>Not Available</p>
+          )}
         </div>
         <div>
           <strong>Aadhar Front:</strong><br />
-          <img src={aadhar_front} alt="Aadhar Front" className="doc-img" />
+          {aadhar_front ? (
+            <img src={aadhar_front} alt="Aadhar Front" className="doc-img" />
+          ) : (
+            <p>Not Available</p>
+          )}
         </div>
         <div>
           <strong>Aadhar Back:</strong><br />
@@ -92,26 +110,20 @@ const AssignedDriver = () => {
         </div>
       </div>
 
-      {family_contacts.length > 0 && (
+      {Array.isArray(family_contacts) && family_contacts.length > 0 && (
         <section className="family-contact-section">
-          <h3>Family Contacts</h3>
-          <div className="family-contact-grid">
-            {family_contacts.map((fc, idx) => (
-              <div key={idx} className="family-contact-row">
-                <p>
-                  <strong>Name:</strong> {fc.name || "—"}
-                </p>
-                <p>
-                  <strong>Relation:</strong> {fc.relation || "—"}
-                </p>
-                <p>
-                  <strong>Contact:</strong> {fc.contact || "—"}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+        <h3>Family Contacts</h3>
+        <div className="family-contact-grid">
+          {family_contacts.map((fc, idx) => (
+            <div key={idx} className="family-contact-row">
+              <p><strong>Name:</strong> {fc.name || "—"}</p>
+              <p><strong>Relation:</strong> {fc.relation || "—"}</p>
+              <p><strong>Contact:</strong> {fc.contact || "—"}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}     
     </div>
   );
 };

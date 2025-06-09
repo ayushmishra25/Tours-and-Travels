@@ -103,13 +103,11 @@ const DriverDetailsUpload = () => {
       formDataToSend.append(`family_contacts[${index}][contact]`, contact.contact);
     });
 
-
     if (files.photo) formDataToSend.append("photo", files.photo);
     if (files.licenseFront) formDataToSend.append("driving_licence_front", files.licenseFront);
     if (files.licenseBack) formDataToSend.append("driving_licence_back", files.licenseBack);
     if (files.aadharFront) formDataToSend.append("aadhar_card_front", files.aadharFront);
     if (files.aadharBack) formDataToSend.append("aadhar_card_back", files.aadharBack);
-    if (files.passbook) formDataToSend.append("passbook_front", files.passbook);
 
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 

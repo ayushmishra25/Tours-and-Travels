@@ -50,12 +50,14 @@ class DriverDetailsUploadController extends Controller
             'bank_name' => $details->bank_name,
             'ifsc_code' => $details->ifsc_code,
             'account_holder_name' => $details->account_holder_name,
+            'family_contacts' => $details->family_contacts ?? [],
         ]);
     }
 
     // Store new driver details
     public function store(Request $request)
     {
+        \Log::info('Request All:', $request->all());
         $validatedData = $request->validate([
             'photo' => 'nullable|image',
             'education' => 'required|string',
@@ -91,6 +93,9 @@ class DriverDetailsUploadController extends Controller
             }
         }
 
+        $familyContacts = $request->input('family_contacts', []);
+        $validatedData['family_contacts'] = $familyContacts;
+
         $driver = DriverDetailsUpload::create($validatedData);
 
         return response()->json([
@@ -99,9 +104,12 @@ class DriverDetailsUploadController extends Controller
         ], 201);
     }
 
-    // Update a driver record
+
     public function update(Request $request, $id)
     {
+        \Log::info("🔄 Driver update called for user_id: {$id}");
+        \Log::info("📥 Incoming Request:", $request->all());
+
         $driver = DriverDetailsUpload::where('user_id', $id)->first();
 
         if (!$driver) {
@@ -116,7 +124,7 @@ class DriverDetailsUploadController extends Controller
             'pincode' => 'sometimes|string',
             'zone' => 'sometimes|string',
             'driving_experience' => 'sometimes|integer',
-            'car_driving_experience' => 'sometimes|integer',
+            'car_driving_experience' => 'sometimes|string',
             'driving_licence_front' => 'nullable|image',
             'driving_licence_back' => 'nullable|image',
             'type_of_driving_licence' => 'sometimes|string',
@@ -129,6 +137,8 @@ class DriverDetailsUploadController extends Controller
             'account_holder_name' => 'sometimes|string',
         ]);
 
+        \Log::info("✅ Validated data (before file upload):", $data);
+
         // Handle file uploads
         $fileFields = [
             'photo', 'driving_licence_front', 'driving_licence_back',
@@ -138,10 +148,33 @@ class DriverDetailsUploadController extends Controller
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $data[$field] = $request->file($field)->store('uploads/driver', 'public');
+                \Log::info("📂 Uploaded file: {$field} => {$data[$field]}");
             }
         }
 
+        // Parse family_contacts from flat request structure
+        $familyContacts = [];
+        foreach ($request->all() as $key => $value) {
+            if (preg_match('/^family_contacts\[(\d+)\]\[(name|relation|contact)\]$/', $key, $matches)) {
+                $index = $matches[1];
+                $field = $matches[2];
+                $familyContacts[$index][$field] = $value;
+            }
+        }
+
+        if (!empty($familyContacts)) {
+            ksort($familyContacts); // Optional, keep order
+            $data['family_contacts'] = array_values($familyContacts); // Re-index
+            \Log::info("👨‍👩‍👧 Parsed family_contacts:", $data['family_contacts']);
+        } else {
+            \Log::info("ℹ️ No valid family_contacts found.");
+        }
+
+        \Log::info("📝 Final data before update:", $data);
+
         $driver->update($data);
+
+        \Log::info("✅ Driver details updated successfully for user_id: {$id}");
 
         return response()->json([
             'message' => 'Driver details updated successfully',

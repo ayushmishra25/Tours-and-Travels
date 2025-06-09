@@ -30,7 +30,10 @@ class DriverDetailsUpload extends Model
         'bank_name',
         'ifsc_code',
         'account_holder_name',
+        'family_contacts', 
     ];
 
-    
+    protected $casts = [
+        'family_contacts' => 'array', 
+    ];
 }
