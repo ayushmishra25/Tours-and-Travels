@@ -16,7 +16,7 @@ function About() {
             <li>
               <strong>Driver Services</strong>  
               <ul>
-                <li><em>Hourly</em> — Flexible pick-up or drop-off , up to 12 hours or 80 km. Rs120 per hour will be applied for the overtime and Rs300 for night charges if working after 10PM.</li>
+                <li><em>Hourly</em> — Flexible pick-up or drop-off , up to 12 hours or 80 km. Rs120 per hour will be applied for the overtime and Rs200 for night charges if working after 10PM.</li>
                 <li><em>Weekly Bookings</em> — Dedicated driver on a weekly salary for errands, office runs, or events.</li>
                 <li><em>Monthly Contracts</em> — Keep a professional driver on board for long-term convenience.</li>
                 <li><em>Outstation & On-Demand</em> — Plan intercity travel or last-minute rides with transparent, city-based pricing.</li>

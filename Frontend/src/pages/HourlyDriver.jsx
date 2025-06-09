@@ -224,7 +224,7 @@ const HourlyDriver = () => {
               km, an additional charge of ₹10/km will be applied, including
               food, accommodation, and convenience. An additional service charge
               of ₹120 per hour will apply for extended hours. For services
-              provided after 10:00 PM, a night charge of ₹300 will be
+              provided after 10:00 PM, a night charge of ₹200 will be
               applicable. Thank you for your understanding.
             </p>
           </div>

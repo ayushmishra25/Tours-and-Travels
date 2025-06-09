@@ -169,7 +169,7 @@ const OndemandDriver = () => {
             <p className="price-note">
               Please note: On-demand services may have surge pricing during peak hours.
               Extra charges for food, accommodation, and night stays may apply.
-              An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹300 will be applicable. 
+              An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹200 will be applicable. 
               You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
             </p>
 

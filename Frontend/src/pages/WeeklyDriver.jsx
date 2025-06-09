@@ -237,8 +237,8 @@ const WeeklyDriver = () => {
 
             <p className="price-note">
               Please note: You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
-              For each night stay, an extra charge of ₹300 applies, along with food and accommodation costs. Pricing is negotiable; we will contact you soon to confirm the details.
-              An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹300 will be applicable. Thank you for your understanding
+              For each night stay, an extra charge of ₹200 applies, along with food and accommodation costs. Pricing is negotiable; we will contact you soon to confirm the details.
+              An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹200 will be applicable. Thank you for your understanding
             </p>
 
             {/* Display either auth errors or field validation errors */}
