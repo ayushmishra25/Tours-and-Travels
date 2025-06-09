@@ -3297,6 +3297,83 @@ h3 {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
+/* Family Contacts Section */
+.family-contact-section {
+  margin-top: 40px;
+  padding: 24px;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.family-contact-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  color: #111827;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+/* Grid container: auto‐flow responsive cards */
+.family-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Individual contact card */
+.family-contact-row {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.family-contact-row:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.family-contact-row p {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.family-contact-row p strong {
+  color: #1f2937;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .family-contact-section {
+    padding: 20px;
+  }
+  .family-contact-section h3 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .family-contact-section {
+    padding: 16px;
+  }
+  .family-contact-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+  .family-contact-grid {
+    gap: 12px;
+  }
+  .family-contact-row {
+    padding: 12px;
+  }
+  .family-contact-row p {
+    font-size: 0.9rem;
+  }
+}
+
 @media (max-width: 768px) {
   .no-driver-assigned {
     font-size: 1.2rem;

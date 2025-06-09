@@ -34,7 +34,7 @@ const AssignedDriver = () => {
   if (loading) return <p>Loading Driver Details...</p>;
   if (!driverData) return <h2 className="no-driver-assigned" >No Driver is assigned yet for booking ID: {booking_id}, wait for few minutes.</h2>;
 
-  // Corrected key mapping from API response
+  // Destructure your existing fields
   const {
     driver_name: name,
     driver_contact: contact,
@@ -48,6 +48,7 @@ const AssignedDriver = () => {
     driving_licence_front: dl_front,
     aadhar_card_front: aadhar_front,
     aadhar_card_back: aadhar_back,
+    family_contacts = [],            
   } = driverData;
 
   return (
@@ -90,6 +91,27 @@ const AssignedDriver = () => {
           )}
         </div>
       </div>
+
+      {family_contacts.length > 0 && (
+        <section className="family-contact-section">
+          <h3>Family Contacts</h3>
+          <div className="family-contact-grid">
+            {family_contacts.map((fc, idx) => (
+              <div key={idx} className="family-contact-row">
+                <p>
+                  <strong>Name:</strong> {fc.name || "—"}
+                </p>
+                <p>
+                  <strong>Relation:</strong> {fc.relation || "—"}
+                </p>
+                <p>
+                  <strong>Contact:</strong> {fc.contact || "—"}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };
