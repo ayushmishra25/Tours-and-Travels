@@ -1732,6 +1732,33 @@ fieldset.account-details legend {
   padding: 0 5px;
 }
 
+.family-contact-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.family-contact-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.family-contact-row input {
+  flex: 1 1 30%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .family-contact-row input {
+    flex: 1 1 100%;
+  }
+}
+
+
 .submit-btn {
   padding: 15px;
   display: block;

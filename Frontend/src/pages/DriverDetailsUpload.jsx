@@ -32,6 +32,14 @@ const DriverDetailsUpload = () => {
     passbook: null,
   });
 
+  // use state for family details
+  const [familyContacts, setFamilyContacts] = useState([
+    { name: "", relation: "", contact: "" },
+    { name: "", relation: "", contact: "" },
+    { name: "", relation: "", contact: "" },
+  ]);
+
+
   // ★ CHANGED: inline feedback messages
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,6 +51,14 @@ const DriverDetailsUpload = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  //hadler for family contacts
+  const handleFamilyContactChange = (index, field, value) => {
+    const updatedContacts = [...familyContacts];
+    updatedContacts[index][field] = value;
+    setFamilyContacts(updatedContacts);
+  };
+
 
   const handleFileChange = (e) => {
     const { name } = e.target;
@@ -80,6 +96,13 @@ const DriverDetailsUpload = () => {
     formDataToSend.append("bank_name", formData.bankName);
     formDataToSend.append("ifsc_code", formData.ifsc);
     formDataToSend.append("account_holder_name", formData.accountHolderName);
+
+    familyContacts.forEach((contact, index) => {
+      formDataToSend.append(`family_contacts[${index}][name]`, contact.name);
+      formDataToSend.append(`family_contacts[${index}][relation]`, contact.relation);
+      formDataToSend.append(`family_contacts[${index}][contact]`, contact.contact);
+    });
+
 
     if (files.photo) formDataToSend.append("photo", files.photo);
     if (files.licenseFront) formDataToSend.append("driving_licence_front", files.licenseFront);
@@ -213,6 +236,33 @@ const DriverDetailsUpload = () => {
             <input type="text" name="accountHolderName" value={formData.accountHolderName} onChange={handleChange} placeholder="Enter account holder name" />
           </div>
         </fieldset>
+
+        <h3>Family Contact Details</h3>
+          <div className="family-contact-section">
+            {familyContacts.map((contact, index) => (
+              <div className="family-contact-row" key={index}>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={contact.name}
+                  onChange={(e) => handleFamilyContactChange(index, "name", e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Relation"
+                  value={contact.relation}
+                  onChange={(e) => handleFamilyContactChange(index, "relation", e.target.value)}
+                />
+                <input
+                  type="tel"
+                  placeholder="Contact Number"
+                  value={contact.contact}
+                  onChange={(e) => handleFamilyContactChange(index, "contact", e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
 
         <div className="form-group-driverdetails-edit">
               <button type="submit" className="submit-btn">Save</button> 
