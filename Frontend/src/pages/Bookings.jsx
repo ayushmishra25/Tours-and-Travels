@@ -71,7 +71,7 @@ const Bookings = () => {
       <h2>My Bookings</h2>
       <ul>
         {bookings.length > 0 ? (
-          bookings.map((booking, index) => (
+          bookings.slice().reverse().map((booking, index) => (
             <li
               key={booking.id || index}
               style={{
