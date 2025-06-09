@@ -73,8 +73,13 @@ const DriverDetails = () => {
         <div className="info-grid">
           <p><strong>Education:</strong> {driver.education || "N/A"}</p>
           <p><strong>Age:</strong> {driver.age || "N/A"}</p>
-          <p><strong>Location:</strong> {[driver.exact_location, driver.zone, driver.pincode].filter(Boolean).join(", ") || "N/A"}</p>
-          <p><strong>Driving Experience:</strong> {driver.driving_experience ? `${driver.driving_experience} years` : "N/A"}</p>
+          <p>
+            <strong>Location:</strong>{[driver.exact_location, driver.zone, driver.pincode].filter(Boolean).join(", ") || "N/A"}</p><p>
+            <strong>Driving Experience:</strong>{" "}
+            {driver.driving_experience
+              ? `${driver.driving_experience} years`
+              : "N/A"}
+          </p>
           <p><strong>Car Driving Experience:</strong> {driver.car_driving_experience || "N/A"}</p>
           <p><strong>License Type:</strong> {driver.type_of_driving_licence || "N/A"}</p>
         </div>
@@ -100,6 +105,22 @@ const DriverDetails = () => {
           <p><strong>Account Holder Name:</strong> {driver.account_holder_name || "N/A"}</p>
         </div>
       </div>
+
+      {Array.isArray(driver.family_contacts) && driver.family_contacts.length > 0 && (
+        <div className="details-section">
+          <h3>Family Contacts</h3>
+          <div className="family-contacts-grid">
+            {driver.family_contacts.slice(0, 3).map((fc, idx) => (
+              <div key={idx} className="contact-card">
+                <p><strong>Name:</strong> {fc.name || "N/A"}</p>
+                <p><strong>Relation:</strong> {fc.relation || "N/A"}</p>
+                <p><strong>Contact:</strong> {fc.contact || "N/A"}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {/* === End Family Contacts === */}
     </div>
   );
 };

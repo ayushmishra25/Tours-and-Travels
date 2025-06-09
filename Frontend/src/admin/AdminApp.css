@@ -859,6 +859,24 @@
   background-color: #0056b3;
 }
 
+.family-contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+.contact-card {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+}
+.contact-card p {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+
 /* ✅ Responsive Design */
 @media screen and (max-width: 768px) {
   .driver-photo {
