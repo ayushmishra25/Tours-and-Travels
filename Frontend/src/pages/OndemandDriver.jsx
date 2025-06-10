@@ -19,23 +19,37 @@ const OndemandDriver = () => {
   const [authError, setAuthError] = useState("");
   const [fieldError, setFieldError] = useState("");
 
-  const user = JSON.parse(localStorage.getItem("user")) || {
-    message: "User not authenticated!"
+  const user =
+    JSON.parse(localStorage.getItem("user")) || {
+      message: "User not authenticated!",
+    };
+
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+  // Fixed pricing table
+  const pricing = {
+    50: 606,
+    100: 1115,
+    150: 1206,
+    200: 1443,
+    250: 1670,
+    300: 1860,
+    350: 2349,
+    400: 2570,
+    450: 2800,
+    500: 3050,
+    600: 3529,
+    700: 4008,
+    800: 4480,
+    900: 4962,
+    1000: 5435,
+    1200: 6400,
   };
 
-  const baseFare = 50;
-  const perKmRate = 15;
-
-  const calculateFare = () => {
-    const d = parseFloat(distance);
-    return isNaN(d) ? 0 : baseFare + d * perKmRate;
-  };
-
+  // Update fare whenever distance changes
   useEffect(() => {
-    if (pickup && destination && distance) {
-      setTotalAmount(calculateFare());
-    }
-  }, [pickup, destination, distance]);
+    setTotalAmount(pricing[distance] || 0);
+  }, [distance]);
 
   const handleBookNow = async () => {
     if (!token) {
@@ -69,17 +83,15 @@ const OndemandDriver = () => {
 
     const bookingDatetime = `${date} ${time}:00`;
     const payload = {
-      booking_type: "On demand", // Ensure this value is accepted by your database
-      trip_type: "one-way", // Ensure this value is accepted by your database
+      booking_type: "On demand",
+      trip_type: "one-way",
       source_location: pickup,
-      source_pincode:pickupPincode,
+      source_pincode: pickupPincode,
       destination_location: destination,
       distance: parseFloat(distance),
       booking_datetime: bookingDatetime,
       payment: totalAmount,
     };
-
-    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
       const resp = await axios.post(`${baseURL}/api/bookings`, payload, {
@@ -87,7 +99,6 @@ const OndemandDriver = () => {
       });
 
       const { booking } = resp.data;
-
       navigate("/post-booking", {
         state: {
           bookingId: booking.id,
@@ -110,6 +121,10 @@ const OndemandDriver = () => {
     <>
       <DashboardNavbar />
       <div className="ondemand-driver-container">
+        <Helmet>
+          <title>On-Demand Driver Service</title>
+        </Helmet>
+
         <h1>On-Demand Driver Service</h1>
         <div className="booking-form">
           <div className="left-section">
@@ -128,6 +143,7 @@ const OndemandDriver = () => {
                 onChange={(e) => setpickupPincode(e.target.value)}
               />
             </label>
+
             <label>
               Destination Address:
               <input
@@ -137,44 +153,67 @@ const OndemandDriver = () => {
                 onChange={(e) => setDestination(e.target.value)}
               />
             </label>
+
             <label>
               Distance (in km):
-              <input
-                type="number"
-                placeholder="Enter Distance"
+              <select
                 value={distance}
                 onChange={(e) => setDistance(e.target.value)}
-              />
+              >
+                <option value="">Select distance</option>
+                {Object.keys(pricing).map((km) => (
+                  <option key={km} value={km}>
+                    {km} km
+                  </option>
+                ))}
+              </select>
             </label>
+
             <label>
               Date:
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
             </label>
+
             <label>
               Time:
-              <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
             </label>
           </div>
+
           <div className="right-section">
             <h3>User Details</h3>
             <p>Name: {user.name}</p>
             <p>Phone: {user.phone}</p>
-            <h2>₹ {totalAmount}</h2>
 
+            <h2>₹ {totalAmount}</h2>
 
             <button className="book-now-btn" onClick={handleBookNow}>
               Book Now
             </button>
 
             <p className="price-note">
-              Please note: On-demand services may have surge pricing during peak hours.
-              Extra charges for food, accommodation, and night stays may apply.
-              An additional service charge of ₹120 per hour will apply for extended hours. For services provided after 10:00 PM, a night charge of ₹200 will be applicable. 
-              You may cancel your ride up to one hour before the scheduled start time without any charge. Cancellations made within one hour of service will incur a ₹100 fee.
+              Please note: On-demand services may have surge pricing during peak
+              hours. Extra charges for food, accommodation, and night stays may
+              apply. An additional service charge of ₹120 per hour will apply
+              for extended hours. For services provided after 10:00 PM, a night
+              charge of ₹200 will be applicable. You may cancel your ride up to
+              one hour before the scheduled start time without any charge.
+              Cancellations made within one hour of service will incur a ₹100
+              fee.
             </p>
 
             {authError && <p className="error-message">{authError}</p>}
-            {!authError && fieldError && <p className="error-message">{fieldError}</p>}
+            {!authError && fieldError && (
+              <p className="error-message">{fieldError}</p>
+            )}
           </div>
         </div>
       </div>
