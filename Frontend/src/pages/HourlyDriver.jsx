@@ -62,6 +62,21 @@ const HourlyDriver = () => {
       return;
     }
 
+    if (!pickup.trim()) {
+      setAuthError("give pickup Address");
+      return;
+    }
+
+    if (!destination.trim()) {
+      setAuthError("Please give destination");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(pickupPincode)) {
+      setAuthError("Pincode must be of 6 didgit");
+      return;
+    }
+
     if (!date || !time) {
       setAuthError("Please select both a date and a time.");
       return;
@@ -120,7 +135,14 @@ const HourlyDriver = () => {
       });
     } catch (err) {
       console.error("Booking error:", err);
-      setAuthError("Booking failed. Please try again.");
+      if (err.response?.data?.message) {
+        setAuthError(err.response.data.message);
+      } else if (err.response) {
+        setAuthError(`Booking failed: ${err.response.statusText} (code ${err.response.status})`);
+      } else {
+        // Network or other error
+        setAuthError("Network error. Please try again later.");
+      }
     }
   };
 
