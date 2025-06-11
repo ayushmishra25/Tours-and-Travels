@@ -57,7 +57,6 @@ class DriverDetailsUploadController extends Controller
     // Store new driver details
     public function store(Request $request)
     {
-        \Log::info('Request All:', $request->all());
         $validatedData = $request->validate([
             'photo' => 'nullable|image',
             'education' => 'required|string',
