@@ -24,7 +24,7 @@ function Home() {
         <meta property="og:description" content="Reliable and verified drivers available on hourly, daily, and monthly plans. Book with Sahyog Force and get GST-compliant billing." />
         <meta property="og:url" content="https://www.sahyogforce.com/" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="/logo.webp" />
+        <meta property="og:image" content="https://www.sahyogforce.com/logo.webp" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
