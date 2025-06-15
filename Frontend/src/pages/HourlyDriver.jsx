@@ -38,7 +38,7 @@ const HourlyDriver = () => {
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
   const [pickup, setPickup] = useState("");
-  const [pickupPincode , setpickupPincode] = useState("");
+  const [pickupPincode, setpickupPincode] = useState("");
   const [destination, setDestination] = useState("");
   const [tripType] = useState("roundtrip");
   const [hours, setHours] = useState(5);
@@ -48,6 +48,9 @@ const HourlyDriver = () => {
   const [authError, setAuthError] = useState("");
   const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
 
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [geoError, setGeoError] = useState("");
+
   // Calculate hourly fare
   const calculateFare = () => {
     if (!pickup || !destination) return 0;
@@ -55,7 +58,42 @@ const HourlyDriver = () => {
     return hourlyPricing[city]?.[hours - 1] ?? 0;
   };
 
-  // Handle booking + notifications
+  // 📍 Get current location and reverse geocode
+  const handleGetCurrentLocation = () => {
+    setGeoLoading(true);
+    setGeoError("");
+    if (!navigator.geolocation) {
+      setAuthError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          const address = data.display_name || "";
+          const pincodeMatch = address.match(/\b\d{6}\b/); // extract 6-digit pincode
+          const pincode = pincodeMatch ? pincodeMatch[0] : "";
+          setPickup(address);
+          setpickupPincode(pincode);
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error.message);
+          setGeoError("Failed to retrieve location address.");
+        } finally {
+          setGeoLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setAuthError("Permission denied or error fetching location.");
+      }
+    );
+  };
+
   const handleBookNow = async () => {
     if (!token) {
       setAuthError("Please register and login first to book a driver.");
@@ -63,7 +101,7 @@ const HourlyDriver = () => {
     }
 
     if (!pickup.trim()) {
-      setAuthError("give pickup Address");
+      setAuthError("Give pickup address");
       return;
     }
 
@@ -73,7 +111,7 @@ const HourlyDriver = () => {
     }
 
     if (!/^\d{6}$/.test(pickupPincode)) {
-      setAuthError("Pincode must be of 6 didgit");
+      setAuthError("Pincode must be of 6 digits");
       return;
     }
 
@@ -89,7 +127,7 @@ const HourlyDriver = () => {
       booking_type: "Hourly",
       trip_type: tripType,
       source_location: pickup,
-      source_pincode:pickupPincode,
+      source_pincode: pickupPincode,
       destination_location: destination,
       hours,
       payment: totalAmount,
@@ -105,7 +143,6 @@ const HourlyDriver = () => {
 
       const { booking } = resp.data;
 
-      // ✅ Browser Notification
       if ("Notification" in window) {
         if (Notification.permission === "granted") {
           new Notification("Booking Confirmed!", {
@@ -140,13 +177,11 @@ const HourlyDriver = () => {
       } else if (err.response) {
         setAuthError(`Booking failed: ${err.response.statusText} (code ${err.response.status})`);
       } else {
-        // Network or other error
         setAuthError("Network error. Please try again later.");
       }
     }
   };
 
-  // Format YYYY-MM-DD
   const formatDateLocal = (d) => {
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, "0");
@@ -154,20 +189,16 @@ const HourlyDriver = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Set min/max date on mount
   useEffect(() => {
     const today = new Date();
     const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-
+    tomorrow.setDate(today.getDate());
     const nextWeek = new Date(today);
     nextWeek.setDate(today.getDate() + 7);
-
     setMinDate(formatDateLocal(tomorrow));
     setMaxDate(formatDateLocal(nextWeek));
   }, []);
 
-  // Recalculate amount when pickup/destination/hours change
   useEffect(() => {
     setTotalAmount(calculateFare());
   }, [pickup, destination, hours]);
@@ -197,14 +228,30 @@ const HourlyDriver = () => {
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
             />
-
+            
             <input
               type="text"
               placeholder="Enter Pickup Area Pincode"
               value={pickupPincode}
               onChange={(e) => setpickupPincode(e.target.value)}
             />
-            
+
+            <button
+            onClick={handleGetCurrentLocation}
+            style={{
+              marginTop: "6px",
+              padding: "6px 12px",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+            }}
+            >
+            Get Current Location
+            </button>
+             {geoLoading && <p>Fetching your current location...</p>}
+            {geoError && <p className="error-message">{geoError}</p>}
+
             <input
               type="text"
               placeholder="Enter Destination Address"

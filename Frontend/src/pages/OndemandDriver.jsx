@@ -19,14 +19,15 @@ const OndemandDriver = () => {
   const [authError, setAuthError] = useState("");
   const [fieldError, setFieldError] = useState("");
 
-  const user =
-    JSON.parse(localStorage.getItem("user")) || {
-      message: "User not authenticated!",
-    };
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [geoError, setGeoError] = useState("");
+
+  const user = JSON.parse(localStorage.getItem("user")) || {
+    message: "User not authenticated!",
+  };
 
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-  // Fixed pricing table
   const pricing = {
     50: 606,
     100: 1115,
@@ -46,10 +47,49 @@ const OndemandDriver = () => {
     1200: 6400,
   };
 
-  // Update fare whenever distance changes
   useEffect(() => {
     setTotalAmount(pricing[distance] || 0);
   }, [distance]);
+
+  const fetchCurrentLocation = () => {
+    setGeoLoading(true);
+    setGeoError("");
+
+    if (!navigator.geolocation) {
+      setGeoError("Geolocation is not supported by your browser.");
+      setGeoLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await axios.get(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+
+          const address = response.data.address;
+          const displayName = response.data.display_name;
+          const pincode = address.postcode || "";
+
+          setPickup(displayName || "");
+          setpickupPincode(pincode);
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error.message);
+          setGeoError("Failed to retrieve location address.");
+        } finally {
+          setGeoLoading(false);
+        }
+      },
+      (error) => {
+        setGeoLoading(false);
+        setGeoError("Failed to fetch current location.");
+        console.error("Geolocation error:", error);
+      }
+    );
+  };
 
   const handleBookNow = async () => {
     if (!token) {
@@ -142,8 +182,23 @@ const OndemandDriver = () => {
                 value={pickupPincode}
                 onChange={(e) => setpickupPincode(e.target.value)}
               />
-            </label>
-
+                <button
+                type="button"
+                onClick={fetchCurrentLocation}
+                style={{
+                  marginTop: "6px",
+                  padding: "6px 12px",
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+                >
+                Get Current Location
+                </button>
+                {geoLoading && <p>Fetching your current location...</p>}
+                {geoError && <p className="error-message">{geoError}</p>}
+              </label>
             <label>
               Destination Address:
               <input

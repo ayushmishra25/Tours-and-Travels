@@ -56,6 +56,7 @@ const monthlyPricing = {
 const MonthlyDriver = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
 
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
@@ -69,10 +70,8 @@ const MonthlyDriver = () => {
   const [authError, setAuthError] = useState("");
   const [fieldError, setFieldError] = useState("");
 
-  const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
-
-  // Replace this with your actual pricing logic
-  
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [geoError, setGeoError] = useState("");
 
   const calculateFare = () => {
     if (!location) return 0;
@@ -88,6 +87,46 @@ const MonthlyDriver = () => {
     setTotalAmount(fare);
   }, [location, workingDays, workingHours]);
 
+  const fetchCurrentLocation = () => {
+    setGeoLoading(true);
+    setGeoError("");
+
+    if (!navigator.geolocation) {
+      setGeoError("Geolocation is not supported by your browser.");
+      setGeoLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await axios.get(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+
+          const address = response.data.address;
+          const displayName = response.data.display_name;
+          const pincode = address.postcode || "";
+
+          setPickupLocation(displayName || "");
+          setpickupPincode(pincode);
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error.message);
+          setGeoError("Failed to retrieve location address.");
+        } finally {
+          setGeoLoading(false);
+        }
+      },
+      (error) => {
+        setGeoLoading(false);
+        setGeoError("Failed to fetch current location.");
+        console.error("Geolocation error:", error);
+      }
+    );
+  };
+
   const handleBookNow = async () => {
     if (!token) {
       setAuthError("Please register and login first to book a driver.");
@@ -96,14 +135,13 @@ const MonthlyDriver = () => {
     }
     setAuthError("");
 
-    if (!location || !workingDays || !workingHours || !date || !pickupLocation ) {
+    if (!location || !workingDays || !workingHours || !date || !pickupLocation) {
       setFieldError("All fields are required");
       return;
     }
 
     setFieldError("");
 
-    // ✅ Format booking_datetime correctly as "Y-m-d H:i:s"
     const now = new Date();
     const formattedDatetime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
       now.getDate()
@@ -113,10 +151,10 @@ const MonthlyDriver = () => {
 
     const bookingData = {
       booking_type: "Monthly",
-      trip_type: "M", 
+      trip_type: "M",
       source_location: pickupLocation,
       vehicle_details: vehicleDetails,
-      source_pincode:pickupPincode,
+      source_pincode: pickupPincode,
       hours: null,
       working_days: parseInt(workingDays),
       working_hours_per_day: parseInt(workingHours),
@@ -124,7 +162,7 @@ const MonthlyDriver = () => {
       booking_datetime: formattedDatetime,
       payment: totalAmount
     };
-     
+
     const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
@@ -172,6 +210,7 @@ const MonthlyDriver = () => {
                 ))}
               </select>
             </label>
+
             <label>
               Pickup Location:
               <input
@@ -180,16 +219,23 @@ const MonthlyDriver = () => {
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={fetchCurrentLocation}
+                style={{
+                  marginTop: "6px",
+                  padding: "6px 12px",
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+                >
+                Get Current Location
+                </button> 
             </label>
-            <label>
-              Pickup Area Pincode:
-              <input
-                type="text"
-                placeholder="Enter Pickup Area Pincode"
-                value={pickupPincode}
-                onChange={(e) => setpickupPincode(e.target.value)}
-              />
-            </label>
+            {geoLoading && <p>Fetching your current location...</p>}
+            {geoError && <p className="error-message">{geoError}</p>}
               <label>
                 Vehicle Details:
                 <input
