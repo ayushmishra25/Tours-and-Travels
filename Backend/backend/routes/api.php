@@ -9,6 +9,8 @@ use App\Http\Controllers\API\SupportRequestController;
 use App\Http\Controllers\API\DriverController;
 use App\Http\Controllers\API\InvoiceController;
 use App\Http\Controllers\API\DriverRideController;
+use App\Http\Controllers\API\EarningController;
+
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -48,6 +50,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Driver Rides
     Route::apiResource('driver-rides', DriverRideController::class);
+
+    // Driver Earning
+    Route::post('/finalize-payment/{booking_id}', [EarningController::class, 'finalizePayment']);
+    Route::get('/driver-earnings/{user_id}', [EarningController::class, 'getDriverEarnings']);
+
 
     // Driver-related Routes
     Route::prefix('drivers/{id}')->group(function () {

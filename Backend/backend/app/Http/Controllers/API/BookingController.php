@@ -101,15 +101,11 @@ class BookingController extends Controller
     public function assignDriver(Request $request, $id)
     {
         $request->validate([
-            'driver_name' => 'required|string',
             'driver_contact' => 'required|string',
-            'driver_location' => 'nullable|string',
         ]);
 
         $booking = Booking::findOrFail($id);
-        $booking->driver_name = $request->driver_name;
         $booking->driver_contact = $request->driver_contact;
-        $booking->driver_location = $request->driver_location;
         $booking->save();
 
         return response()->json(['message' => 'Driver assigned successfully.', 'booking' => $booking]);

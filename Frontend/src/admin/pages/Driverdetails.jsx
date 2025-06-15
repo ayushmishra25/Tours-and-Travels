@@ -74,7 +74,7 @@ const DriverDetails = () => {
           <p><strong>Education:</strong> {driver.education || "N/A"}</p>
           <p><strong>Age:</strong> {driver.age || "N/A"}</p>
           <p>
-            <strong>Location:</strong>{[driver.exact_location, driver.zone, driver.pincode].filter(Boolean).join(", ") || "N/A"}</p><p>
+            <strong>Location:</strong>{[driver.exact_location, driver.pincode].filter(Boolean).join(", ") || "N/A"}</p><p>
             <strong>Driving Experience:</strong>{" "}
             {driver.driving_experience
               ? `${driver.driving_experience} years`

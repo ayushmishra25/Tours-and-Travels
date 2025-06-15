@@ -113,28 +113,42 @@ const DriverRides = () => {
   };
 
   const handlePaymentReceived = async (rideId) => {
-    if (!rideId) {
-      console.error("Missing booking_id for payment received");
-      return;
-    }
+  if (!rideId) {
+    console.error("Missing booking_id for payment received");
+    return;
+  }
 
-    try {
-      const res = await axios.put(
-        `${baseURL}/api/driver-rides/${rideId}`, // ride.id as booking_id in URL
-        {
-          payment_received: true,
-          payment_status: true,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      console.log("Payment received:", res.data);
-      setRideStatus((prev) => ({ ...prev, [rideId]: "completed" }));
-    } catch (err) {
-      console.error("Failed to update payment:", err.response?.data || err);
-    }
+  try {
+    // Step 1: Update payment status
+    const res = await axios.put(
+      `${baseURL}/api/driver-rides/${rideId}`, // ride.id as booking_id in URL
+      {
+        payment_received: true,
+        payment_status: true,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    console.log("Payment received updated:", res.data);
+
+    // Step 2: Finalize payment (new API call)
+    const finalizeRes = await axios.post(
+      `${baseURL}/api/finalize-payment/${rideId}`, // New endpoint
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    console.log("Payment finalized:", finalizeRes.data);
+
+    // Step 3: Update status in UI
+    setRideStatus((prev) => ({ ...prev, [rideId]: "completed" }));
+  } catch (err) {
+    console.error("Failed to finalize payment:", err.response?.data || err);
+  }
   };
+
 
   return (
     <>

@@ -41,6 +41,7 @@ const ManageDrivers = () => {
         (driver.email && driver.email.toLowerCase().includes(query)) ||
         (driver.phone && driver.phone.toString().includes(query)) ||
         (driver.location && driver.location.toLowerCase().includes(query)) ||
+        (driver.current_location && driver.current_location.toLowerCase().includes(query)) ||
         (driver.pincode && driver.pincode.toString().includes(query))
       );
     });
@@ -85,6 +86,7 @@ const ManageDrivers = () => {
                 <th>Email</th>
                 <th>Contact</th>
                 <th>Location</th>
+                <th>Current Location</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -100,6 +102,7 @@ const ManageDrivers = () => {
                   <td>{driver.email ?? "N/A"}</td>
                   <td>{driver.phone ?? "N/A"}</td>
                   <td>{driver.location ?? "N/A"}</td>
+                  <td>{driver.current_location ?? "N/A"}</td>
                   <td>{driver.is_available ? "Active" : "Inactive"}</td>
                 </tr>
               ))}

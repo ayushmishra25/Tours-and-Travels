@@ -126,12 +126,19 @@ class AuthController extends Controller
     // listing API of users and drivers 
     public function listUsers(Request $request)
     {
-        $role = $request->query('role'); 
+        $role = $request->query('role');
 
         if ($role == 0) {
             $users = User::where('role', 0)->get();
         } elseif ($role == 1) {
-            $users = User::where('role', 1)->get();
+            $users = User::where('role', 1)
+                ->leftJoin('driver_details_uploads', 'users.id', '=', 'driver_details_uploads.user_id')
+                ->select(
+                    'users.*',
+                    'driver_details_uploads.exact_location as location',
+                    'users.location as current_location'
+                )
+                ->get();
         } else {
             $users = User::all();
         }
@@ -140,6 +147,7 @@ class AuthController extends Controller
             'users' => $users
         ], 200);
     }
+
 
     public function updateProfile(Request $request, $id)
     {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\DriverRide;
+use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DriverRideController extends Controller
@@ -111,4 +113,7 @@ class DriverRideController extends Controller
             'ride' => $ride,
         ]);
     }
+
+    
+
 }

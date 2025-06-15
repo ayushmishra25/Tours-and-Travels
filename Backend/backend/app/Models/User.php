@@ -52,4 +52,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function driverDetailsUpload()
+    {
+        return $this->hasOne(DriverDetailsUpload::class, 'user_id');
+    }
+
+    
+
 }
