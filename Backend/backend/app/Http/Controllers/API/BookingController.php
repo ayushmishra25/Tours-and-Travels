@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Events\BookingCreated;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\DriverRide;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,7 +77,16 @@ class BookingController extends Controller
 
     public function index()
     {
-        $bookings = Booking::with('user')->orderBy('id', 'desc')->get();
+        $bookings = Booking::with('user')
+            ->leftJoin('driver_rides', 'bookings.id', '=', 'driver_rides.booking_id')
+            ->orderBy('bookings.id', 'desc')
+            ->select(
+                'bookings.*',
+                'driver_rides.payment_type',
+                'driver_rides.payment_status',
+                'driver_rides.payment_received'
+            )
+            ->get();
 
         $formatted = $bookings->map(function ($booking) {
             return [
@@ -90,12 +100,16 @@ class BookingController extends Controller
                 'to' => $booking->destination_location,
                 'driver' => $booking->driver_name ?? null,
                 'driverContact' => $booking->driver_contact ?? null,
+                'payment_type' => $booking->payment_type ?? 'N/A',
+                'payment_status' => $booking->payment_status ?? 'N/A',
+                'payment_received' => $booking->payment_received ?? 'N/A',
                 'created_at' => $booking->created_at->toDateTimeString(),
             ];
         });
 
         return response()->json(['bookings' => $formatted]);
     }
+
 
 
     public function assignDriver(Request $request, $id)

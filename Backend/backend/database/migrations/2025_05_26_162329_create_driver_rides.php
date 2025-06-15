@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('driver_rides', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('driver_id')->nullable();
-            $table->unsignedBigInteger('booking_id');  // define booking_id column first
+            $table->unsignedBigInteger('booking_id');  
             $table->unique('booking_id');   
             $table->timestamp('start_ride')->nullable();
             $table->timestamp('end_ride')->nullable();

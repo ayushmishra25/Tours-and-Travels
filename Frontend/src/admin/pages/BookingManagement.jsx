@@ -70,7 +70,7 @@ const BookingManagement = () => {
   const submitAssign = async (id) => {
     const data = formData[id];
 
-    if (!data.name || !data.contact || !data.location) {
+    if ( !data.contact) {
       alert("Please fill all fields before submitting.");
       return;
     }
@@ -91,13 +91,12 @@ const BookingManagement = () => {
 
       if (!response.ok) throw new Error("Failed to assign driver");
 
-      alert(`Driver assigned: ${data.name}`);
+      alert(`Driver assigned: ${data.contact}`);
       setBookings((prev) =>
         prev.map((b) =>
           b.id === id
             ? {
                 ...b,
-                driver: data.name,
                 driverContact: data.contact,
               }
             : b
@@ -113,10 +112,12 @@ const BookingManagement = () => {
   const renderBooking = (b) => (
     <div key={b.id} className="booking-card">
       <div className="booking-info">
-        <p><strong>User:</strong> {b.userName} ({b.userContact})</p>
-        <p><strong>Date:</strong> {b.date} <strong>Time:</strong> {b.time}</p>
-        <p><strong>Type:</strong> {b.booking_type}</p>
-        <p><strong>From:</strong> {b.from} <strong>To:</strong> {b.to}</p>
+        <p><strong>Customer:</strong> {b.userName}</p>
+        <p><strong>Customer Contact Number:</strong> {b.userContact}</p>
+        <p><strong>Pickup:</strong> {b.from} <strong>Destination:</strong> {b.to}</p>
+        <p><strong>Booking Type:</strong> {b.booking_type}</p>
+        <p><strong>Date:</strong> {b.date} </p>
+        <p><strong>Time:</strong> {b.time}</p>
         {b.driver && <p><strong>Driver:</strong> {b.driver} ({b.driverContact})</p>}
       </div>
       {!b.driver && (
@@ -128,23 +129,9 @@ const BookingManagement = () => {
         <div className="assign-form">
           <input
             type="text"
-            name="name"
-            placeholder="Driver Name"
-            value={formData[b.id]?.name || ""}
-            onChange={(e) => handleInputChange(b.id, e)}
-          />
-          <input
-            type="text"
             name="contact"
             placeholder="Driver Contact"
             value={formData[b.id]?.contact || ""}
-            onChange={(e) => handleInputChange(b.id, e)}
-          />
-          <input
-            type="text"
-            name="location"
-            placeholder="Driver Location"
-            value={formData[b.id]?.location || ""}
             onChange={(e) => handleInputChange(b.id, e)}
           />
           <button className="submit-assign" onClick={() => submitAssign(b.id)}>

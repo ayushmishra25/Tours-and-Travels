@@ -8,6 +8,7 @@ const ManageDrivers = () => {
   const [filteredDrivers, setFilteredDrivers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -49,6 +50,17 @@ const ManageDrivers = () => {
     setFilteredDrivers(results);
   }, [searchQuery, drivers]);
 
+  const copyToClipboard = (text, id) => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000); // Reset after 2s
+    })
+    .catch((err) => {
+      console.error("Failed to copy:", err);
+    });
+  };
+
   return (
     <div className="manage-drivers-container">
       <h2 className="heading">Driver Management</h2>
@@ -66,7 +78,6 @@ const ManageDrivers = () => {
           border: "1px solid #ccc",
           borderRadius: "5px",
           width: "200%",
-          
         }}
       />
 
@@ -84,7 +95,7 @@ const ManageDrivers = () => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Contact</th>
+                <th>Contact <span style={{ fontWeight: "normal" }}>(Copy)</span></th>
                 <th>Location</th>
                 <th>Current Location</th>
                 <th>Status</th>
@@ -100,7 +111,25 @@ const ManageDrivers = () => {
                     </Link>
                   </td>
                   <td>{driver.email ?? "N/A"}</td>
-                  <td>{driver.phone ?? "N/A"}</td>
+                  <td>
+                  {driver.phone ?? "N/A"}
+                  {driver.phone && (
+                    <button
+                      onClick={() => copyToClipboard(driver.phone, driver.id || driver._id)}
+                      style={{
+                        marginLeft: "10px",
+                        padding: "2px 6px",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        background: "#f5f5f5",
+                      }}
+                    >
+                      {copiedId === (driver.id || driver._id) ? "Copied" : "Copy"}
+                    </button>
+                  )}
+                  </td>
                   <td>{driver.location ?? "N/A"}</td>
                   <td>{driver.current_location ?? "N/A"}</td>
                   <td>{driver.is_available ? "Active" : "Inactive"}</td>

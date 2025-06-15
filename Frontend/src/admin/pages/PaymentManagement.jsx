@@ -1,9 +1,7 @@
-// src/admin/pages/PaymentManagement.jsx
 import React, { useState, useEffect } from "react";
 
 const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
-
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
@@ -15,20 +13,44 @@ const PaymentManagement = () => {
           },
         });
         const result = await response.json();
-        setPayments(result.bookings);
+        setPayments(result.bookings || []);
       } catch (error) {
         console.error("Error fetching payments:", error);
       }
     };
-  
+
     fetchPayments();
   }, []);
-  
 
-  const togglePaymentToDriver = (id) => {
-    setPayments(prev => prev.map(p =>
-      p.id === id ? { ...p, paymentToDriver: !p.paymentToDriver } : p
-    ));
+  const togglePaymentToDriver = async (bookingId, currentStatus, paymentType) => {
+    if (paymentType === "upi" && !currentStatus) {
+      try {
+        const response = await fetch(`${baseURL}/api/driver-rides/${bookingId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            payment_received: true,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to confirm payment");
+        }
+
+        // Update local state only on success
+        setPayments(prev =>
+          prev.map(p =>
+            p.id === bookingId ? { ...p, payment_received: true } : p
+          )
+        );
+      } catch (error) {
+        console.error("Error confirming payment:", error);
+        return;
+      }
+    }
   };
 
   return (
@@ -43,35 +65,58 @@ const PaymentManagement = () => {
               <tr>
                 <th>ID</th>
                 <th>User</th>
-                <th>Driver</th>
-                <th>From</th>
-                <th>To</th>
+                <th>Assigned Driver</th>
+                <th>Pickup</th>
+                <th>Destination</th>
                 <th>Date</th>
                 <th>Booking Type</th>
-                <th>Paid via UPI</th>
-                <th>Payment to Driver</th>
+                <th>Payment Type</th>
+                <th>Payment Status</th>
+                <th>Confirm Payment (UPI)</th>
               </tr>
             </thead>
             <tbody>
-              {payments.map(p => (
-                <tr key={p.id} className={p.paymentToDriver ? 'paid-row' : ''}>
-                  <td>{p.id}</td>
-                  <td>{p.userName}</td>
-                  <td>{p.driver}</td>
-                  <td>{p.from}</td>
-                  <td>{p.to}</td>
-                  <td>{p.date}</td>
-                  <td>{p.booking_type}</td>
-                  <td>{p.paidViaUPI ? '✅' : '❌'}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={p.paymentToDriver}
-                      onChange={() => togglePaymentToDriver(p.id)}
-                    />
-                  </td>
-                </tr>
-              ))}
+              {payments.map(p => {
+                const isCash = p.payment_type === "cash";
+
+                // UPI payment is confirmed only if both fields are true
+                const isUpiPaid =
+                  p.payment_type === "upi" &&
+                  p.payment_status === true &&
+                  p.payment_received === true;
+
+                return (
+                  <tr key={p.id} className={isUpiPaid ? "paid-row" : ""}>
+                    <td>{p.id}</td>
+                    <td>{p.userName || "N/A"}</td>
+                    <td>{p.driver}</td>
+                    <td>{p.from}</td>
+                    <td>{p.to}</td>
+                    <td>{p.date}</td>
+                    <td>{p.booking_type}</td>
+                    <td>{p.payment_type}</td>
+                    <td>
+                      {p.payment_status === true && p.payment_received === true
+                        ? "✅"
+                        : "❌"}
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={isUpiPaid}
+                        disabled={isCash || isUpiPaid}
+                        onChange={() =>
+                          togglePaymentToDriver(
+                            p.id,
+                            isUpiPaid,
+                            p.payment_type
+                          )
+                        }
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
