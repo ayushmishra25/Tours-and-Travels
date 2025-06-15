@@ -119,9 +119,9 @@ const BookingManagement = () => {
         <p><strong>Booking Type:</strong> {b.booking_type}</p>
         <p><strong>Date:</strong> {b.date} </p>
         <p><strong>Time:</strong> {b.time}</p>
-        {b.driver && <p><strong>Driver:</strong> {b.driver} ({b.driverContact})</p>}
+        {b.driverContact && <p><strong>Driver Contact:</strong> {b.driverContact}</p>}
       </div>
-      {!b.driver && (
+      {!b.driverContact && (
         <button className="assign-btn" onClick={() => toggleAssignForm(b.id)}>
           Assign a Driver
         </button>
