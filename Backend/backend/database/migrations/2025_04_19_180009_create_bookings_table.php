@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('source_location');
             $table->string('source_pincode', 6);
             $table->string('zone')->nullable();
-            $table->string('destination_location')->nullablle();
+            $table->string('destination_location')->nullable();
+            $table->string('vehicle_details')->nullable();
             $table->integer('hours')->nullable(); // For hourly
             $table->integer('working_days')->nullable(); 
             $table->integer('working_hours_per_day')->nullable(); 

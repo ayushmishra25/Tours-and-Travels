@@ -60,7 +60,7 @@ const MonthlyDriver = () => {
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [pickupPincode, setpickupPincode] = useState("");
-  const [destinationLocation, setDestinationLocation] = useState("");
+  const [vehicleDetails, setVehicleDetails] = useState("");
   const [workingDays, setWorkingDays] = useState("22");
   const [workingHours, setWorkingHours] = useState("8");
   const [date, setDate] = useState("");
@@ -96,7 +96,7 @@ const MonthlyDriver = () => {
     }
     setAuthError("");
 
-    if (!location || !workingDays || !workingHours || !date || !pickupLocation || !destinationLocation) {
+    if (!location || !workingDays || !workingHours || !date || !pickupLocation ) {
       setFieldError("All fields are required");
       return;
     }
@@ -115,7 +115,7 @@ const MonthlyDriver = () => {
       booking_type: "Monthly",
       trip_type: "M", 
       source_location: pickupLocation,
-      destination_location: destinationLocation,
+      vehicle_details: vehicleDetails,
       source_pincode:pickupPincode,
       hours: null,
       working_days: parseInt(workingDays),
@@ -141,7 +141,6 @@ const MonthlyDriver = () => {
         state: {
           bookingId: booking.id,
           pickupLocation: booking.source_location,
-          destinationLocation: booking.destination_location,
           bookingType: booking.booking_type,
           tripType: booking.trip_type,
           bookingDatetime: booking.booking_datetime,
@@ -191,13 +190,13 @@ const MonthlyDriver = () => {
                 onChange={(e) => setpickupPincode(e.target.value)}
               />
             </label>
-            <label>
-                Destination Location:
+              <label>
+                Vehicle Details:
                 <input
                   type="text"
-                  placeholder="Enter Destination Location"
-                  value={destinationLocation}
-                  onChange={(e) => setDestinationLocation(e.target.value)}
+                  placeholder="Enter Vehicle Name"
+                  value={vehicleDetails}
+                  onChange={(e) => setVehicleDetails(e.target.value)}
                 />
               </label>
             <label>

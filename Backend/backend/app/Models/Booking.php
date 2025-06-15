@@ -18,6 +18,7 @@ class Booking extends Model
         'source_location',
         'source_pincode',
         'destination_location',
+        'vehicle_details',
         'hours',
         'working_days',
         'working_hours_per_day',

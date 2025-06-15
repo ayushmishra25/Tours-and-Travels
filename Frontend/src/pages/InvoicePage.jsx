@@ -81,7 +81,7 @@ const InvoicePage = () => {
             <h1>Sahyog Force</h1>
             <p className="brand-subtext">By Shankar & Company</p>
             <p>Uttam Nagar, New Delhi-110059</p>
-            <p>GSTIN: {GSTIN}</p>
+            {/* <p>GSTIN: {GSTIN}</p> */}
             <p>Email: support@sahyogforce.com</p>
             <p>Phone: +91-9220922268</p>
           </div>

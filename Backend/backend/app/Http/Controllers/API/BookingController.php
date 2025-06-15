@@ -18,6 +18,7 @@ class BookingController extends Controller
             'source_location' => 'required|string',
             'source_pincode' => 'required|digits:6',  
             'destination_location' => 'nullable|string',
+            'vehicle_details' => 'nullable|string',
             'hours' => 'nullable|integer',
             'working_days' => 'nullable|integer',
             'working_hours_per_day' => 'nullable|integer',
@@ -35,6 +36,7 @@ class BookingController extends Controller
             'source_location' => $request->source_location,
             'source_pincode' => $request->source_pincode,  
             'destination_location' => $request->destination_location,
+            'vehicle_details' => $request->vehicle_details,
             'hours' => $request->hours,
             'working_days' => $request->working_days,
             'working_hours_per_day' => $request->working_hours_per_day,
@@ -58,6 +60,7 @@ class BookingController extends Controller
                 'user_name' => auth()->user()->name,
                 'source' => $booking->source_location,
                 'destination' => $booking->destination_location,
+                'vehicle_details' => $booking->vehicle_details,
                 'booking_type' => $booking->booking_type,
                 'timestamp' => now()->toDateTimeString()
             ]));
@@ -97,6 +100,7 @@ class BookingController extends Controller
                 'time' => $booking->booking_datetime ? date('H:i', strtotime($booking->booking_datetime)) : null,
                 'booking_type' => $booking->booking_type,
                 'from' => $booking->source_location,
+                'vehicle_details' => $booking->vehicle_details,
                 'to' => $booking->destination_location,
                 'driver' => $booking->driver_name ?? null,
                 'driverContact' => $booking->driver_contact ?? null,
