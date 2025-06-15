@@ -114,7 +114,8 @@ const BookingManagement = () => {
       <div className="booking-info">
         <p><strong>Customer:</strong> {b.userName}</p>
         <p><strong>Customer Contact Number:</strong> {b.userContact}</p>
-        <p><strong>Pickup:</strong> {b.from} <strong>Destination:</strong> {b.to}</p>
+        <p><strong>Pickup:</strong> {b.from}</p>
+        <p><strong>Destination:</strong> {b.to}</p>
         <p><strong>Booking Type:</strong> {b.booking_type}</p>
         <p><strong>Date:</strong> {b.date} </p>
         <p><strong>Time:</strong> {b.time}</p>
