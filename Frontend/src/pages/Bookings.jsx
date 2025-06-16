@@ -158,7 +158,9 @@ const Bookings = () => {
             </div>
           </li>
         ))
-      ) : (
+      ) 
+      :
+      (
         <li>No bookings found.</li>
       )}
     </ul>
