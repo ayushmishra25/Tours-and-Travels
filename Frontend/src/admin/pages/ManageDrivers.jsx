@@ -1,7 +1,7 @@
 // ManageDrivers.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ManageDrivers = () => {
   const [drivers, setDrivers] = useState([]);
@@ -11,15 +11,19 @@ const ManageDrivers = () => {
   const [copiedId, setCopiedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/listUsers?role=1`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `${baseURL}/api/listUsers?role=1`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         const fetchedDrivers = response.data.users || [];
         setDrivers(fetchedDrivers);
         setFilteredDrivers(fetchedDrivers);
@@ -32,33 +36,39 @@ const ManageDrivers = () => {
     };
 
     fetchDrivers();
-  }, []);
+  }, [baseURL]);
 
   useEffect(() => {
     const query = searchQuery.toLowerCase();
-    const results = drivers.filter((driver) => {
-      return (
-        (driver.name && driver.name.toLowerCase().includes(query)) ||
-        (driver.email && driver.email.toLowerCase().includes(query)) ||
-        (driver.phone && driver.phone.toString().includes(query)) ||
-        (driver.location && driver.location.toLowerCase().includes(query)) ||
-        (driver.current_location && driver.current_location.toLowerCase().includes(query)) ||
-        (driver.pincode && driver.pincode.toString().includes(query))
-      );
-    });
-
-    setFilteredDrivers(results);
+    setFilteredDrivers(
+      drivers.filter((driver) =>
+        [
+          driver.name,
+          driver.email,
+          driver.phone?.toString(),
+          driver.location,
+          driver.current_location,
+          driver.pincode?.toString(),
+        ]
+          .filter(Boolean)
+          .some((field) => field.toLowerCase().includes(query))
+      )
+    );
   }, [searchQuery, drivers]);
 
   const copyToClipboard = (text, id) => {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000); // Reset after 2s
-    })
-    .catch((err) => {
-      console.error("Failed to copy:", err);
-    });
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+      })
+      .catch((err) => console.error("Failed to copy:", err));
+  };
+
+  const handleEditClick = (driverId) => {
+    // Redirect to the shared editable profile page, passing driverId as a param
+    navigate(`/driver-details-upload-editable/${driverId}`);
   };
 
   return (
@@ -95,46 +105,68 @@ const ManageDrivers = () => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Contact <span style={{ fontWeight: "normal" }}>(Copy)</span></th>
+                <th>
+                  Contact <span style={{ fontWeight: "normal" }}>(Copy)</span>
+                </th>
                 <th>Location</th>
                 <th>Current Location</th>
                 <th>Status</th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
-              {filteredDrivers.map((driver) => (
-                <tr key={driver.id || driver._id}>
-                  <td>{driver.id || driver._id}</td>
-                  <td>
-                    <Link to={`/admin/drivers/${driver.id || driver._id}`}>
-                      {driver.name ?? "No Name"}
-                    </Link>
-                  </td>
-                  <td>{driver.email ?? "N/A"}</td>
-                  <td>
-                  {driver.phone ?? "N/A"}
-                  {driver.phone && (
-                    <button
-                      onClick={() => copyToClipboard(driver.phone, driver.id || driver._id)}
-                      style={{
-                        marginLeft: "10px",
-                        padding: "2px 6px",
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        background: "#007bff",
-                      }}
-                    >
-                      {copiedId === (driver.id || driver._id) ? "Copied" : "Copy"}
-                    </button>
-                  )}
-                  </td>
-                  <td>{driver.location ?? "N/A"}</td>
-                  <td>{driver.current_location ?? "N/A"}</td>
-                  <td>{driver.is_available ? "Active" : "Inactive"}</td>
-                </tr>
-              ))}
+              {filteredDrivers.map((driver,idx) => {
+                const id = driver.id || driver._id;
+                return (
+                  <tr key={`${id}-${idx}`}>
+                    <td>{id}</td>
+                    <td>
+                      <Link to={`/admin/drivers/${id}`}>{driver.name ?? "No Name"}</Link>
+                    </td>
+                    <td>{driver.email ?? "N/A"}</td>
+                    <td>
+                      {driver.phone ?? "N/A"}
+                      {driver.phone && (
+                        <button
+                          onClick={() => copyToClipboard(driver.phone, id)}
+                          style={{
+                            marginLeft: "10px",
+                            padding: "2px 6px",
+                            fontSize: "12px",
+                            cursor: "pointer",
+                            border: "1px solid #ccc",
+                            borderRadius: "4px",
+                            background: "#007bff",
+                            color: "#fff",
+                          }}
+                        >
+                          {copiedId === id ? "Copied" : "Copy"}
+                        </button>
+                      )}
+                    </td>
+                    <td>{driver.location ?? "N/A"}</td>
+                    <td>{driver.current_location ?? "N/A"}</td>
+                    <td>{driver.is_available ? "Active" : "Inactive"}</td>
+                    <td>
+                      <button
+                        onClick={() => handleEditClick(id)}
+                        style={{
+                          paddingLeft: "5px",
+                          paddingRight: "35px",
+                          fontSize: "15px",
+                          cursor: "pointer",
+                          border: "1px solid #28a745",
+                          borderRadius: "4px",
+                          background: "#28a745",
+                          color: "#fff",
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
