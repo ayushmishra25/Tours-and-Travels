@@ -37,7 +37,7 @@ const HourlyDriver = () => {
 
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
-  const [pickup, setPickup] = useState("");
+  const [pickupLocation, setPickupLocation] = useState("");
   const [pickupPincode, setpickupPincode] = useState("");
   const [destination, setDestination] = useState("");
   const [tripType] = useState("roundtrip");
@@ -53,33 +53,45 @@ const HourlyDriver = () => {
 
   // Calculate hourly fare
   const calculateFare = () => {
-    if (!pickup || !destination) return 0;
-    const city = getCityFromAddress(pickup);
+    if (!pickupLocation || !destination) return 0;
+    const city = getCityFromAddress(pickupLocation);
     return hourlyPricing[city]?.[hours - 1] ?? 0;
   };
 
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
   // 📍 Get current location and reverse geocode
-  const handleGetCurrentLocation = () => {
+  const fetchCurrentLocation = () => {
     setGeoLoading(true);
     setGeoError("");
+
     if (!navigator.geolocation) {
-      setAuthError("Geolocation is not supported by your browser.");
+      setGeoError("Geolocation is not supported by your browser.");
+      setGeoLoading(false);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        
         try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await response.json();
-          const address = data.display_name || "";
-          const pincodeMatch = address.match(/\b\d{6}\b/); // extract 6-digit pincode
-          const pincode = pincodeMatch ? pincodeMatch[0] : "";
-          setPickup(address);
-          setpickupPincode(pincode);
+          const response = await axios.get(`${baseURL}/api/geocode?latlng=${latitude},${longitude}`);
+
+          if (response.data.status === "OK" && response.data.results.length > 0) {
+            const fullAddress = response.data.results[0].formatted_address;
+            const addressComponents = response.data.results[0].address_components;
+
+            const pincodeObj = addressComponents.find((component) =>
+              component.types.includes("postal_code")
+            );
+            const pincode = pincodeObj ? pincodeObj.long_name : "";
+
+            setPickupLocation(fullAddress);
+            setpickupPincode(pincode);
+          } else {
+            setGeoError("Could not retrieve address from coordinates.");
+          }
         } catch (error) {
           console.error("Reverse geocoding failed:", error.message);
           setGeoError("Failed to retrieve location address.");
@@ -88,8 +100,9 @@ const HourlyDriver = () => {
         }
       },
       (error) => {
+        setGeoLoading(false);
+        setGeoError("Failed to fetch current location.");
         console.error("Geolocation error:", error);
-        setAuthError("Permission denied or error fetching location.");
       }
     );
   };
@@ -100,8 +113,8 @@ const HourlyDriver = () => {
       return;
     }
 
-    if (!pickup.trim()) {
-      setAuthError("Give pickup address");
+    if (!pickupLocation.trim()) {
+      setAuthError("Give pickupLocation address");
       return;
     }
 
@@ -126,15 +139,13 @@ const HourlyDriver = () => {
       user_id: parseInt(localStorage.getItem("userId")),
       booking_type: "Hourly",
       trip_type: tripType,
-      source_location: pickup,
+      source_location: pickupLocation,
       source_pincode: pickupPincode,
       destination_location: destination,
       hours,
       payment: totalAmount,
       booking_datetime,
     };
-
-    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
       const resp = await axios.post(`${baseURL}/api/bookings`, payload, {
@@ -146,13 +157,13 @@ const HourlyDriver = () => {
       if ("Notification" in window) {
         if (Notification.permission === "granted") {
           new Notification("Booking Confirmed!", {
-            body: `Your booking for ${hours} hour(s) is confirmed. Driver will reach at ${pickup}.`,
+            body: `Your booking for ${hours} hour(s) is confirmed. Driver will reach at ${pickupLocation}.`,
           });
         } else if (Notification.permission !== "denied") {
           Notification.requestPermission().then((permission) => {
             if (permission === "granted") {
               new Notification("Booking Confirmed!", {
-                body: `Your booking for ${hours} hour(s) is confirmed. Driver will reach at ${pickup}.`,
+                body: `Your booking for ${hours} hour(s) is confirmed. Driver will reach at ${pickupLocation}.`,
               });
             }
           });
@@ -201,16 +212,16 @@ const HourlyDriver = () => {
 
   useEffect(() => {
     setTotalAmount(calculateFare());
-  }, [pickup, destination, hours]);
+  }, [pickupLocation, destination, hours]);
 
   return (
     <>
-      <Helmet>
-        <title>Hourly Driver Booking</title>
-      </Helmet>
-
       <DashboardNavbar />
       <div className="hourly-driver-container">
+        <Helmet>
+        <title>Hourly Driver Booking</title>
+        </Helmet>
+        <h1>Hourly Service</h1>
         <div className="booking-form">
           <div className="left-section">
             <h3>Select Hours</h3>
@@ -225,8 +236,8 @@ const HourlyDriver = () => {
             <input
               type="text"
               placeholder="Enter Pickup Address"
-              value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
+              value={pickupLocation}
+              onChange={(e) => setPickupLocation(e.target.value)}
             />
             
             <input
@@ -237,7 +248,7 @@ const HourlyDriver = () => {
             />
 
             <button
-            onClick={handleGetCurrentLocation}
+            onClick={fetchCurrentLocation}
             style={{
               marginTop: "6px",
               padding: "6px 12px",

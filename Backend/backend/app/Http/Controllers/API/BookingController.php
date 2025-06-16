@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Events\BookingCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Models\DriverRide;
 use App\Models\Booking;
@@ -202,6 +203,19 @@ class BookingController extends Controller
             'aadhar_card_back'        => $convertToUrl($driverDetails->aadhar_card_back),
             'family_contacts' => $driverDetails->family_contacts ?? [],
         ]);
+    }
+
+    public function geocode(Request $request)
+    {
+        $latlng = $request->input('latlng');
+        $apiKey = env('GOOGLE_MAPS_API_KEY');
+
+        $response = Http::get("https://maps.googleapis.com/maps/api/geocode/json", [
+            'latlng' => $latlng,
+            'key' => $apiKey
+        ]);
+
+        return $response->json();
     }
 
 }

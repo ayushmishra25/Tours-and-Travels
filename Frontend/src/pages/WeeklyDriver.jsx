@@ -21,6 +21,8 @@ const WeeklyDriver = () => {
   const [workingHoursPerDay, setWorkingHoursPerDay] = useState("");
   const [userLocation, setUserLocation] = useState(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [geoLoading, setGeoLoading] = useState(false);
+    const [geoError, setGeoError] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
 
@@ -38,43 +40,50 @@ const WeeklyDriver = () => {
     setTotalAmount(fare);
   }, [location, workingDays, workingHoursPerDay]);
 
-  const handleGetCurrentLocation = () => {
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+  const fetchCurrentLocation = () => {
+    setGeoLoading(true);
+    setGeoError("");
+
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
+      setGeoError("Geolocation is not supported by your browser.");
+      setGeoLoading(false);
       return;
     }
 
-    setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        setUserLocation({ lat: latitude, lng: longitude });
-
+        
         try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await res.json();
+          const response = await axios.get(`${baseURL}/api/geocode?latlng=${latitude},${longitude}`);
 
-          if (data?.display_name) {
-            setPickupLocation(data.display_name);
-            if (data.address?.postcode) {
-              setpickupPincode(data.address.postcode);
-            }
+          if (response.data.status === "OK" && response.data.results.length > 0) {
+            const fullAddress = response.data.results[0].formatted_address;
+            const addressComponents = response.data.results[0].address_components;
+
+            const pincodeObj = addressComponents.find((component) =>
+              component.types.includes("postal_code")
+            );
+            const pincode = pincodeObj ? pincodeObj.long_name : "";
+
+            setPickupLocation(fullAddress);
+            setpickupPincode(pincode);
           } else {
-            alert("Could not retrieve address from location.");
+            setGeoError("Could not retrieve address from coordinates.");
           }
-        } catch (err) {
-          console.error("Reverse geocoding error:", err);
-          alert("Failed to get address. Please enter manually.");
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error.message);
+          setGeoError("Failed to retrieve location address.");
         } finally {
-          setIsLocating(false);
+          setGeoLoading(false);
         }
       },
       (error) => {
-        console.error("Geolocation error:", error.message);
-        alert("Unable to fetch your location. Please check your device settings.");
-        setIsLocating(false);
+        setGeoLoading(false);
+        setGeoError("Failed to fetch current location.");
+        console.error("Geolocation error:", error);
       }
     );
   };
@@ -129,8 +138,6 @@ const WeeklyDriver = () => {
       start_date: date,
       booking_datetime: bookingDatetime,
     };
-
-    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
       const response = await axios.post(`${baseURL}/api/bookings`, bookingData, {
@@ -196,7 +203,7 @@ const WeeklyDriver = () => {
               />
               <button
                 type="button"
-                onClick={handleGetCurrentLocation}
+                onClick={fetchCurrentLocation}
                 disabled={isLocating}
                 style={{
                   marginTop: "6px",
@@ -211,6 +218,8 @@ const WeeklyDriver = () => {
                 {isLocating ? "Getting Location..." : " Use Current Location"}
               </button>
             </label>
+            {geoLoading && <p>Fetching your current location...</p>}
+            {geoError && <p className="error-message">{geoError}</p>}
 
             <label>
               Destination Location:
