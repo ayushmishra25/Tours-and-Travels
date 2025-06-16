@@ -5,9 +5,11 @@ const BookingManagement = () => {
   const [assignForms, setAssignForms] = useState({});
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState({});
+  const [editData, setEditData] = useState({});
+  const [menuOpen, setMenuOpen] = useState({});
 
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
-
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -70,7 +72,7 @@ const BookingManagement = () => {
   const submitAssign = async (id) => {
     const data = formData[id];
 
-    if ( !data.contact) {
+    if (!data.contact) {
       alert("Please fill all fields before submitting.");
       return;
     }
@@ -109,18 +111,99 @@ const BookingManagement = () => {
     }
   };
 
+  const toggleMenu = (id) => {
+    setMenuOpen((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const startEditing = (booking) => {
+    setEditMode((prev) => ({ ...prev, [booking.id]: true }));
+    setEditData((prev) => ({
+      ...prev,
+      [booking.id]: {
+        date: booking.date,
+        time: booking.time,
+        driverContact: booking.driverContact || "",
+      },
+    }));
+    setMenuOpen({});
+  };
+
+  const handleEditChange = (id, e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [name]: value,
+      },
+    }));
+  };
+
+  const saveEdit = (id) => {
+    const updated = editData[id];
+    setBookings((prev) =>
+      prev.map((b) =>
+        b.id === id
+          ? {
+              ...b,
+              date: updated.date,
+              time: updated.time,
+              driverContact: b.driverContact ? updated.driverContact : b.driverContact,
+            }
+          : b
+      )
+    );
+    setEditMode((prev) => ({ ...prev, [id]: false }));
+  };
+
+  const discardEdit = (id) => {
+    setEditMode((prev) => ({ ...prev, [id]: false }));
+  };
+
   const renderBooking = (b) => (
     <div key={b.id} className="booking-card">
+      <div className="three-dot-menu" onClick={() => toggleMenu(b.id)}>
+        &#8942;
+        {menuOpen[b.id] && (
+          <div className="dropdown-menu">
+            <div onClick={() => startEditing(b)}>Edit</div>
+          </div>
+        )}
+      </div>
       <div className="booking-info">
         <p><strong>Customer:</strong> {b.userName}</p>
         <p><strong>Customer Contact Number:</strong> {b.userContact}</p>
         <p><strong>Pickup:</strong> {b.from}</p>
         <p><strong>Destination:</strong> {b.to}</p>
         <p><strong>Booking Type:</strong> {b.booking_type}</p>
-        <p><strong>Date:</strong> {b.date} </p>
-        <p><strong>Time:</strong> {b.time}</p>
-        {b.driverContact && <p><strong>Driver Contact:</strong> {b.driverContact}</p>}
+
+        {!editMode[b.id] ? (
+          <>
+            <p><strong>Date:</strong> {b.date}</p>
+            <p><strong>Time:</strong> {b.time}</p>
+            {b.driverContact && <p><strong>Driver Contact:</strong> {b.driverContact}</p>}
+          </>
+        ) : (
+          <div className="edit-fields">
+            <input type="date" name="date" value={editData[b.id]?.date || ""} onChange={(e) => handleEditChange(b.id, e)} />
+            <input type="time" name="time" value={editData[b.id]?.time || ""} onChange={(e) => handleEditChange(b.id, e)} />
+            {b.driverContact && (
+              <input
+                type="text"
+                name="driverContact"
+                placeholder="Driver Contact"
+                value={editData[b.id]?.driverContact || ""}
+                onChange={(e) => handleEditChange(b.id, e)}
+              />
+            )}
+            <div className="edit-buttons">
+              <button onClick={() => saveEdit(b.id)}>Save</button>
+              <button onClick={() => discardEdit(b.id)}>Discard</button>
+            </div>
+          </div>
+        )}
       </div>
+
       {!b.driverContact && (
         <button className="assign-btn" onClick={() => toggleAssignForm(b.id)}>
           Assign a Driver
