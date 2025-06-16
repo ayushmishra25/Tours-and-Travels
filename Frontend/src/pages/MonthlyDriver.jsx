@@ -56,7 +56,7 @@ const monthlyPricing = {
 const MonthlyDriver = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user")) || "User not authenticated";
+  const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest", phone: "N/A" };
 
   const [location, setLocation] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
@@ -72,6 +72,8 @@ const MonthlyDriver = () => {
 
   const [geoLoading, setGeoLoading] = useState(false);
   const [geoError, setGeoError] = useState("");
+
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   const calculateFare = () => {
     if (!location) return 0;
@@ -100,18 +102,24 @@ const MonthlyDriver = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-
+        
         try {
-          const response = await axios.get(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
+          const response = await axios.get(`${baseURL}/api/geocode?latlng=${latitude},${longitude}`);
 
-          const address = response.data.address;
-          const displayName = response.data.display_name;
-          const pincode = address.postcode || "";
+          if (response.data.status === "OK" && response.data.results.length > 0) {
+            const fullAddress = response.data.results[0].formatted_address;
+            const addressComponents = response.data.results[0].address_components;
 
-          setPickupLocation(displayName || "");
-          setpickupPincode(pincode);
+            const pincodeObj = addressComponents.find((component) =>
+              component.types.includes("postal_code")
+            );
+            const pincode = pincodeObj ? pincodeObj.long_name : "";
+
+            setPickupLocation(fullAddress);
+            setpickupPincode(pincode);
+          } else {
+            setGeoError("Could not retrieve address from coordinates.");
+          }
         } catch (error) {
           console.error("Reverse geocoding failed:", error.message);
           setGeoError("Failed to retrieve location address.");
@@ -133,21 +141,20 @@ const MonthlyDriver = () => {
       setFieldError("");
       return;
     }
-    setAuthError("");
 
     if (!location || !workingDays || !workingHours || !date || !pickupLocation) {
       setFieldError("All fields are required");
       return;
     }
 
+    setAuthError("");
     setFieldError("");
 
     const now = new Date();
     const formattedDatetime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
       now.getDate()
     ).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(
-      now.getSeconds()
-    ).padStart(2, '0')}`;
+      now.getSeconds()).padStart(2, '0')}`;
 
     const bookingData = {
       booking_type: "Monthly",
@@ -162,8 +169,6 @@ const MonthlyDriver = () => {
       booking_datetime: formattedDatetime,
       payment: totalAmount
     };
-
-    const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
       const response = await axios.post(`${baseURL}/api/bookings`, bookingData, {
@@ -210,16 +215,21 @@ const MonthlyDriver = () => {
                 ))}
               </select>
             </label>
-
             <label>
-              Pickup Location:
+              Pickup Address:
               <input
                 type="text"
-                placeholder="Enter Pickup Location"
+                placeholder="Enter Pickup Address"
                 value={pickupLocation}
                 onChange={(e) => setPickupLocation(e.target.value)}
               />
-              <button
+              <input
+                type="text"
+                placeholder="Enter Pickup Area Pincode"
+                value={pickupPincode}
+                onChange={(e) => setpickupPincode(e.target.value)}
+              />
+                <button
                 type="button"
                 onClick={fetchCurrentLocation}
                 style={{
@@ -232,10 +242,10 @@ const MonthlyDriver = () => {
                 }}
                 >
                 Get Current Location
-                </button> 
-            </label>
-            {geoLoading && <p>Fetching your current location...</p>}
-            {geoError && <p className="error-message">{geoError}</p>}
+                </button>
+                {geoLoading && <p>Fetching your current location...</p>}
+                {geoError && <p className="error-message">{geoError}</p>}
+              </label>
               <label>
                 Vehicle Details:
                 <input

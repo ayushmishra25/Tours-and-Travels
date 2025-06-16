@@ -16,6 +16,8 @@ use App\Http\Controllers\API\EarningController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/listUsers', [AuthController::class, 'listUsers']);
+Route::get('/geocode', [BookingController::class, 'geocode']);
+
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {

@@ -8,7 +8,7 @@ const OndemandDriver = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const [pickup, setPickup] = useState("");
+  const [pickupLocation, setPickupLocation ] = useState("");
   const [pickupPincode, setpickupPincode] = useState("");
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
@@ -64,18 +64,24 @@ const OndemandDriver = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-
+        
         try {
-          const response = await axios.get(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
+          const response = await axios.get(`${baseURL}/api/geocode?latlng=${latitude},${longitude}`);
 
-          const address = response.data.address;
-          const displayName = response.data.display_name;
-          const pincode = address.postcode || "";
+          if (response.data.status === "OK" && response.data.results.length > 0) {
+            const fullAddress = response.data.results[0].formatted_address;
+            const addressComponents = response.data.results[0].address_components;
 
-          setPickup(displayName || "");
-          setpickupPincode(pincode);
+            const pincodeObj = addressComponents.find((component) =>
+              component.types.includes("postal_code")
+            );
+            const pincode = pincodeObj ? pincodeObj.long_name : "";
+
+            setPickupLocation(fullAddress);
+            setpickupPincode(pincode);
+          } else {
+            setGeoError("Could not retrieve address from coordinates.");
+          }
         } catch (error) {
           console.error("Reverse geocoding failed:", error.message);
           setGeoError("Failed to retrieve location address.");
@@ -173,8 +179,8 @@ const OndemandDriver = () => {
               <input
                 type="text"
                 placeholder="Enter Pickup Address"
-                value={pickup}
-                onChange={(e) => setPickup(e.target.value)}
+                value={pickupLocation}
+                onChange={(e) => setPickupLocation(e.target.value)}
               />
               <input
                 type="text"
