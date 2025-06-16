@@ -4,14 +4,16 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Events\BookingCreated;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Models\DriverRide;
 use App\Models\Booking;
+use Illuminate\Database\Eloquent\SoftDeletes; 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
+    // Booking Function
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -78,10 +80,11 @@ class BookingController extends Controller
         return null;
     }
 
-
+    // Admin Listing API of Bookings
     public function index()
     {
         $bookings = Booking::with('user')
+            ->withTrashed() // Include soft-deleted bookings
             ->leftJoin('driver_rides', 'bookings.id', '=', 'driver_rides.booking_id')
             ->orderBy('bookings.id', 'desc')
             ->select(
@@ -109,6 +112,7 @@ class BookingController extends Controller
                 'payment_status' => $booking->payment_status ?? 'N/A',
                 'payment_received' => $booking->payment_received ?? 'N/A',
                 'created_at' => $booking->created_at->toDateTimeString(),
+                'deleted_by_customer' => $booking->deleted_at ? true : false, // 🟢 Added this line
             ];
         });
 
@@ -116,7 +120,7 @@ class BookingController extends Controller
     }
 
 
-
+    // Assign a Driver
     public function assignDriver(Request $request, $id)
     {
         $request->validate([
@@ -130,15 +134,23 @@ class BookingController extends Controller
         return response()->json(['message' => 'Driver assigned successfully.', 'booking' => $booking]);
     }
 
-
+    // Cutomer booking listing 
     public function show($user_id)
     {
-        $bookings = Booking::with('user')->orderBy('id', 'desc')->get();
+        $bookings = Booking::withTrashed()->with('user')->orderBy('id', 'desc')->get();
+
+        // Add 'is_deleted' flag to each booking
+        $bookings = $bookings->map(function ($booking) {
+            $booking->is_deleted = $booking->deleted_at !== null;
+            return $booking;
+        });
 
         return response()->json(['bookings' => $bookings]);
     }
 
-    // my rides page details
+
+
+    // Driver rides page details
     public function getRidesForDriver()
     {
         $user = Auth::user();
@@ -169,11 +181,10 @@ class BookingController extends Controller
         return response()->json(['rides' => $rides], 200);
     }
 
+    // Against booking Id assign Driver Details
     public function getDriverDetails($booking_id)
     {
         $booking = Booking::find($booking_id);
-
-       
         $driverContact = $booking->driver_contact;
         $driver = User::where('phone', $driverContact)->first();
 
@@ -205,6 +216,7 @@ class BookingController extends Controller
         ]);
     }
 
+    // Current location API
     public function geocode(Request $request)
     {
         $latlng = $request->input('latlng');
@@ -216,6 +228,20 @@ class BookingController extends Controller
         ]);
 
         return $response->json();
+    }
+
+    // Delete the booking 
+    public function destroy($id)
+    {
+        $booking = Booking::find($id);
+        if (!$booking) {
+            return response()->json(['message' => 'Booking not found.'], 404);
+        }
+        if ($booking->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized: You can only delete your own bookings.'], 403);
+        }
+        $booking->delete(); // Soft delete
+        return response()->json(['message' => 'Booking soft deleted successfully.']);
     }
 
 }

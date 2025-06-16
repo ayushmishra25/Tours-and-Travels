@@ -59,13 +59,12 @@ const Bookings = () => {
       }
     } catch (error) {
       console.error("Error checking payment status:", error);
-      alert("First Go to payment page and confirm your payment method and make the payment.");
+      alert("First go to payment page and confirm your payment method and make the payment.");
     }
   };
 
   const handleCancelBooking = async (bookingId) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;
-
     try {
       await axios.delete(`${BASE_URL}/api/bookings/${bookingId}`, {
         headers: {
@@ -73,7 +72,17 @@ const Bookings = () => {
         },
       });
 
-      setBookings((prev) => prev.filter((b) => b.id !== bookingId));
+      // Re-fetch bookings from the server to get updated data
+      const userId = localStorage.getItem("userId");
+      const response = await axios.get(`${BASE_URL}/api/bookings/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const updatedBookings = response.data.bookings;
+      setBookings(Array.isArray(updatedBookings) ? updatedBookings : []);
+      
       alert("Booking canceled successfully.");
     } catch (error) {
       console.error("Error canceling booking:", error);
@@ -81,91 +90,94 @@ const Bookings = () => {
     }
   };
 
+
   return (
-  <div className="bookings-container">
-    <Helmet>
-      <title>My Bookings</title>
-    </Helmet>
-    <h2>My Bookings</h2>
-    <ul>
-      {bookings.length > 0 ? (
-        bookings.map((booking, index) => (
-          <li
-            key={booking.id || index}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: "1px solid #ccc",
-              padding: "10px 0",
-            }}
-          >
-            <div>
-              <strong>{booking.booking_type}</strong> — From{" "}
-              <strong>{booking.source_location}</strong> to{" "}
-              <strong>{booking.destination_location}</strong> —{" "}
-              <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
-            </div>
+    <div className="bookings-container">
+      <Helmet>
+        <title>My Bookings</title>
+      </Helmet>
+      <h2>My Bookings</h2>
+      <ul>
+        {bookings.length > 0 ? (
+          bookings.map((booking, index) => (
+            <li
+              key={booking.id || index}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #ccc",
+                padding: "10px 0",
+              }}
+            >
+              <div>
+                <strong>{booking.booking_type}</strong> — From{" "}
+                <strong>{booking.source_location}</strong> to{" "}
+                <strong>{booking.destination_location}</strong> —{" "}
+                <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
+              </div>
 
-            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {booking.is_deleted ? (
+                  <span style={{ color: "red", fontWeight: "bold" }}>Cancelled</span>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleCancelBooking(booking.id)}
+                      title="Cancel Booking"
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "18px",
+                        color: "#e74c3c",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ❌
+                    </button>
 
-              <button
-                  onClick={() => handleCancelBooking(booking.id)}
-                  title="Cancel Booking"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "18px",
-                    color: "#e74c3c",
-                    fontWeight: "bold",
-                  }}
-                >
-                  ❌
-              </button>
+                    <Link
+                      to={`/final-tnc/${booking.id}`}
+                      title="View Payment Details"
+                      style={{ textDecoration: "none", fontSize: "18px" }}
+                    >
+                      💳
+                    </Link>
 
+                    <Link
+                      to={`/assigned-driver/${booking.id}`}
+                      title="View Driver Details"
+                      style={{ textDecoration: "none", fontSize: "18px" }}
+                    >
+                      👨‍✈️
+                    </Link>
 
-              <Link
-                to={`/final-tnc/${booking.id}`}
-                title="View Payment Details"
-                style={{ textDecoration: "none", fontSize: "18px" }}
-              >
-                💳
-              </Link>
-
-              <Link
-                to={`/assigned-driver/${booking.id}`}
-                title="View Driver Details"
-                style={{ textDecoration: "none", fontSize: "18px" }}
-              >
-                👨‍✈️
-              </Link>
-
-              <button
-                onClick={() => handleInvoiceClick(booking.id)}
-                title="View Bill"
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                  color: "#2e86de",
-                  fontWeight: "bold",
-                }}
-              >
-                🧾
-              </button>
-            </div>
-          </li>
-        ))
-      ) 
-      :
-      (
-        <li>No bookings found.</li>
-      )}
-    </ul>
-  </div>
-);
-}
+                    <button
+                      onClick={() => handleInvoiceClick(booking.id)}
+                      title="View Bill"
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "18px",
+                        color: "#2e86de",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      🧾
+                    </button>
+                  </>
+                )}
+              </div>
+            </li>
+          ))
+        ) : (
+          <li>No bookings found.</li>
+        )}
+      </ul>
+    </div>
+  );
+};
 
 export default Bookings;

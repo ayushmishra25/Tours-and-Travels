@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('driver_contact')->nullable();
             $table->string('driver_location')->nullable(); 
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

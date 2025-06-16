@@ -161,15 +161,38 @@ const BookingManagement = () => {
   };
 
   const renderBooking = (b) => (
-    <div key={b.id} className="booking-card">
-      <div className="three-dot-menu" onClick={() => toggleMenu(b.id)}>
-        &#8942;
-        {menuOpen[b.id] && (
-          <div className="dropdown-menu">
-            <div onClick={() => startEditing(b)}>Edit</div>
-          </div>
-        )}
-      </div>
+    <div
+      key={b.id}
+      className="booking-card"
+      style={{
+        border: "1px solid #ccc",
+        marginBottom: "1rem",
+        padding: "1rem",
+        opacity: b.deleted_by_customer ? 0.6 : 1,
+      }}
+    >
+      {!b.deleted_by_customer && (
+        <div
+          className="three-dot-menu"
+          onClick={() => toggleMenu(b.id)}
+          style={{ cursor: "pointer" }}
+        >
+          &#8942;
+          {menuOpen[b.id] && (
+            <div
+              className="dropdown-menu"
+              style={{
+                border: "1px solid #ddd",
+                backgroundColor: "#fff",
+                padding: "5px",
+              }}
+            >
+              <div onClick={() => startEditing(b)}>Edit</div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="booking-info">
         <p><strong>Customer:</strong> {b.userName}</p>
         <p><strong>Customer Contact Number:</strong> {b.userContact}</p>
@@ -185,8 +208,18 @@ const BookingManagement = () => {
           </>
         ) : (
           <div className="edit-fields">
-            <input type="date" name="date" value={editData[b.id]?.date || ""} onChange={(e) => handleEditChange(b.id, e)} />
-            <input type="time" name="time" value={editData[b.id]?.time || ""} onChange={(e) => handleEditChange(b.id, e)} />
+            <input
+              type="date"
+              name="date"
+              value={editData[b.id]?.date || ""}
+              onChange={(e) => handleEditChange(b.id, e)}
+            />
+            <input
+              type="time"
+              name="time"
+              value={editData[b.id]?.time || ""}
+              onChange={(e) => handleEditChange(b.id, e)}
+            />
             {b.driverContact && (
               <input
                 type="text"
@@ -204,12 +237,13 @@ const BookingManagement = () => {
         )}
       </div>
 
-      {!b.driverContact && (
+      {!b.driverContact && !b.deleted_by_customer && (
         <button className="assign-btn" onClick={() => toggleAssignForm(b.id)}>
           Assign a Driver
         </button>
       )}
-      {assignForms[b.id] && (
+
+      {assignForms[b.id] && !b.deleted_by_customer && (
         <div className="assign-form">
           <input
             type="text"
@@ -223,8 +257,16 @@ const BookingManagement = () => {
           </button>
         </div>
       )}
+
+      {b.deleted_by_customer && (
+        <p style={{ color: "red", fontWeight: "bold", marginTop: "10px" }}>
+          The booking is deleted by customer
+        </p>
+      )}
     </div>
   );
+
+
 
   return (
     <div className="booking-management-container">
