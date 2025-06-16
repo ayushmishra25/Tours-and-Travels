@@ -63,6 +63,24 @@ const Bookings = () => {
     }
   };
 
+  const handleCancelBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+
+    try {
+      await axios.delete(`${BASE_URL}/api/bookings/${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setBookings((prev) => prev.filter((b) => b.id !== bookingId));
+      alert("Booking canceled successfully.");
+    } catch (error) {
+      console.error("Error canceling booking:", error);
+      alert("Failed to cancel the booking. Please try again.");
+    }
+  };
+
   return (
   <div className="bookings-container">
     <Helmet>
@@ -90,6 +108,23 @@ const Bookings = () => {
             </div>
 
             <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+
+              <button
+                  onClick={() => handleCancelBooking(booking.id)}
+                  title="Cancel Booking"
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "18px",
+                    color: "#e74c3c",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ❌
+              </button>
+
+
               <Link
                 to={`/final-tnc/${booking.id}`}
                 title="View Payment Details"
