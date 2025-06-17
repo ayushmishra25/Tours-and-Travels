@@ -8,6 +8,7 @@ const BookingManagement = () => {
   const [editMode, setEditMode] = useState({});
   const [editData, setEditData] = useState({});
   const [menuOpen, setMenuOpen] = useState({});
+  const [rideStatus, setRideStatus] = useState({});
 
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -23,6 +24,26 @@ const BookingManagement = () => {
 
         const data = await response.json();
         setBookings(data.bookings || []);
+
+        const rideStatuses = {};
+        await Promise.all(
+          (data.bookings || []).map(async (b) => {
+            try {
+              const res = await fetch(`${baseURL}/api/driver-rides/${b.id}`, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              });
+              if (!res.ok) throw new Error("Ride data not found");
+              const rideData = await res.json();
+              rideStatuses[b.id] = rideData;
+            } catch (err) {
+              console.warn(`No ride data for booking ${b.id}`);
+              rideStatuses[b.id] = null;
+            }
+          })
+        );
+        setRideStatus(rideStatuses);
       } catch (err) {
         console.error("Error fetching bookings:", err);
       } finally {
@@ -96,12 +117,7 @@ const BookingManagement = () => {
       alert(`Driver assigned: ${data.contact}`);
       setBookings((prev) =>
         prev.map((b) =>
-          b.id === id
-            ? {
-                ...b,
-                driverContact: data.contact,
-              }
-            : b
+          b.id === id ? { ...b, driverContact: data.contact } : b
         )
       );
       toggleAssignForm(id);
@@ -162,8 +178,6 @@ const BookingManagement = () => {
         return;
       }
 
-      const data = await response.json();
-
       setBookings((prev) =>
         prev.map((b) =>
           b.id === id
@@ -189,125 +203,162 @@ const BookingManagement = () => {
     setEditMode((prev) => ({ ...prev, [id]: false }));
   };
 
-  const renderBooking = (b) => (
-    <div
-      key={b.id}
-      className="booking-card"
-      style={{
-        border: "1px solid #ccc",
-        marginBottom: "1rem",
-        padding: "1rem",
-        opacity: b.deleted_by_customer ? 0.6 : 1,
-      }}
-    >
-      {!b.deleted_by_customer && (
-        <div
-          className="three-dot-menu"
-          onClick={() => toggleMenu(b.id)}
-          style={{ cursor: "pointer" }}
-        >
-          &#8942;
-          {menuOpen[b.id] && (
-            <div
-              className="dropdown-menu"
-              style={{
-                border: "1px solid #ddd",
-                backgroundColor: "#fff",
-                padding: "5px",
-              }}
-            >
-              <div onClick={() => startEditing(b)}>Edit</div>
-            </div>
-          )}
-        </div>
-      )}
+  const renderRideInfo = (id) => {
+  const rideWrapper = rideStatus[id];
+  const ride = rideWrapper?.ride;
 
-      <div className="booking-info">
-        <p><strong>Customer:</strong> {b.userName}</p>
-        <p><strong>Customer Contact Number:</strong> {b.userContact}</p>
-        <p><strong>Pickup:</strong> {b.from}</p>
-        <p><strong>Destination:</strong> {b.to}</p>
-        <p><strong>Booking Type:</strong> {b.booking_type}</p>
+  if (!rideWrapper || !ride) {
+    return (
+      <div className="ride-info" style={{ marginTop: "10px" }}>
+        <p style={{ color: "orange" }}>
+          <strong>Ride Status:</strong> Driver has not initiated the ride.
+        </p>
+      </div>
+    );
+  }
 
-        {!editMode[b.id] ? (
-          <>
-            <p><strong>Date:</strong> {b.date}</p>
-            <p><strong>Time:</strong> {b.time}</p>
-            {b.driverContact && <p><strong>Driver Contact:</strong> {b.driverContact}</p>}
-          </>
-        ) : (
-          <div className="edit-fields">
-            <input
-              type="date"
-              name="date"
-              value={editData[b.id]?.date || ""}
-              onChange={(e) => handleEditChange(b.id, e)}
-            />
-            <input
-              type="time"
-              name="time"
-              value={editData[b.id]?.time || ""}
-              onChange={(e) => handleEditChange(b.id, e)}
-            />
-            {b.driverContact && (
-              <input
-                type="text"
-                name="driverContact"
-                placeholder="Driver Contact"
-                value={editData[b.id]?.driverContact || ""}
-                onChange={(e) => handleEditChange(b.id, e)}
-              />
+  return (
+    <div className="ride-info" style={{ marginTop: "10px" }}>
+      <p><strong>Ride Start:</strong> {ride.start_ride || "Not started"}</p>
+      <p><strong>Ride End:</strong> {ride.end_ride || "Not ended"}</p>
+    </div>
+    );
+  };
+
+
+  const renderBooking = (b) => {
+    const ride = rideStatus[b.id];
+    const rideStarted = !!ride?.start_ride;
+
+    return (
+      <div
+        key={b.id}
+        className="booking-card"
+        style={{
+          border: "1px solid #ccc",
+          marginBottom: "1rem",
+          padding: "1rem",
+          opacity: b.deleted_by_customer ? 0.6 : 1,
+        }}
+      >
+        {!b.deleted_by_customer && !rideStarted && (
+          <div
+            className="three-dot-menu"
+            onClick={() => toggleMenu(b.id)}
+            style={{ cursor: "pointer" }}
+          >
+            &#8942;
+            {menuOpen[b.id] && (
+              <div
+                className="dropdown-menu"
+                style={{
+                  border: "1px solid #ddd",
+                  backgroundColor: "#fff",
+                  padding: "5px",
+                }}
+              >
+                <div onClick={() => startEditing(b)}>Edit</div>
+              </div>
             )}
-            <div className="edit-buttons">
-              <button onClick={() => saveEdit(b.id)}>Save</button>
-              <button onClick={() => discardEdit(b.id)}>Discard</button>
-            </div>
           </div>
         )}
-      </div>
 
-      {!b.driverContact && !b.deleted_by_customer && (
-        <button className="assign-btn" onClick={() => toggleAssignForm(b.id)}>
-          Assign a Driver
-        </button>
-      )}
+        <div className="booking-info">
+          <p><strong>Customer:</strong> {b.userName}</p>
+          <p><strong>Customer Contact Number:</strong> {b.userContact}</p>
+          <p><strong>Pickup:</strong> {b.from}</p>
+          <p><strong>Destination:</strong> {b.to}</p>
+          <p><strong>Booking Type:</strong> {b.booking_type}</p>
+          <p><strong>Vehicle Details:</strong> {b.vehicle_details}</p>
 
-      {assignForms[b.id] && !b.deleted_by_customer && (
-        <div className="assign-form">
-          <input
-            type="text"
-            name="contact"
-            placeholder="Driver Contact"
-            value={formData[b.id]?.contact || ""}
-            onChange={(e) => handleInputChange(b.id, e)}
-          />
-          <button className="submit-assign" onClick={() => submitAssign(b.id)}>
-            Driver Assigned Successfully
-          </button>
+          {!editMode[b.id] ? (
+            <>
+              <p><strong>Date:</strong> {b.date}</p>
+              <p><strong>Time:</strong> {b.time}</p>
+              {b.driverContact && <p><strong>Driver Contact:</strong> {b.driverContact}</p>}
+            </>
+          ) : (
+            <div className="edit-fields">
+              <input
+                type="date"
+                name="date"
+                value={editData[b.id]?.date || ""}
+                onChange={(e) => handleEditChange(b.id, e)}
+              />
+              <input
+                type="time"
+                name="time"
+                value={editData[b.id]?.time || ""}
+                onChange={(e) => handleEditChange(b.id, e)}
+              />
+              {b.driverContact && (
+                <input
+                  type="text"
+                  name="driverContact"
+                  placeholder="Driver Contact"
+                  value={editData[b.id]?.driverContact || ""}
+                  onChange={(e) => handleEditChange(b.id, e)}
+                />
+              )}
+              <div className="edit-buttons">
+                <button onClick={() => saveEdit(b.id)}>Save</button>
+                <button onClick={() => discardEdit(b.id)}>Discard</button>
+              </div>
+            </div>
+          )}
+
+          {renderRideInfo(b.id)}
         </div>
-      )}
 
-      {b.deleted_by_customer && (
-        <p style={{ color: "red", fontWeight: "bold", marginTop: "10px" }}>
-          The booking is deleted by customer
-        </p>
-      )}
-    </div>
-  );
+        {!b.driverContact && !b.deleted_by_customer && !rideStarted && (
+          <button className="assign-btn" onClick={() => toggleAssignForm(b.id)}>
+            Assign a Driver
+          </button>
+        )}
+
+        {assignForms[b.id] && !b.deleted_by_customer && !rideStarted && (
+          <div className="assign-form">
+            <input
+              type="text"
+              name="contact"
+              placeholder="Driver Contact"
+              value={formData[b.id]?.contact || ""}
+              onChange={(e) => handleInputChange(b.id, e)}
+            />
+            <button className="submit-assign" onClick={() => submitAssign(b.id)}>
+              Driver Assigned Successfully
+            </button>
+          </div>
+        )}
+
+        {b.deleted_by_customer && (
+          <p style={{ color: "red", fontWeight: "bold", marginTop: "10px" }}>
+            The booking is deleted by customer
+          </p>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="booking-management-container">
       <h2>Booking Management</h2>
 
-      <section className="booking-section">
-        <h3>Today's Bookings</h3>
-        {todays.length === 0 ? <p>No bookings for today.</p> : todays.map(renderBooking)}
-      </section>
+      {loading ? (
+        <p>Loading bookings...</p>
+      ) : (
+        <>
+          <section className="booking-section">
+            <h3>Today's Bookings</h3>
+            {todays.length === 0 ? <p>No bookings for today.</p> : todays.map(renderBooking)}
+          </section>
 
-      <section className="booking-section">
-        <h3>Earlier Bookings</h3>
-        {earlier.length === 0 ? <p>No earlier bookings.</p> : earlier.map(renderBooking)}
-      </section>
+          <section className="booking-section">
+            <h3>Earlier Bookings</h3>
+            {earlier.length === 0 ? <p>No earlier bookings.</p> : earlier.map(renderBooking)}
+          </section>
+        </>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom"; // to get booking_id from URL
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import html2pdf from "html2pdf.js";
@@ -37,7 +37,7 @@ const InvoicePage = () => {
     if (!invoiceRef.current) return;
     const opt = {
       margin: 0.5,
-      filename: `${invoiceData?.customerName || "Invoice"}_Invoice.pdf`,
+      filename: `${invoiceData?.name || "Invoice"}_Invoice.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -48,7 +48,6 @@ const InvoicePage = () => {
   if (loading) return <p>Loading invoice...</p>;
   if (!invoiceData) return <p>No invoice data found for booking ID: {booking_id}</p>;
 
-  // Destructure invoiceData safely
   const {
     name,
     address,
@@ -67,21 +66,30 @@ const InvoicePage = () => {
     total_amount,
   } = invoiceData;
 
+  // Calculate end date for "Monthly" and "Weekly" service types
+  const bookingDateObj = new Date(booking_datetime);
+  let endDateObj = null;
+
+  if (service_type?.toLowerCase() === "monthly") {
+    endDateObj = new Date(bookingDateObj);
+    endDateObj.setMonth(endDateObj.getMonth() + 11);
+  } else if (service_type?.toLowerCase() === "weekly") {
+    endDateObj = new Date(bookingDateObj);
+    endDateObj.setDate(endDateObj.getDate() + 7);
+  }
+
   return (
     <>
-      {/* <DashboardNavbar /> */}
       <Helmet>
         <title>Invoice | Sahyog Force</title>
       </Helmet>
 
       <div className="invoice-wrapper" ref={invoiceRef}>
-        {/* Invoice content here same as before, using dynamic data from invoiceData */}
         <div className="invoice-header">
           <div className="company-info">
             <h1>Sahyog Force</h1>
             <p className="brand-subtext">By Shankar & Company</p>
             <p>Uttam Nagar, New Delhi-110059</p>
-            {/* <p>GSTIN: {GSTIN}</p> */}
             <p>Email: support@sahyogforce.com</p>
             <p>Phone: +91-9220922268</p>
           </div>
@@ -107,7 +115,10 @@ const InvoicePage = () => {
         <h2 className="section-title">Service Details</h2>
         <div className="invoice-details">
           <p><strong>Service Type:</strong> {service_type}</p>
-          <p><strong>Start:</strong> {new Date(booking_datetime).toLocaleString()}</p>
+          <p><strong>Start Date and Time:</strong> {new Date(booking_datetime).toLocaleString()}</p>
+          {endDateObj && (
+            <p><strong>End Date:</strong> {endDateObj.toLocaleDateString()}</p>
+          )}
         </div>
 
         <h2 className="section-title">Billing Summary</h2>
@@ -119,14 +130,14 @@ const InvoicePage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            {/* <tr>
               <td>Subtotal</td>
               <td>₹{subtotal}</td>
             </tr>
             <tr>
               <td>GST (5%)</td>
               <td>₹{GST}</td>
-            </tr>
+            </tr> */}
             <tr className="total-row">
               <td><strong>Total</strong></td>
               <td><strong>₹{total_amount}</strong></td>
@@ -136,7 +147,7 @@ const InvoicePage = () => {
 
         <h2 className="section-title">Payment Info</h2>
         <div className="invoice-details">
-          <p><strong>Payment Date:</strong> {new Date(booking_datetime).toLocaleDateString()}</p>
+          <p><strong>Payment Date:</strong> {new Date(payment_date || booking_datetime).toLocaleDateString()}</p>
           {/* <p><strong>Payment Method:</strong> {paymentMethod}</p> */}
           {/* {transactionId && <p><strong>Transaction ID:</strong> {transactionId}</p>} */}
         </div>
