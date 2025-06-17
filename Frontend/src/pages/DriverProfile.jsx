@@ -48,10 +48,6 @@ const DriverProfile = () => {
     return date.toLocaleDateString();
   };
 
-  const handleEditClick = () => {
-    navigate("/driver-details-upload-editable"); 
-  };
-
   return (
     <>
       <DriverNavbar />
@@ -68,7 +64,6 @@ const DriverProfile = () => {
               <p><strong>Phone:</strong> {user.phone}</p>
               <p><strong>Location:</strong> {user.location}</p>
               <p><strong>Joined:</strong> {formatDate(user.created_at)}</p>
-              <button onClick={handleEditClick} className="edit-button">Edit Profile</button> {/* ✅ Add this */}
             </div>
           </div>
         )}
