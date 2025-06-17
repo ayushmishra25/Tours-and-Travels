@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\DriverRide;
 use App\Models\Booking;
 use App\Models\User;
+use App\Models\DriverRide;
 use Illuminate\Http\Request;
 
 class DriverRideController extends Controller
@@ -13,75 +13,41 @@ class DriverRideController extends Controller
     /**
      * Store or update a driver ride based on booking_id.
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'booking_id' => 'required|exists:bookings,id',
-            'payment_type' => 'nullable|in:cash,upi',
-            'payment_received' => 'nullable|boolean',
-            'payment_status' => 'nullable|boolean',
-        ]);
-
-        // Check if a ride already exists for the booking_id
-        $existingRide = DriverRide::where('booking_id', $validated['booking_id'])->first();
-
-        $data = [
-            'payment_type' => $validated['payment_type'] ?? null,
-            'payment_received' => $validated['payment_received'] ?? false,
-            'payment_status' => $validated['payment_status'] ?? false,
-        ];
-
-        if ($existingRide) {
-            // Update existing ride (do not update start_ride again)
-            $existingRide->update($data);
-
-            return response()->json([
-                'message' => 'Ride updated successfully',
-                'ride' => $existingRide,
-            ]);
-        } else {
-            // Insert new ride with current time for start_ride
-            $ride = DriverRide::create(array_merge([
-                'booking_id' => $validated['booking_id'],
-                'start_ride' => now(), 
-            ], $data));
-
-            return response()->json([
-                'message' => 'Ride started',
-                'ride' => $ride,
-            ]);
-        }
-    }
-
-    /**
-     * Update an existing driver ride by ride ID.
-     */
     public function update(Request $request, $booking_id)
     {
-        // Find ride by booking_id (assuming it's unique)
-        $ride = DriverRide::where('booking_id', $booking_id)->firstOrFail();
-
         $validated = $request->validate([
             'driver_id' => 'nullable|exists:users,id',
+            'start_ride' => 'nullable|date',
             'end_ride' => 'nullable|date',
             'payment_type' => 'nullable|in:cash,upi',
             'payment_received' => 'nullable|boolean',
             'payment_status' => 'nullable|boolean',
         ]);
 
-        if (isset($validated['driver_id'])) {
+        $ride = DriverRide::firstOrNew(['booking_id' => $booking_id]);
+
+        if (!$ride->exists) {
+            // New record - set default start_ride and optional fields
+            $ride->payment_type = $validated['payment_type'] ?? 'cash';
+            $ride->payment_received = $validated['payment_received'] ?? false;
+            $ride->payment_status = $validated['payment_status'] ?? false;
+        }
+
+        // Only update fields if present in request
+        if (array_key_exists('driver_id', $validated)) {
             $ride->driver_id = $validated['driver_id'];
         }
 
-        // Default end_ride to now if missing or null
-        if (!$request->has('end_ride') || is_null($validated['end_ride'] ?? null)) {
-            $ride->end_ride = now();
-        } else {
-            $ride->end_ride = $validated['end_ride'];
+        if (array_key_exists('start_ride', $validated)) {
+            $ride->start_ride = $validated['start_ride'] ?? now();
         }
 
-        foreach (['payment_type', 'payment_received', 'payment_status', 'booking_id'] as $field) {
-            if ($request->has($field)) {
+        if (array_key_exists('end_ride', $validated)) {
+            $ride->end_ride = $validated['end_ride'] ?? now();
+        }
+
+        foreach (['payment_type', 'payment_received', 'payment_status'] as $field) {
+            if (array_key_exists($field, $validated)) {
                 $ride->$field = $validated[$field];
             }
         }
@@ -89,14 +55,13 @@ class DriverRideController extends Controller
         $ride->save();
 
         return response()->json([
-            'message' => 'Ride updated successfully',
+            'message' => $ride->wasRecentlyCreated ? 'Ride created successfully' : 'Ride updated successfully',
             'ride' => $ride,
         ]);
     }
 
-
     /**
-     * Get ride details by booking_id.
+     * Show ride by booking_id.
      */
     public function show($booking_id)
     {
@@ -113,7 +78,4 @@ class DriverRideController extends Controller
             'ride' => $ride,
         ]);
     }
-
-    
-
 }

@@ -132,6 +132,12 @@ const BookingManagement = () => {
   };
 
   const startEditing = (booking) => {
+    const ride = rideStatus[booking.id];
+    if (ride?.ride?.start_ride) {
+      alert("Cannot edit booking. Ride has already started.");
+      return;
+    }
+
     setEditMode((prev) => ({ ...prev, [booking.id]: true }));
     setEditData((prev) => ({
       ...prev,
@@ -204,30 +210,29 @@ const BookingManagement = () => {
   };
 
   const renderRideInfo = (id) => {
-  const rideWrapper = rideStatus[id];
-  const ride = rideWrapper?.ride;
+    const rideWrapper = rideStatus[id];
+    const ride = rideWrapper?.ride;
 
-  if (!rideWrapper || !ride) {
+    if (!rideWrapper || !ride) {
+      return (
+        <div className="ride-info" style={{ marginTop: "10px" }}>
+          <p style={{ color: "orange" }}>
+            <strong>Ride Status:</strong> Driver is not assigned or Driver has not initiated the Ride.
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div className="ride-info" style={{ marginTop: "10px" }}>
-        <p style={{ color: "orange" }}>
-          <strong>Ride Status:</strong> Driver has not initiated the ride.
-        </p>
+        <p><strong>Ride Start:</strong> {ride.start_ride || "Not started"}</p>
+        <p><strong>Ride End:</strong> {ride.end_ride || "Not ended"}</p>
       </div>
-    );
-  }
-
-  return (
-    <div className="ride-info" style={{ marginTop: "10px" }}>
-      <p><strong>Ride Start:</strong> {ride.start_ride || "Not started"}</p>
-      <p><strong>Ride End:</strong> {ride.end_ride || "Not ended"}</p>
-    </div>
     );
   };
 
-
   const renderBooking = (b) => {
-    const ride = rideStatus[b.id];
+    const ride = rideStatus[b.id]?.ride;
     const rideStarted = !!ride?.start_ride;
 
     return (
@@ -333,7 +338,7 @@ const BookingManagement = () => {
 
         {b.deleted_by_customer && (
           <p style={{ color: "red", fontWeight: "bold", marginTop: "10px" }}>
-            The booking is deleted by customer
+            The booking is cancelled by customer
           </p>
         )}
       </div>

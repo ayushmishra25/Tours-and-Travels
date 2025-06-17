@@ -36,8 +36,8 @@ const FinalTnC = () => {
 
   const handleConfirmPayment = async () => {
     try {
-      await axios.post(
-        `${BASE_URL}/api/driver-rides`,
+      await axios.put(
+        `${BASE_URL}/api/driver-rides/${booking_id}`,
         {
           booking_id,
           payment_type: selectedMethod,

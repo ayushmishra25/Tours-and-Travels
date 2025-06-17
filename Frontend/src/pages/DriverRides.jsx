@@ -62,21 +62,19 @@ const DriverRides = () => {
     else setLoading(false);
   }, [token, baseURL]);
 
-  // Pass ride.id as booking_id to backend
+  // IN handleStartRide - send `start_ride`
   const handleStartRide = async (rideId) => {
-    if (!rideId) {
-      console.error("Missing booking_id for starting ride");
-      return;
-    }
+    if (!rideId) return;
 
     try {
-      const res = await axios.post(
-        `${baseURL}/api/driver-rides`,
+      const res = await axios.put(
+        `${baseURL}/api/driver-rides/${rideId}`,
         {
-          booking_id: rideId, // ride.id used as booking_id
+          booking_id: rideId,
           payment_type: "cash",
           payment_received: false,
           payment_status: false,
+          start_ride:null
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -88,6 +86,7 @@ const DriverRides = () => {
       console.error("Failed to start ride:", err.response?.data || err);
     }
   };
+
 
   const handleEndRide = async (rideId) => {
     if (!rideId) {
@@ -148,6 +147,8 @@ const DriverRides = () => {
     console.error("Failed to finalize payment:", err.response?.data || err);
   }
   };
+
+  
 
 
   return (
