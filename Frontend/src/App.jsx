@@ -91,12 +91,13 @@ const MainContent = () => {
           }
         />
 
-        <Route
-          path="/driver-details-upload"
+        <Route 
+          path="/driver-details-upload-editable/:driverId" 
           element={
-              <DriverDetailsUpload />
-          }
+            <DriverDetailUploadEditable />
+            } 
         />
+
 
         <Route
           path="/driver-details-upload-editable"

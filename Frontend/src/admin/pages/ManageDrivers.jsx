@@ -152,7 +152,7 @@ const ManageDrivers = () => {
                         onClick={() => handleEditClick(id)}
                         style={{
                           paddingLeft: "5px",
-                          paddingRight: "35px",
+                          paddingRight: "40px",
                           fontSize: "15px",
                           cursor: "pointer",
                           border: "1px solid #28a745",

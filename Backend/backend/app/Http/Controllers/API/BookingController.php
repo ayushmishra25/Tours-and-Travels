@@ -10,6 +10,7 @@ use App\Models\Booking;
 use Illuminate\Database\Eloquent\SoftDeletes; 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
@@ -242,6 +243,72 @@ class BookingController extends Controller
         }
         $booking->delete(); // Soft delete
         return response()->json(['message' => 'Booking soft deleted successfully.']);
+    }
+
+    // Update API of Booking
+    public function update(Request $request, $id)
+    {
+
+        try {
+            // Check if user has role_id = 2
+            if (auth()->user()->role != 2) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            // Validate the input
+            $validated = $request->validate([
+                'start_date' => 'nullable|date',
+                'booking_datetime' => 'nullable|date_format:Y-m-d H:i:s',
+                'driver_contact' => 'nullable|string|max:10',
+                'hours' => 'nullable|integer',
+                'working_days' => 'nullable|integer',
+                'working_hours_per_day' => 'nullable|integer',
+            ]);
+
+            // Find the booking
+            $booking = Booking::find($id);
+            if (!$booking) {
+                return response()->json(['message' => 'Booking not found'], 404);
+            }
+
+            // Update allowed fields
+            if ($request -> has('hours')) {
+                $booking->hours = $request->hours;
+            }
+
+            if ($request ->has('working_days')){
+                $booking->working_days = $request->working_days;
+            }
+
+            if ($request -> has('working_hours_per_day')){
+                $booking->working_hours_per_day = $request->working_hours_per_day;
+            }
+
+            if ($request->has('start_date')) {
+                $booking->start_date = $request->start_date;
+            }
+            if ($request->has('booking_datetime')) {
+                $booking->booking_datetime = $request->booking_datetime;
+            }
+            if ($request->has('driver_contact')) {
+                $booking->driver_contact = $request->driver_contact;
+            }
+
+            $booking->save();
+
+            return response()->json(['message' => 'Booking updated successfully', 'booking' => $booking], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation Failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Server Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
 }

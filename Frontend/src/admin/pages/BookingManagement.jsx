@@ -139,21 +139,50 @@ const BookingManagement = () => {
     }));
   };
 
-  const saveEdit = (id) => {
+  const saveEdit = async (id) => {
     const updated = editData[id];
-    setBookings((prev) =>
-      prev.map((b) =>
-        b.id === id
-          ? {
-              ...b,
-              date: updated.date,
-              time: updated.time,
-              driverContact: b.driverContact ? updated.driverContact : b.driverContact,
-            }
-          : b
-      )
-    );
-    setEditMode((prev) => ({ ...prev, [id]: false }));
+
+    try {
+      const response = await fetch(`${baseURL}/api/bookings/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          booking_datetime: `${updated.date} ${updated.time}:00`,
+          driver_contact: updated.driverContact,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Failed to update booking:", errorData);
+        alert("Failed to update booking.");
+        return;
+      }
+
+      const data = await response.json();
+
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === id
+            ? {
+                ...b,
+                date: updated.date,
+                time: updated.time,
+                driverContact: b.driverContact ? updated.driverContact : b.driverContact,
+              }
+            : b
+        )
+      );
+
+      setEditMode((prev) => ({ ...prev, [id]: false }));
+      alert("Booking updated successfully.");
+    } catch (error) {
+      console.error("Error updating booking:", error);
+      alert("Server error while updating booking.");
+    }
   };
 
   const discardEdit = (id) => {
@@ -265,8 +294,6 @@ const BookingManagement = () => {
       )}
     </div>
   );
-
-
 
   return (
     <div className="booking-management-container">

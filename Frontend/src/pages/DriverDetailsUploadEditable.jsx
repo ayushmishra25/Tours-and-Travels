@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const DriverDetailUploadEditable = () => {
@@ -14,7 +14,6 @@ const DriverDetailUploadEditable = () => {
     zone: "",
     drivingExperienceYears: "",
     drivingExperienceType: "",
-    licenseType: "",
     accountNumber: "",
     bankName: "",
     ifsc: "",
@@ -49,7 +48,7 @@ const DriverDetailUploadEditable = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const token    = localStorage.getItem("token");
-  const driverId = localStorage.getItem("userId");
+  const { driverId } = useParams();
   const baseURL  = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   // Fetch existing data on mount
@@ -174,7 +173,7 @@ const DriverDetailUploadEditable = () => {
         }
       );
       setSuccessMessage("Driver details updated successfully.");
-      setTimeout(() => navigate("/driver-dashboard"), 800);
+      setTimeout(() => navigate("/admin/drivers"), 800);
     } catch (err) {
       console.error(err);
       setErrorMessage("Failed to update driver details.");
