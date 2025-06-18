@@ -8,7 +8,6 @@ const BookingManagement = () => {
   const [editMode, setEditMode] = useState({});
   const [editData, setEditData] = useState({});
   const [menuOpen, setMenuOpen] = useState({});
-  const [rideStatus, setRideStatus] = useState({});
 
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -24,26 +23,6 @@ const BookingManagement = () => {
 
         const data = await response.json();
         setBookings(data.bookings || []);
-
-        const rideStatuses = {};
-        await Promise.all(
-          (data.bookings || []).map(async (b) => {
-            try {
-              const res = await fetch(`${baseURL}/api/driver-rides/${b.id}`, {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              });
-              if (!res.ok) throw new Error("Ride data not found");
-              const rideData = await res.json();
-              rideStatuses[b.id] = rideData;
-            } catch (err) {
-              console.warn(`No ride data for booking ${b.id}`);
-              rideStatuses[b.id] = null;
-            }
-          })
-        );
-        setRideStatus(rideStatuses);
       } catch (err) {
         console.error("Error fetching bookings:", err);
       } finally {
@@ -51,8 +30,16 @@ const BookingManagement = () => {
       }
     };
 
+    // Fetch immediately on mount
     fetchBookings();
-  }, []);
+
+    // Set interval to fetch every 60 seconds
+    const intervalId = setInterval(fetchBookings, 60000); // 60000 ms = 1 minute
+
+    // Clean up interval on unmount
+    return () => clearInterval(intervalId);
+  }, [baseURL]);
+
 
   const todayDate = new Date().toISOString().split("T")[0];
 
@@ -132,9 +119,9 @@ const BookingManagement = () => {
   };
 
   const startEditing = (booking) => {
-    const ride = rideStatus[booking.id];
-    if (ride?.ride?.start_ride) {
-      alert("Cannot edit booking. Ride has already started.");
+    const ride = booking?.ride;
+    if (ride?.start_ride || ride?.start_meter) {
+      alert("Cannot edit booking. Ride has already started or meter has started.");
       return;
     }
 
@@ -188,11 +175,11 @@ const BookingManagement = () => {
         prev.map((b) =>
           b.id === id
             ? {
-                ...b,
-                date: updated.date,
-                time: updated.time,
-                driverContact: b.driverContact ? updated.driverContact : b.driverContact,
-              }
+              ...b,
+              date: updated.date,
+              time: updated.time,
+              driverContact: updated.driverContact || b.driverContact,
+            }
             : b
         )
       );
@@ -209,31 +196,80 @@ const BookingManagement = () => {
     setEditMode((prev) => ({ ...prev, [id]: false }));
   };
 
-  const renderRideInfo = (id) => {
-    const rideWrapper = rideStatus[id];
-    const ride = rideWrapper?.ride;
+  const renderRideInfo = (booking) => {
+    const {
+      booking_type,
+      start_ride,
+      end_ride,
+      start_meter,
+      end_meter,
+      driverContact,
+    } = booking;
 
-    if (!rideWrapper || !ride) {
+    const isHourly = booking_type?.toLowerCase() === "hourly";
+    const isOnDemand = booking_type?.toLowerCase() === "on demand" || booking_type?.toLowerCase() === "ondemand";
+
+    if (!driverContact) {
       return (
         <div className="ride-info" style={{ marginTop: "10px" }}>
           <p style={{ color: "orange" }}>
-            <strong>Ride Status:</strong> Driver is not assigned or Driver has not initiated the Ride.
+            <strong>Ride Status:</strong> Driver is not assigned yet.
           </p>
         </div>
       );
     }
 
+    const isValidValue = (val) => val && val !== "N/A";
     return (
       <div className="ride-info" style={{ marginTop: "10px" }}>
-        <p><strong>Ride Start:</strong> {ride.start_ride || "Not started"}</p>
-        <p><strong>Ride End:</strong> {ride.end_ride || "Not ended"}</p>
+        {isHourly && (
+          <>
+            {!isValidValue(start_ride) ? (
+              <p style={{ color: "orange" }}>
+                <strong>Ride Status:</strong> Driver has not initiated the ride.
+              </p>
+            ) : (
+              <p style={{ color: "orange" }}>
+                <strong>Ride Status:</strong> Ride started at {start_ride}
+              </p>
+            )}
+
+            {isValidValue(end_ride) && (
+              <p style={{ color: "orange" }}>
+                <strong>Ride Status:</strong> Ride ended at {end_ride}
+              </p>
+            )}
+          </>
+        )}
+
+        {isOnDemand && (
+          <>
+            {!isValidValue(start_meter) ? (
+              <p style={{ color: "orange" }}>
+                <strong>Ride Status:</strong> Driver has not initiated the ride.
+              </p>
+            ) : (
+              <p style={{ color: "orange" }}>
+                <strong>Ride Status:</strong> Ride started (Meter: {start_meter})
+              </p>
+            )}
+
+            {isValidValue(end_meter) && (
+              <p style={{ color: "orange" }}>
+                <strong>Ride Status:</strong> Ride ended (Meter: {end_meter})
+              </p>
+            )}
+          </>
+        )}
       </div>
     );
   };
 
+
+
+
   const renderBooking = (b) => {
-    const ride = rideStatus[b.id]?.ride;
-    const rideStarted = !!ride?.start_ride;
+    const rideStarted = !!b.ride?.start_ride;
 
     return (
       <div
@@ -296,15 +332,13 @@ const BookingManagement = () => {
                 value={editData[b.id]?.time || ""}
                 onChange={(e) => handleEditChange(b.id, e)}
               />
-              {b.driverContact && (
-                <input
-                  type="text"
-                  name="driverContact"
-                  placeholder="Driver Contact"
-                  value={editData[b.id]?.driverContact || ""}
-                  onChange={(e) => handleEditChange(b.id, e)}
-                />
-              )}
+              <input
+                type="text"
+                name="driverContact"
+                placeholder="Driver Contact"
+                value={editData[b.id]?.driverContact || ""}
+                onChange={(e) => handleEditChange(b.id, e)}
+              />
               <div className="edit-buttons">
                 <button onClick={() => saveEdit(b.id)}>Save</button>
                 <button onClick={() => discardEdit(b.id)}>Discard</button>
@@ -312,7 +346,7 @@ const BookingManagement = () => {
             </div>
           )}
 
-          {renderRideInfo(b.id)}
+          {renderRideInfo(b)}
         </div>
 
         {!b.driverContact && !b.deleted_by_customer && !rideStarted && (

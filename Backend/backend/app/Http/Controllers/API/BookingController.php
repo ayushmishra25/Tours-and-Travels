@@ -197,7 +197,11 @@ class BookingController extends Controller
                 'bookings.*',
                 'driver_rides.payment_type',
                 'driver_rides.payment_status',
-                'driver_rides.payment_received'
+                'driver_rides.payment_received',
+                'driver_rides.end_ride',
+                'driver_rides.start_ride',
+                'driver_rides.start_meter',
+                'driver_rides.end_meter',
             )
             ->get();
 
@@ -217,6 +221,10 @@ class BookingController extends Controller
                 'payment_type' => $booking->payment_type ?? 'N/A',
                 'payment_status' => $booking->payment_status ?? 'N/A',
                 'payment_received' => $booking->payment_received ?? 'N/A',
+                'start_ride' => $booking->start_ride ?? 'N/A',
+                'end_ride' => $booking->end_ride ?? 'N/A',
+                'start_meter' => $booking->start_meter ?? 'N/A',
+                'end_meter' => $booking->end_meter ?? 'N/A',
                 'created_at' => $booking->created_at->toDateTimeString(),
                 'deleted_by_customer' => $booking->deleted_at ? true : false, // 🟢 Added this line
             ];
@@ -262,26 +270,48 @@ class BookingController extends Controller
         $user = Auth::user();
 
         if (!$user || !$user->phone) {
-            return response()->json(['error' => 'Contact to admin about your phone number is wrong.'], 401);
+            return response()->json(['error' => 'Contact admin about your phone number.'], 401);
         }
 
-        // Fetch bookings based on driver's phone
-        $rawRides = Booking::where('driver_contact', $user->phone)
-                    ->orderBy('booking_datetime', 'desc')
-                    ->get();
+        $rawRides = Booking::query()
+            // No withTrashed(): only active (non‑deleted) bookings
+            ->leftJoin('driver_rides', 'bookings.id', '=', 'driver_rides.booking_id')
+            ->whereNull('bookings.deleted_at')
+            ->where('bookings.driver_contact', $user->phone)
+            ->select(
+                'bookings.*',
+                'driver_rides.start_ride',
+                'driver_rides.end_ride',
+                'driver_rides.start_meter',
+                'driver_rides.end_meter',
+                'driver_rides.payment_received',
+            )
+            ->orderBy('bookings.booking_datetime', 'desc')
+            ->get();
 
-
-        // Format the rides
         $rides = $rawRides->map(function ($ride) {
-            return [
-                'id' => $ride->id,
-                'date' => $ride->booking_datetime ? date('Y-m-d', strtotime($ride->booking_datetime)) : null,
-                'time' => $ride->booking_datetime ? date('H:i', strtotime($ride->booking_datetime)) : null,
-                'pickup' => $ride->source_location,
+            $base = [
+                'id'          => $ride->id,
+                'date'        => $ride->booking_datetime ? date('Y-m-d', strtotime($ride->booking_datetime)) : null,
+                'time'        => $ride->booking_datetime? date('H:i', strtotime($ride->booking_datetime)): null,
+                'pickup'      => $ride->source_location,
                 'destination' => $ride->destination_location,
-                'type' => $ride->booking_type,
-                'fare' => $ride->payment ?? 'N/A',
+                'type'        => $ride->booking_type,
+                'fare'        => $ride->payment ?? 'N/A',
+                'payment_received' => $ride->payment_received ?? 'N/A'
             ];
+
+            $type = strtolower($ride->booking_type);
+
+            if ($type === 'on demand') {
+                $base['start_meter'] = $ride->start_meter ?? 'N/A';
+                $base['end_meter']   = $ride->end_meter   ?? 'N/A';
+            } elseif ($type === 'hourly') {
+                $base['start_ride'] = $ride->start_ride ?? 'N/A';
+                $base['end_ride']   = $ride->end_ride   ?? 'N/A';
+            }
+            // weekly and monthly types get no ride fields
+            return $base;
         });
 
         return response()->json(['rides' => $rides], 200);
