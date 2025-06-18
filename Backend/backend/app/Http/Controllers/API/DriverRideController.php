@@ -19,6 +19,8 @@ class DriverRideController extends Controller
             'driver_id' => 'nullable|exists:users,id',
             'start_ride' => 'nullable|date',
             'end_ride' => 'nullable|date',
+            'start_meter' => 'nullable|numeric',
+            'end_meter' => 'nullable|numeric',
             'payment_type' => 'nullable|in:cash,upi',
             'payment_received' => 'nullable|boolean',
             'payment_status' => 'nullable|boolean',
@@ -27,7 +29,7 @@ class DriverRideController extends Controller
         $ride = DriverRide::firstOrNew(['booking_id' => $booking_id]);
 
         if (!$ride->exists) {
-            // New record - set default start_ride and optional fields
+            // New record - set default payment fields
             $ride->payment_type = $validated['payment_type'] ?? 'cash';
             $ride->payment_received = $validated['payment_received'] ?? false;
             $ride->payment_status = $validated['payment_status'] ?? false;
@@ -46,6 +48,16 @@ class DriverRideController extends Controller
             $ride->end_ride = $validated['end_ride'] ?? now();
         }
 
+        // New: Set start_meter and end_meter
+        if (array_key_exists('start_meter', $validated)) {
+            $ride->start_meter = $validated['start_meter'];
+        }
+
+        if (array_key_exists('end_meter', $validated)) {
+            $ride->end_meter = $validated['end_meter'];
+        }
+
+        // Payment info
         foreach (['payment_type', 'payment_received', 'payment_status'] as $field) {
             if (array_key_exists($field, $validated)) {
                 $ride->$field = $validated[$field];
@@ -59,6 +71,7 @@ class DriverRideController extends Controller
             'ride' => $ride,
         ]);
     }
+
 
     /**
      * Show ride by booking_id.

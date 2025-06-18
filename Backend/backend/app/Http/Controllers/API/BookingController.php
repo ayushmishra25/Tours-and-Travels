@@ -20,7 +20,7 @@ class BookingController extends Controller
         $validated = $request->validate([
             'booking_type' => 'required|in:Hourly,Weekly,Monthly,On demand',
             'source_location' => 'required|string',
-            'source_pincode' => 'required|digits:6',  
+            'source_pincode' => 'required|digits:6',
             'destination_location' => 'nullable|string',
             'vehicle_details' => 'nullable|string',
             'hours' => 'nullable|integer',
@@ -29,49 +29,154 @@ class BookingController extends Controller
             'start_date' => 'nullable|date',
             'booking_datetime' => 'nullable|date_format:Y-m-d H:i:s',
             'trip_type' => 'nullable|string',
-            'payment' => 'nullable|numeric',
+            'start_meter' => 'nullable|integer',
+            'end_meter' => 'nullable|integer',
         ]);
 
-        // Save booking
+        $payment = $this->calculateFare($request);
+
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'booking_type' => $request->booking_type,
             'trip_type' => $request->trip_type,
             'source_location' => $request->source_location,
-            'source_pincode' => $request->source_pincode,  
+            'source_pincode' => $request->source_pincode,
             'destination_location' => $request->destination_location,
             'vehicle_details' => $request->vehicle_details,
             'hours' => $request->hours,
             'working_days' => $request->working_days,
             'working_hours_per_day' => $request->working_hours_per_day,
-            'payment' => $request->payment,
+            'payment' => $payment,
             'start_date' => $request->start_date,
             'booking_datetime' => $request->booking_datetime,
         ]);
 
-        $sourcePincode = $request->source_pincode;
-
-        // Get drivers with matching pin code from live_location
-        $drivers = User::where('role', 1)->get()->filter(function ($user) use ($sourcePincode) {
-            return $this->extractPinCode($user->location) === $sourcePincode;
-        });
-
-        // Notify matched drivers
-        foreach ($drivers as $driver) {
-            event(new BookingCreated([
-                'driver_id' => $driver->id,
-                'booking_id' => $booking->id,
-                'user_name' => auth()->user()->name,
-                'source' => $booking->source_location,
-                'destination' => $booking->destination_location,
-                'vehicle_details' => $booking->vehicle_details,
-                'booking_type' => $booking->booking_type,
-                'timestamp' => now()->toDateTimeString()
-            ]));
-        }
-
-        return response()->json(['message' => 'Booking successful', 'booking' => $booking], 201);
+        return response()->json([
+            'message' => 'Booking successful',
+            'booking' => $booking
+        ], 201);
     }
+
+    public function calculateFare(Request $request)
+    {
+        $type = $request->booking_type;
+        $location = strtolower(str_replace(' ', '_', $request->source_location));
+
+        if ($type === 'Hourly') {
+            $hourlyPricing = [
+                'delhi' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                'gurugram' => [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
+                'faridabad' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                'ghaziabad' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                'noida' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                'greater_noida' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+            ];
+
+            $hours = $request->hours;
+            if (!$hours || $hours < 1 || $hours > 12) return 0;
+
+            return $hourlyPricing[$location][$hours - 1] ?? 0;
+
+        } elseif ($type === 'Weekly') {
+            $days = (int) $request->working_days;
+            $hoursPerDay = (int) $request->working_hours_per_day;
+            $ratePerHour = 1250 / 12;
+
+            return round($ratePerHour * $hoursPerDay * $days);
+
+        } elseif ($type === 'Monthly') {
+            $monthlyPricing = $this->getMonthlyPricing();
+            $area = $request->source_location;
+            $days = (string) $request->working_days;
+            $hours = (string) $request->working_hours_per_day;
+
+            return $monthlyPricing[$area][$days][$hours] ?? 0;
+
+        } elseif ($type === 'On demand') {
+            $pricing = [
+                50 => 606, 100 => 1115, 150 => 1206, 200 => 1443, 250 => 1670,
+                300 => 1860, 350 => 2349, 400 => 2570, 450 => 2800, 500 => 3050,
+                600 => 3529, 700 => 4008, 800 => 4480, 900 => 4962, 1000 => 5435, 1200 => 6400
+            ];
+
+            // Case 1: Distance is explicitly provided
+            if ($request->has('distance')) {
+                $rounded = $this->roundToNearestKey($pricing, (float) $request->distance);
+                return $pricing[$rounded] ?? 0;
+            }
+
+            // Case 2: Fallback to start_meter and end_meter
+            if ($request->has('start_meter') && $request->has('end_meter')) {
+                $distanceKm = ($request->end_meter - $request->start_meter) / 1000;
+                $rounded = $this->roundToNearestKey($pricing, $distanceKm);
+                return $pricing[$rounded] ?? 0;
+            }
+
+            // Default if no valid inputs
+            return 0;
+        }
+    }
+
+    public function roundToNearestKey(array $pricing, float $distance)
+    {
+        $keys = array_keys($pricing);
+        foreach ($keys as $key) {
+            if ($distance <= $key) return $key;
+        }
+        return max($keys);
+    }
+
+    public function getMonthlyPricing()
+    {
+        return [
+            "East Delhi" => [
+                "22" => ["8" => 17000, "10" => 17500, "12" => 18500],
+                "24" => ["8" => 17500, "10" => 18500, "12" => 19500],
+                "26" => ["8" => 18000, "10" => 19000, "12" => 20000]
+            ],
+            "North Delhi" => [
+                "22" => ["8" => 17000, "10" => 17500, "12" => 18500],
+                "24" => ["8" => 17500, "10" => 17500, "12" => 19500],
+                "26" => ["8" => 18000, "10" => 19000, "12" => 20000]
+            ],
+            "South Delhi" => [
+                "22" => ["8" => 19000, "10" => 20000, "12" => 21000],
+                "24" => ["8" => 19500, "10" => 21000, "12" => 22000],
+                "26" => ["8" => 21000, "10" => 22000, "12" => 23000]
+            ],
+            "West Delhi" => [
+                "22" => ["8" => 17500, "10" => 18500, "12" => 19500],
+                "24" => ["8" => 18000, "10" => 19000, "12" => 20000],
+                "26" => ["8" => 19000, "10" => 20000, "12" => 21000]
+            ],
+            "Gurugram" => [
+                "22" => ["8" => 18500, "10" => 19500, "12" => 20500],
+                "24" => ["8" => 19500, "10" => 20500, "12" => 21500],
+                "26" => ["8" => 20000, "10" => 21000, "12" => 22000]
+            ],
+            "Faridabad" => [
+                "22" => ["8" => 18000, "10" => 19000, "12" => 20000],
+                "24" => ["8" => 19000, "10" => 20000, "12" => 21000],
+                "26" => ["8" => 20000, "10" => 21000, "12" => 22000]
+            ],
+            "Ghaziabad" => [
+                "22" => ["8" => 16000, "10" => 17000, "12" => 18000],
+                "24" => ["8" => 17000, "10" => 18000, "12" => 19000],
+                "26" => ["8" => 18000, "10" => 19000, "12" => 20000]
+            ],
+            "Noida" => [
+                "22" => ["8" => 17000, "10" => 18000, "12" => 19000],
+                "24" => ["8" => 18000, "10" => 19000, "12" => 20000],
+                "26" => ["8" => 19000, "10" => 20000, "12" => 21000]
+            ],
+            "Greater Noida" => [
+                "22" => ["8" => 17000, "10" => 18000, "12" => 19000],
+                "24" => ["8" => 18000, "10" => 19000, "12" => 20000],
+                "26" => ["8" => 19000, "10" => 20000, "12" => 21000]
+            ],
+        ];
+    }
+
 
     private function extractPinCode($address)
     {

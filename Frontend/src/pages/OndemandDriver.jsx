@@ -105,7 +105,7 @@ const OndemandDriver = () => {
     }
     setAuthError("");
 
-    if (!pickup.trim()) {
+    if (!pickupLocation.trim()) {
       setFieldError("Pickup address is required");
       return;
     }
@@ -131,12 +131,11 @@ const OndemandDriver = () => {
     const payload = {
       booking_type: "On demand",
       trip_type: "one-way",
-      source_location: pickup,
+      source_location: pickupLocation,
       source_pincode: pickupPincode,
       destination_location: destination,
       distance: parseFloat(distance),
       booking_datetime: bookingDatetime,
-      payment: totalAmount,
     };
 
     try {

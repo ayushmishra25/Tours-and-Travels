@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unique('booking_id');   
             $table->timestamp('start_ride')->nullable();
             $table->timestamp('end_ride')->nullable();
+            $table->integer('start_meter')->nullable();
+            $table->integer('end_meter')->nullable();
             $table->enum('payment_type', ['cash', 'upi'])->default('cash');
             $table->boolean('payment_received')->nullable()->default(false);
             $table->boolean('payment_status')->nullable()->default(false);

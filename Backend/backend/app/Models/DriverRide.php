@@ -14,6 +14,8 @@ class DriverRide extends Model
         'booking_id',
         'start_ride',
         'end_ride',
+        'start_meter',
+        'end_meter',
         'payment_type',
         'payment_received',
         'payment_status',
