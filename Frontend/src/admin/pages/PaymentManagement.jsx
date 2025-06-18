@@ -65,7 +65,7 @@ const PaymentManagement = () => {
               <tr>
                 <th>ID</th>
                 <th>User</th>
-                <th>Assigned Driver</th>
+                <th>Assigned Driver Contact</th>
                 <th>Pickup</th>
                 <th>Destination</th>
                 <th>Date</th>
@@ -89,7 +89,7 @@ const PaymentManagement = () => {
                   <tr key={p.id} className={isUpiPaid ? "paid-row" : ""}>
                     <td>{p.id}</td>
                     <td>{p.userName || "N/A"}</td>
-                    <td>{p.driver}</td>
+                    <td>{p.driverContact}</td>
                     <td>{p.from}</td>
                     <td>{p.to}</td>
                     <td>{p.date}</td>
