@@ -114,7 +114,6 @@ const MainContent = () => {
         />
         
         <Route path="/earnings" element={<Earnings /> } />
-        {/* My Rides page */}
        <Route
           path="/trip-history"
           element={
@@ -122,7 +121,6 @@ const MainContent = () => {
             }
         />
         
-        {/* My Rides page */}
        <Route
           path="/support"
           element={

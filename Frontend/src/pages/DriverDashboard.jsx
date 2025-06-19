@@ -50,7 +50,6 @@ const DriverDashboard = () => {
 
   const toggleAvailability = async () => {
     if (!isAvailable) {
-      // Going from Inactive ➝ Active: Fetch location
       if (!navigator.geolocation) {
         setErrorMsg("Geolocation is not supported by your browser.");
         return;
@@ -62,14 +61,12 @@ const DriverDashboard = () => {
           const longitude = position.coords.longitude;
 
           try {
-            // Step 1: Reverse Geocoding
             const locationRes = await fetch(
               `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
             );
             const locationData = await locationRes.json();
             const location = locationData.display_name;
 
-            // Step 2: Send location + toggle request
             const res = await axios.post(
               `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
               { latitude, longitude, location },
@@ -88,7 +85,6 @@ const DriverDashboard = () => {
         }
       );
     } else {
-      // Going from Active ➝ Inactive: Just toggle
       try {
         const res = await axios.post(
           `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
@@ -100,27 +96,6 @@ const DriverDashboard = () => {
         console.error("Error toggling availability:", error);
         setErrorMsg("Failed to toggle availability. Please try again.");
       }
-    }
-  };
-
-  const handleNewSlotChange = (e) => {
-    const { name, value } = e.target;
-    setNewSlot((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddSlot = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/api/drivers/${driverId}/add-slot`,
-        newSlot,
-        { headers }
-      );
-      setTimeSlots((prev) => [...prev, res.data]);
-      setNewSlot({ date: "", start: "", end: "" });
-    } catch (error) {
-      console.error("Error adding slot:", error);
-      setErrorMsg("Failed to add time slot. Please try again.");
     }
   };
 
@@ -149,25 +124,27 @@ const DriverDashboard = () => {
               <p>Status: <strong>{isAvailable ? "Available" : "Unavailable"}</strong></p>
             </section>
 
-            <section className="scheduling-section">
-              <h2>Scheduling</h2>
-              <form onSubmit={handleAddSlot} className="slot-form">
-                <input type="date" name="date" value={newSlot.date} onChange={handleNewSlotChange} required />
-                <input type="time" name="start" value={newSlot.start} onChange={handleNewSlotChange} required />
-                <input type="time" name="end" value={newSlot.end} onChange={handleNewSlotChange} required />
-                <button type="submit">Add Slot</button>
-              </form>
-              {timeSlots.length === 0 ? (
-                <p>No slots added.</p>
-              ) : (
-                <ul>
-                  {timeSlots.map((s, i) => (
-                    <li key={i}>
-                      {s.date} {s.start} - {s.end}
-                    </li>
-                  ))}
-                </ul>
-              )}
+            {/* 🔗 Quick Links Section */}
+            <section className="dashboard-section">
+              <h2>Quick Links</h2>
+              <div className="cards-grid">
+                <a href="/trip-history" className="card">
+                  <h3>My Rides</h3>
+                  <p>View and manage your ride history and status.</p>
+                </a>
+                <a href="/earnings" className="card">
+                  <h3>Earnings</h3>
+                  <p>Track your income and payment summaries.</p>
+                </a>
+                <a href="/driver-profile" className="card">
+                  <h3>Profile</h3>
+                  <p>Get your personal details.</p>
+                </a>
+                <a href="/support" className="card">
+                  <h3>Support</h3>
+                  <p>Reach out for help or resolve issues quickly.</p>
+                </a>
+              </div>
             </section>
           </>
         )}
