@@ -20,6 +20,7 @@ class BookingController extends Controller
         $validated = $request->validate([
             'booking_type' => 'required|in:Hourly,Weekly,Monthly,On demand',
             'source_location' => 'required|string',
+            'zone' => 'required|string',
             'source_pincode' => 'required|digits:6',
             'destination_location' => 'nullable|string',
             'vehicle_details' => 'nullable|string',
@@ -38,6 +39,7 @@ class BookingController extends Controller
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'booking_type' => $request->booking_type,
+            'zone' => $request->zone,
             'trip_type' => $request->trip_type,
             'source_location' => $request->source_location,
             'source_pincode' => $request->source_pincode,
@@ -50,6 +52,9 @@ class BookingController extends Controller
             'start_date' => $request->start_date,
             'booking_datetime' => $request->booking_datetime,
         ]);
+        if ($request->booking_type === 'Monthly') {
+            $bookingData['is_selected'] = true;
+        }
 
         return response()->json([
             'message' => 'Booking successful',
@@ -190,8 +195,9 @@ class BookingController extends Controller
     public function index()
     {
         $bookings = Booking::with('user')
-            ->withTrashed() // Include soft-deleted bookings
+            ->withTrashed()
             ->leftJoin('driver_rides', 'bookings.id', '=', 'driver_rides.booking_id')
+            ->leftJoin('users as driver_user', 'bookings.driver_contact', '=', 'driver_user.phone') // join to get driver name
             ->orderBy('bookings.id', 'desc')
             ->select(
                 'bookings.*',
@@ -202,6 +208,7 @@ class BookingController extends Controller
                 'driver_rides.start_ride',
                 'driver_rides.start_meter',
                 'driver_rides.end_meter',
+                'driver_user.name as driver_name' // selecting driver's name
             )
             ->get();
 
@@ -216,7 +223,10 @@ class BookingController extends Controller
                 'from' => $booking->source_location,
                 'vehicle_details' => $booking->vehicle_details,
                 'to' => $booking->destination_location,
-                'driver' => $booking->driver_name ?? null,
+                'hours' => $booking->hours ?? null,
+                'working_days' => $booking->working_days ?? null,
+                'working_hours_per_day' => $booking->working_hours_per_day ?? null,
+                'driver' => $booking->driver_name ?? null, // get driver name from joined table
                 'driverContact' => $booking->driver_contact ?? null,
                 'payment_type' => $booking->payment_type ?? 'N/A',
                 'payment_status' => $booking->payment_status ?? 'N/A',
@@ -226,13 +236,12 @@ class BookingController extends Controller
                 'start_meter' => $booking->start_meter ?? 'N/A',
                 'end_meter' => $booking->end_meter ?? 'N/A',
                 'created_at' => $booking->created_at->toDateTimeString(),
-                'deleted_by_customer' => $booking->deleted_at ? true : false, // 🟢 Added this line
+                'deleted_by_customer' => $booking->deleted_at ? true : false,
             ];
         });
 
         return response()->json(['bookings' => $formatted]);
     }
-
 
     // Assign a Driver
     public function assignDriver(Request $request, $id)

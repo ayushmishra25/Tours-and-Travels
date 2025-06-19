@@ -29,7 +29,8 @@ class Booking extends Model
         'booking_datetime',
         'driver_name',
         'driver_contact',
-        'driver_location'
+        'driver_location',
+        'is_selected'
     ];
 
     /**
