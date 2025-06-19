@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import DashboardNavbar from "../components/DashboardNavbar";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 import AdminNavbar from "../admin/components/AdminNavbar";
@@ -45,7 +44,6 @@ const DriverEarningOnAdmin = () => {
       <Helmet>
         <title>Driver Earnings Summary</title>
       </Helmet>
-      <DashboardNavbar />
 
       <div className="admin-earnings-container">
         <h1>Driver Earnings Summary</h1>
