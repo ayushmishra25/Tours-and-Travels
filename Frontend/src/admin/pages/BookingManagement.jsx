@@ -8,6 +8,7 @@ const BookingManagement = () => {
   const [editMode, setEditMode] = useState({});
   const [editData, setEditData] = useState({});
   const [menuOpen, setMenuOpen] = useState({});
+  const [selectionState, setSelectionState] = useState({});
 
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -30,25 +31,17 @@ const BookingManagement = () => {
       }
     };
 
-    // Fetch immediately on mount
     fetchBookings();
-
-    // Set interval to fetch every 60 seconds
-    const intervalId = setInterval(fetchBookings, 60000); // 60000 ms = 1 minute
-
-    // Clean up interval on unmount
+    const intervalId = setInterval(fetchBookings, 60000);
     return () => clearInterval(intervalId);
   }, [baseURL]);
 
-
   const todayDate = new Date().toISOString().split("T")[0];
-
   const todays = bookings.filter((b) => {
     const createdAt = b.created_at || b.date;
     const createdAtDate = new Date(createdAt).toISOString().split("T")[0];
     return createdAtDate === todayDate;
   });
-
   const earlier = bookings.filter((b) => {
     const createdAt = b.created_at || b.date;
     const createdAtDate = new Date(createdAt).toISOString().split("T")[0];
@@ -79,7 +72,6 @@ const BookingManagement = () => {
 
   const submitAssign = async (id) => {
     const data = formData[id];
-
     if (!data.contact) {
       alert("Please fill all fields before submitting.");
       return;
@@ -150,7 +142,6 @@ const BookingManagement = () => {
 
   const saveEdit = async (id) => {
     const updated = editData[id];
-
     try {
       const response = await fetch(`${baseURL}/api/bookings/${id}`, {
         method: "PUT",
@@ -187,13 +178,37 @@ const BookingManagement = () => {
       setEditMode((prev) => ({ ...prev, [id]: false }));
       alert("Booking updated successfully.");
     } catch (error) {
-      console.error("Error updating booking:", error);
+      console.error("Error updating booking:", error);  
       alert("Server error while updating booking.");
     }
   };
 
   const discardEdit = (id) => {
     setEditMode((prev) => ({ ...prev, [id]: false }));
+  };
+
+  const handleSelect = async (id) => {
+    try {
+      const response = await fetch(`${baseURL}/api/bookings/${id}/select-driver`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ is_selected: 1 }),
+      });
+      if (!response.ok) throw new Error("Failed to select driver");
+      setSelectionState((prev) => ({ ...prev, [id]: 'selected' }));
+      alert('Driver selected successfully.');
+    } catch (error) {
+      console.error("Select error:", error);
+      alert('Failed to select driver.');
+    }
+  };
+
+  const handleReject = (id) => {
+    setSelectionState((prev) => ({ ...prev, [id]: 'rejected' }));
+    toggleAssignForm(id);
   };
 
   const renderRideInfo = (booking) => {
@@ -223,7 +238,7 @@ const BookingManagement = () => {
     return (
       <div className="ride-info" style={{ marginTop: "10px" }}>
         {isHourly && (
-          <>
+          <>  
             {!isValidValue(start_ride) ? (
               <p style={{ color: "orange" }}>
                 <strong>Ride Status:</strong> Driver has not initiated the ride.
@@ -265,11 +280,11 @@ const BookingManagement = () => {
     );
   };
 
-
-
-
   const renderBooking = (b) => {
     const rideStarted = !!b.ride?.start_ride;
+    const isMonthly = b.booking_type?.toLowerCase() === 'monthly';
+    const hasDriver = !!b.driverContact;
+    const isSelected = selectionState[b.id] === 'selected';
 
     return (
       <div
@@ -299,6 +314,28 @@ const BookingManagement = () => {
                 }}
               >
                 <div onClick={() => startEditing(b)}>Edit</div>
+                {isMonthly && hasDriver && (
+                  <>
+                    <div
+                      onClick={() => handleSelect(b.id)}
+                      style={{
+                        color: isSelected ? 'gray' : 'initial',
+                        pointerEvents: isSelected ? 'none' : 'auto',
+                      }}
+                    >
+                      Selected
+                    </div>
+                    <div
+                      onClick={() => !isSelected && handleReject(b.id)}
+                      style={{
+                        color: isSelected ? 'gray' : 'initial',
+                        pointerEvents: isSelected ? 'none' : 'auto',
+                      }}
+                    >
+                      Rejected
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -386,7 +423,7 @@ const BookingManagement = () => {
       {loading ? (
         <p>Loading bookings...</p>
       ) : (
-        <>
+        <>  
           <section className="booking-section">
             <h3>Today's Bookings</h3>
             {todays.length === 0 ? <p>No bookings for today.</p> : todays.map(renderBooking)}

@@ -319,11 +319,11 @@
 /* ManageDrivers.css */
 
 .manage-drivers-container {
-  
   padding-top: 60px;
   padding-bottom: 20px;
   max-width: 1000px;
-  margin: auto;
+  margin-left: 140px;
+  margin-right: 100px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 

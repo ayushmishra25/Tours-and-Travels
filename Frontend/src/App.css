@@ -3694,3 +3694,48 @@ h3 {
     font-size: 14px;
   }
 }
+
+/* File: src/styles/DriverEarningOnAdmin.css */
+
+.admin-earnings-container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.earnings-table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.earnings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.earnings-table th,
+.earnings-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.earnings-table th {
+  background-color: #f9f9f9;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .earnings-table th,
+  .earnings-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}

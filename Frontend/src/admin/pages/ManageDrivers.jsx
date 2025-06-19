@@ -73,6 +73,10 @@ const ManageDrivers = () => {
     navigate(`/driver-trips-on-admin/${driverId}`);
   };
 
+  const handleEarningClick = (driverId) => {
+    navigate(`/driver-earning-on-admin/${driverId}`);
+  }
+
   return (
     <div className="manage-drivers-container">
       <h2 className="heading">Driver Management</h2>
@@ -120,6 +124,7 @@ const ManageDrivers = () => {
               <th>Status</th>
               <th>Edit</th>
               <th>Trips</th>
+              <th>Earnings</th>
             </tr>
           </thead>
           <tbody>
@@ -190,6 +195,25 @@ const ManageDrivers = () => {
                       }}
                     >
                       Trips
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleEarningClick(id)}
+                      style={{
+                        paddingLeft: "5px",
+                        paddingRight: "40px",
+                        marginRight:"40px",
+                        marginLeft:"5px",
+                        fontSize: "15px",
+                        cursor: "pointer",
+                        border: "1px solid #28a745",
+                        borderRadius: "4px",
+                        background: "#28a745",
+                        color: "#fff",
+                      }}
+                    >
+                      Earnings
                     </button>
                   </td>
                 </tr>

@@ -31,6 +31,7 @@ import DriverDetailUploadEditable from './pages/DriverDetailsUploadEditable';
 import AssignedDriver from './pages/AssignedDriver';
 import UserRidesOnAdmin from './pages/UserRidesOnAdmin';
 import DriverTripsOnAdmin from './pages/DriverTripsOnAdmin';
+import DriverEarningOnAdmin from './pages/DriverEarningsOnAdmin';
 
 
 
@@ -146,6 +147,7 @@ const MainContent = () => {
         <Route path="/driver-earnings" element={<Earnings />} />
         <Route path="/user-rides-on-admin/:userId" element={<UserRidesOnAdmin />} />
         <Route path="/driver-trips-on-admin/:driverId" element={<DriverTripsOnAdmin />} />
+        <Route path="/driver-earning-on-admin/:driverId" element={<DriverEarningOnAdmin />} />
 
 
         {/* Any unmatched goes home */}
