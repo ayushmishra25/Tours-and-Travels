@@ -1627,29 +1627,6 @@ button.login-btn:hover {
   padding: 80px 20px 20px; /* Extra padding for navbar space */
 }
 
-.dashboard-section {
-  margin-top: 2rem;
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.card {
-  background-color: #f5f5f5;
-  padding: 1rem;
-  border-radius: 10px;
-  text-decoration: none;
-  color: #333;
-  transition: all 0.2s ease-in-out;
-}
-
-.card:hover {
-  background-color: #e0e0e0;
-}
-
 .dashboard-content {
   margin-top: 20px;
   text-align: center;
@@ -2355,116 +2332,176 @@ fieldset.account-details legend {
   }
 }
 /* src/pages/DriverProfile.css */
-.profile-container {
-  margin-top: 64px; /* push below navbar */
-  padding: 2rem;
+/* General Page Layout */
+.profile-container-driver {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Profile Card */
+.profile-card-driver {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.info-section-driver h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.info-section-driver p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+/* Driver Details Wrapper */
+.driver-details-wrapper-driver {
+  background-color: #fafafa;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Header with Photo */
+.driver-header-driver {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.driver-photo-driver {
+  width: 140px;
+  height: 140px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.photo-box-driver {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  background: #f5f7fa;
-  min-height: calc(100vh - 40vh);
 }
 
-.profile-card {
-  display: flex;
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  overflow: hidden;
-  width: 100%;
-  max-width: 800px;
-}
-
-.info-section {
-  flex: 1;
-  padding: 1.5rem;
-}
-
-.info-section h2 {
-  margin-top: 0;
-  color: #003366;
-}
-
-.info-section p {
-  margin: 0.5rem 0;
-  color: #333;
-}
-
-.stats-card {
-  display: flex;
-  gap: 2rem;
-  width: 100%;
-  max-width: 800px;
-  justify-content: center;
-  align-items: center;
-  /* gap: 2rem;  remove or keep as you like */
-  width: 100%;
-  max-width: 800px;
-}
-
-.stat-item {
-  flex: 1;
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.stat-item h3 {
-  margin: 0;
-  font-size: 2rem;
-  color: #003366;
-}
-
-.stat-item p {
-  margin: 0.5rem 0 0;
-  color: #555;
-}
-
-.stats-card button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
+/* Download Buttons */
+.download-btn-driver {
   background-color: #007bff;
   color: white;
-  border-radius: 5px;
+  border: none;
+  padding: 6px 14px;
+  margin-top: 5px;
+  margin-right: 32px;
+  margin-left: 65px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 0.7rem;
+  transition: background-color 0.2s;
 }
 
-.stats-card button:hover {
+.download-btn-driver:hover {
   background-color: #0056b3;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .profile-card {
-    flex-direction: column;
-    align-items: center;
-  }
-  .avatar-section {
-    width: 100%;
-    padding: 1rem 0;
-  }
-  .stats-card {
-    flex-direction: column;
-  }
+/* Section Headings */
+.details-section-driver {
+  margin-top: 25px;
 }
 
-@media (max-width: 480px) {
-  .profile-container {
-    padding: 1rem;
+.details-section-driver h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Info Grid (Personal/Bank Details) */
+.info-grid-driver {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+/* Document Grid */
+.documents-grid-driver {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.document-box-driver {
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.document-img-driver {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* Family Contacts */
+.family-contacts-grid-driver {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.contact-card-driver {
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.contact-card-driver p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+
+/* Loading & Error Messages */
+.loading,
+.error-message {
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 20px 0;
+  color: #d9534f;
+}
+
+/* Responsive Overrides */
+@media (max-width: 600px) {
+  .driver-header-driver {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
-  .info-section,
-  .stat-item {
-    padding: 1rem;
-  }
-  .avatar {
+
+  .driver-photo-driver {
     width: 100px;
     height: 100px;
   }
+
+  .download-btn-driver {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    margin-right: 20px;
+  }
+
+  .profile-card-driver, .driver-details-wrapper-driver {
+    padding: 15px;
+  }
 }
+
 /* logo css */
 .header {
   display: flex;
