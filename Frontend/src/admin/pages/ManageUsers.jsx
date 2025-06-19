@@ -40,17 +40,14 @@ const ManageUsers = () => {
     const filtered = users.filter((user) =>
       user.name.toLowerCase().includes(value) ||
       user.email.toLowerCase().includes(value) ||
-      user.phone.toLowerCase().includes(value)
+      user.phone.toLowerCase().includes(value) ||
+      user.location.toLowerCase().includes(value)
     );
     setFilteredUsers(filtered);
   };
 
-  const goToUserDetails = (userId) => {
-    navigate(`/admin/user-details/${userId}`);
-  };
-
   const goToUserRides = (userId) => {
-    navigate(`/admin/user-rides/${userId}`);
+    navigate(`/user-rides-on-admin/${userId}`);
   };
 
   return (
@@ -82,6 +79,7 @@ const ManageUsers = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Location</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -89,16 +87,10 @@ const ManageUsers = () => {
               {filteredUsers.map((user) => (
                 <tr key={user.id}>
                   <td>{user.id}</td>
-                  <td>
-                    <button
-                      className="link-button"
-                      onClick={() => goToUserDetails(user.id)}
-                    >
-                      {user.name}
-                    </button>
-                  </td>
+                  <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
+                  <td>{user.location}</td>
                   <td>
                     <button
                       className="rides-btn"

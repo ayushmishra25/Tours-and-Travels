@@ -18,7 +18,7 @@ function Register() {
   const [apiError, setApiError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const locations = ["Delhi", "Faridabad", "Ghaziabad", "Noida", "Greater noida"];
+  const locations = ["Delhi", "Faridabad", "Ghaziabad", "Noida", "Greater noida","Gurugram"];
   const navigate = useNavigate();
 
   const handleChange = (e) => {

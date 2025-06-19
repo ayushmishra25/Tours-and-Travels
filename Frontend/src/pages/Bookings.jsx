@@ -20,11 +20,13 @@ const Bookings = () => {
           return;
         }
 
-        const response = await axios.get(`${BASE_URL}/api/bookings/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(`${BASE_URL}/api/bookings/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = response.data.bookings;
         if (Array.isArray(data)) {
@@ -44,11 +46,14 @@ const Bookings = () => {
 
   const handleInvoiceClick = async (bookingId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/driver-rides/${bookingId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/driver-rides/${bookingId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const ride = response.data.ride;
 
@@ -59,7 +64,9 @@ const Bookings = () => {
       }
     } catch (error) {
       console.error("Error checking payment status:", error);
-      alert("First go to payment page and confirm your payment method and make the payment.");
+      alert(
+        "First go to payment page and confirm your payment method and make the payment."
+      );
     }
   };
 
@@ -74,15 +81,18 @@ const Bookings = () => {
 
       // Re-fetch bookings from the server to get updated data
       const userId = localStorage.getItem("userId");
-      const response = await axios.get(`${BASE_URL}/api/bookings/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/bookings/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const updatedBookings = response.data.bookings;
       setBookings(Array.isArray(updatedBookings) ? updatedBookings : []);
-      
+
       alert("Booking canceled successfully.");
     } catch (error) {
       console.error("Error canceling booking:", error);
@@ -90,6 +100,65 @@ const Bookings = () => {
     }
   };
 
+  const renderBookingDetails = (booking) => {
+    const dt = new Date(booking.booking_datetime).toLocaleString();
+    switch (booking.booking_type) {
+      case "Hourly":
+        return (
+          <>
+            <span>Trip: <strong>{booking.trip_type}</strong></span> —
+            <span> Hours: {booking.hours}</span> —
+            <span> From <strong>{booking.source_location}</strong></span> —
+            <span> To <strong>{booking.destination_location}</strong></span> —
+            <span> Payment: ₹{booking.payment}</span> —
+            <span> {dt}</span>
+          </>
+        );
+      case "Weekly":
+        return (
+          <>
+            <span>Trip: <strong>{booking.trip_type}</strong></span> —
+            <span> Total Hours: {booking.hours}</span> —
+            <span> From <strong>{booking.source_location}</strong></span> —
+            <span> To <strong>{booking.destination_location}</strong></span> —
+            <span> Start Date: {booking.start_date}</span> —
+            <span> Payment: ₹{booking.payment}</span> —
+            <span> {dt}</span>
+          </>
+        );
+      case "Monthly":
+        return (
+          <>
+            <span>Zone: <strong>{booking.zone}</strong></span> —
+            <span> Vehicle: {booking.vehicle_details}</span> —
+            <span> Working Days: {booking.working_days}</span> —
+            <span> Hours/Day: {booking.working_hours_per_day}</span> —
+            <span> Start Date: {booking.start_date}</span> —
+            <span> Payment: ₹{booking.payment}</span> —
+            <span> {dt}</span>
+          </>
+        );
+      case "On demand":
+      case "Ondemand":
+        return (
+          <>
+            <span>Trip: one-way</span> —
+            <span> From <strong>{booking.source_location}</strong></span> —
+            <span> To <strong>{booking.destination_location}</strong></span> —
+            <span> Distance: {booking.distance} km</span> —
+            <span> {dt}</span>
+          </>
+        );
+      default:
+        return (
+          <>
+            <span>From <strong>{booking.source_location}</strong></span> —
+            <span> To <strong>{booking.destination_location}</strong></span> —
+            <span> {dt}</span>
+          </>
+        );
+    }
+  };
 
   return (
     <div className="bookings-container">
@@ -111,15 +180,15 @@ const Bookings = () => {
               }}
             >
               <div>
-                <strong>{booking.booking_type}</strong> — From{" "}
-                <strong>{booking.source_location}</strong> to{" "}
-                <strong>{booking.destination_location}</strong> —{" "}
-                <span>{new Date(booking.booking_datetime).toLocaleString()}</span>
+                <strong>{booking.booking_type}</strong> —{' '}
+                {renderBookingDetails(booking)}
               </div>
 
               <div style={{ display: "flex", alignItems: "center" }}>
                 {booking.is_deleted ? (
-                  <span style={{ color: "red", fontWeight: "bold" }}>Cancelled</span>
+                  <span style={{ color: "red", fontWeight: "bold" }}>
+                    Cancelled
+                  </span>
                 ) : (
                   <>
                     <button

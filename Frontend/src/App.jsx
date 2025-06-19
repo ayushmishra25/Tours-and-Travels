@@ -29,6 +29,9 @@ import InvoicePage from './pages/InvoicePage';
 import FinalTnC from './pages/FinalTnC';
 import DriverDetailUploadEditable from './pages/DriverDetailsUploadEditable';
 import AssignedDriver from './pages/AssignedDriver';
+import UserRidesOnAdmin from './pages/UserRidesOnAdmin';
+import DriverTripsOnAdmin from './pages/DriverTripsOnAdmin';
+
 
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -141,8 +144,9 @@ const MainContent = () => {
         <Route path="/final-tnc/:booking_id" element={<FinalTnC />} />
         <Route path="/assigned-driver/:booking_id" element={<AssignedDriver />} />
         <Route path="/driver-earnings" element={<Earnings />} />
+        <Route path="/user-rides-on-admin/:userId" element={<UserRidesOnAdmin />} />
+        <Route path="/driver-trips-on-admin/:driverId" element={<DriverTripsOnAdmin />} />
 
-        
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />

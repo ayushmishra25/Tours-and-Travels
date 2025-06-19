@@ -1,4 +1,3 @@
-// ManageDrivers.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -67,8 +66,11 @@ const ManageDrivers = () => {
   };
 
   const handleEditClick = (driverId) => {
-    // Redirect to the shared editable profile page, passing driverId as a param
     navigate(`/driver-details-upload-editable/${driverId}`);
+  };
+
+  const handleTripClick = (driverId) => {
+    navigate(`/driver-trips-on-admin/${driverId}`);
   };
 
   return (
@@ -87,7 +89,7 @@ const ManageDrivers = () => {
           fontSize: "16px",
           border: "1px solid #ccc",
           borderRadius: "5px",
-          width: "200%",
+          width: "100%", // full width
         }}
       />
 
@@ -98,78 +100,103 @@ const ManageDrivers = () => {
       ) : filteredDrivers.length === 0 ? (
         <p className="status-text">No drivers found.</p>
       ) : (
-        <div className="table-container">
-          <table className="drivers-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>
-                  Contact <span style={{ fontWeight: "normal" }}>(Copy)</span>
-                </th>
-                <th>Location</th>
-                <th>Current Location</th>
-                <th>Status</th>
-                <th>Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredDrivers.map((driver,idx) => {
-                const id = driver.id || driver._id;
-                return (
-                  <tr key={`${id}-${idx}`}>
-                    <td>{id}</td>
-                    <td>
-                      <Link to={`/admin/drivers/${id}`}>{driver.name ?? "No Name"}</Link>
-                    </td>
-                    <td>{driver.email ?? "N/A"}</td>
-                    <td>
-                      {driver.phone ?? "N/A"}
-                      {driver.phone && (
-                        <button
-                          onClick={() => copyToClipboard(driver.phone, id)}
-                          style={{
-                            marginLeft: "10px",
-                            padding: "2px 6px",
-                            fontSize: "12px",
-                            cursor: "pointer",
-                            border: "1px solid #ccc",
-                            borderRadius: "4px",
-                            background: "#007bff",
-                            color: "#fff",
-                          }}
-                        >
-                          {copiedId === id ? "Copied" : "Copy"}
-                        </button>
-                      )}
-                    </td>
-                    <td>{driver.location ?? "N/A"}</td>
-                    <td>{driver.current_location ?? "N/A"}</td>
-                    <td>{driver.is_available ? "Active" : "Inactive"}</td>
-                    <td>
+        <table
+          className="drivers-table"
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            marginTop: "20px",
+            fontSize: "15px",
+          }}
+        >
+          <thead>
+            <tr style={{ background: "#f2f2f2", textAlign: "left" }}>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact (Copy)</th>
+              <th>Location</th>
+              <th>Current Location</th>
+              <th>Status</th>
+              <th>Edit</th>
+              <th>Trips</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredDrivers.map((driver, idx) => {
+              const id = driver.id || driver._id;
+              return (
+                <tr key={`${id}-${idx}`} style={{ borderBottom: "1px solid #ddd" }}>
+                  <td>{id}</td>
+                  <td>
+                    <Link to={`/admin/drivers/${id}`}>
+                      {driver.name ?? "No Name"}
+                    </Link>
+                  </td>
+                  <td>{driver.email ?? "N/A"}</td>
+                  <td>
+                    {driver.phone ?? "N/A"}
+                    {driver.phone && (
                       <button
-                        onClick={() => handleEditClick(id)}
+                        onClick={() => copyToClipboard(driver.phone, id)}
                         style={{
-                          paddingLeft: "5px",
-                          paddingRight: "40px",
-                          fontSize: "15px",
+                          marginLeft: "10px",
+                          padding: "2px 6px",
+                          fontSize: "12px",
                           cursor: "pointer",
-                          border: "1px solid #28a745",
+                          border: "1px solid #ccc",
                           borderRadius: "4px",
-                          background: "#28a745",
+                          background: "#007bff",
                           color: "#fff",
                         }}
                       >
-                        Edit
+                        {copiedId === id ? "Copied" : "Copy"}
                       </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    )}
+                  </td>
+                  <td>{driver.location ?? "N/A"}</td>
+                  <td>{driver.current_location ?? "N/A"}</td>
+                  <td>{driver.is_available ? "Active" : "Inactive"}</td>
+                  <td>
+                    <button
+                      onClick={() => handleEditClick(id)}
+                      style={{
+                        paddingLeft: "5px",
+                        paddingRight: "40px",
+                        fontSize: "15px",
+                        cursor: "pointer",
+                        border: "1px solid #28a745",
+                        borderRadius: "4px",
+                        background: "#28a745",
+                        color: "#fff",
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleTripClick(id)}
+                      style={{
+                        paddingLeft: "5px",
+                        paddingRight: "40px",
+                        marginRight:"25px",
+                        fontSize: "15px",
+                        cursor: "pointer",
+                        border: "1px solid #28a745",
+                        borderRadius: "4px",
+                        background: "#28a745",
+                        color: "#fff",
+                      }}
+                    >
+                      Trips
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       )}
     </div>
   );
