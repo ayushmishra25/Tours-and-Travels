@@ -87,7 +87,7 @@ const DriverDetailUploadEditable = () => {
         setInitialData(data);
       } catch (err) {
         console.error(err);
-        setErrorMessage("Failed to load driver data.");
+        setErrorMessage("Driver Details does not exist.");
       }
     };
     fetchDriverData();

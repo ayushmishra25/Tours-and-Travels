@@ -284,7 +284,11 @@ class BookingController extends Controller
     // Cutomer booking listing 
     public function show($user_id)
     {
-        $bookings = Booking::withTrashed()->with('user')->orderBy('id', 'desc')->get();
+        $bookings = Booking::withTrashed()
+            ->with('user')
+            ->where('user_id', $user_id)
+            ->orderBy('id', 'desc')
+            ->get();
 
         // Add 'is_deleted' flag to each booking
         $bookings = $bookings->map(function ($booking) {
@@ -294,8 +298,6 @@ class BookingController extends Controller
 
         return response()->json(['bookings' => $bookings]);
     }
-
-
 
     // Driver rides page details
     public function getRidesForDriver()
@@ -346,6 +348,60 @@ class BookingController extends Controller
             // weekly and monthly types get no ride fields
             return $base;
         });
+
+        return response()->json(['rides' => $rides], 200);
+    }
+
+    //  Admin page Driver Ride
+    public function getRidesForDriverById($driverId)
+    {
+        $admin = Auth::user();
+
+        if (!$admin || $admin->role != 2) { 
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $driver = User::find($driverId);
+        if (!$driver || !$driver->phone) {
+            return response()->json(['error' => 'Driver not found or missing phone.'], 404);
+        }
+
+        $rides = Booking::query()
+            ->leftJoin('driver_rides', 'bookings.id', '=', 'driver_rides.booking_id')
+            ->whereNull('bookings.deleted_at')
+            ->where('bookings.driver_contact', $driver->phone)
+            ->select(
+                'bookings.*',
+                'driver_rides.start_ride',
+                'driver_rides.end_ride',
+                'driver_rides.start_meter',
+                'driver_rides.end_meter',
+                'driver_rides.payment_received'
+            )
+            ->orderBy('bookings.booking_datetime', 'desc')
+            ->get()
+            ->map(function ($ride) {
+                $data = [
+                    'id' => $ride->id,
+                    'date' => $ride->booking_datetime ? date('Y-m-d', strtotime($ride->booking_datetime)) : null,
+                    'time' => $ride->booking_datetime ? date('h:i A', strtotime($ride->booking_datetime)) : null,
+                    'pickup' => $ride->source_location,
+                    'destination' => $ride->destination_location,
+                    'type' => $ride->booking_type,
+                    'fare' => $ride->payment ?? 'N/A',
+                    'payment_received' => $ride->payment_received ?? 'N/A',
+                ];
+
+                if (strtolower($ride->booking_type) === 'on demand') {
+                    $data['start_meter'] = $ride->start_meter ?? 'N/A';
+                    $data['end_meter'] = $ride->end_meter ?? 'N/A';
+                } elseif (strtolower($ride->booking_type) === 'hourly') {
+                    $data['start_ride'] = $ride->start_ride ?? 'N/A';
+                    $data['end_ride'] = $ride->end_ride ?? 'N/A';
+                }
+
+                return $data;
+            });
 
         return response()->json(['rides' => $rides], 200);
     }

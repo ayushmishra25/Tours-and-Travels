@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/{id}/assign-driver', [BookingController::class, 'assignDriver']);
     Route::get('/booking/{booking_id}', [BookingController::class, 'getDriverDetails']);
     Route::get('/driver/rides', [BookingController::class, 'getRidesForDriver']);
+    Route::get('/admin/driver-rides/{driverId}', [BookingController::class, 'getRidesForDriverById']);
+
     
 
     // Support-related

@@ -14,7 +14,7 @@ const DriverTripsOnAdmin = () => {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const res = await axios.get(`${baseURL}/api/driver-rides/${driverId}`, {
+          const res = await axios.get(`${baseURL}/api/admin/driver-rides/${driverId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -55,7 +55,7 @@ const DriverTripsOnAdmin = () => {
                 <p><strong>Destination:</strong> {trip.destination}</p>
                 <p><strong>Type:</strong> {trip.type}</p>
                 <p><strong>Fare:</strong> ₹{trip.fare}</p>
-                <p><strong>Payment Received:</strong> {trip.payment_received}</p>
+                <p><strong>Payment Received:</strong> {trip.payment_received === true ? "Done" : "Not done"}</p>
               </div>
             ))}
           </div>
