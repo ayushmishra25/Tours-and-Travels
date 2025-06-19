@@ -490,6 +490,7 @@ class BookingController extends Controller
                 'hours' => 'nullable|integer',
                 'working_days' => 'nullable|integer',
                 'working_hours_per_day' => 'nullable|integer',
+                'is_selected' => 'nullable|boolean'
             ]);
 
             // Find the booking
@@ -516,6 +517,9 @@ class BookingController extends Controller
             }
             if ($request->has('booking_datetime')) {
                 $booking->booking_datetime = $request->booking_datetime;
+            }
+            if ($request->has('is_selected')) {
+                $booking->is_selected = $request->is_selected;
             }
             if ($request->has('driver_contact')) {
                 $booking->driver_contact = $request->driver_contact;

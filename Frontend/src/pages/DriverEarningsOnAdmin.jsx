@@ -1,5 +1,6 @@
-// File: src/pages/DriverEarningOnAdmin.jsx
+
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import DashboardNavbar from "../components/DashboardNavbar";
 import { Helmet } from "react-helmet";
 import axios from "axios";
@@ -7,16 +8,26 @@ import axios from "axios";
 const DriverEarningOnAdmin = () => {
   const [earningsList, setEarningsList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { driverId } = useParams(); // From route: /driver-earnings/:driverId
   const token = localStorage.getItem("token");
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
-    const fetchAllEarnings = async () => {
+    const fetchEarnings = async () => {
       try {
-        const res = await axios.get(`${baseURL}/api/admin/driver-earnings/${driverId}`, {
+        const res = await axios.get(`${baseURL}/api/driver-earnings/${driverId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setEarningsList(res.data || []);
+
+        const data = res.data;
+        // Convert single-object response to array
+        const earningsArray = Array.isArray(data)
+          ? data
+          : data
+          ? [data]
+          : [];
+
+        setEarningsList(earningsArray);
       } catch (err) {
         console.error("Error fetching drivers' earnings:", err);
       } finally {
@@ -24,8 +35,8 @@ const DriverEarningOnAdmin = () => {
       }
     };
 
-    if (token) fetchAllEarnings();
-  }, [token]);
+    if (token && driverId) fetchEarnings();
+  }, [token, driverId, baseURL]);
 
   return (
     <>
@@ -33,8 +44,9 @@ const DriverEarningOnAdmin = () => {
         <title>Driver Earnings Summary</title>
       </Helmet>
       <DashboardNavbar />
+
       <div className="admin-earnings-container">
-        <h1>Drivers' Earnings Summary</h1>
+        <h1>Driver Earnings Summary</h1>
         {loading ? (
           <p className="loading">Loading earnings data…</p>
         ) : earningsList.length === 0 ? (
@@ -44,7 +56,7 @@ const DriverEarningOnAdmin = () => {
             <table className="earnings-table">
               <thead>
                 <tr>
-                  <th>Driver Name</th>
+                  <th>Driver ID</th>
                   <th>Cash to Driver</th>
                   <th>UPI to Company</th>
                   <th>Company Share (20%)</th>
@@ -52,13 +64,13 @@ const DriverEarningOnAdmin = () => {
                 </tr>
               </thead>
               <tbody>
-                {earningsList.map((d) => (
-                  <tr key={d.driver_id}>
-                    <td>{d.driver_name}</td>
-                    <td>₹{d.total_driver_earning?.toFixed(2) || "0.00"}</td>
-                    <td>₹{d.total_company_earning?.toFixed(2) || "0.00"}</td>
-                    <td>₹{d.total_company_share?.toFixed(2) || "0.00"}</td>
-                    <td>₹{d.total_driver_share?.toFixed(2) || "0.00"}</td>
+                {earningsList.map((d, idx) => (
+                  <tr key={d.user_id || idx}>
+                    <td>{d.driver_name || d.user_id}</td>
+                    <td>₹{(d.total_driver_earning ?? 0).toFixed(2)}</td>
+                    <td>₹{(d.total_company_earning ?? 0).toFixed(2)}</td>
+                    <td>₹{(d.total_company_share ?? 0).toFixed(2)}</td>
+                    <td>₹{(d.total_driver_share ?? 0).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

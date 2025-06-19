@@ -178,7 +178,7 @@ const BookingManagement = () => {
       setEditMode((prev) => ({ ...prev, [id]: false }));
       alert("Booking updated successfully.");
     } catch (error) {
-      console.error("Error updating booking:", error);  
+      console.error("Error updating booking:", error);
       alert("Server error while updating booking.");
     }
   };
@@ -189,8 +189,8 @@ const BookingManagement = () => {
 
   const handleSelect = async (id) => {
     try {
-      const response = await fetch(`${baseURL}/api/bookings/${id}/select-driver`, {
-        method: "POST",
+      const response = await fetch(`${baseURL}/api/bookings/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -238,7 +238,7 @@ const BookingManagement = () => {
     return (
       <div className="ride-info" style={{ marginTop: "10px" }}>
         {isHourly && (
-          <>  
+          <>
             {!isValidValue(start_ride) ? (
               <p style={{ color: "orange" }}>
                 <strong>Ride Status:</strong> Driver has not initiated the ride.
@@ -314,7 +314,7 @@ const BookingManagement = () => {
                 }}
               >
                 <div onClick={() => startEditing(b)}>Edit</div>
-                {isMonthly && hasDriver && (
+                {isMonthly && hasDriver && !b.is_selected && (
                   <>
                     <div
                       onClick={() => handleSelect(b.id)}
@@ -423,7 +423,7 @@ const BookingManagement = () => {
       {loading ? (
         <p>Loading bookings...</p>
       ) : (
-        <>  
+        <>
           <section className="booking-section">
             <h3>Today's Bookings</h3>
             {todays.length === 0 ? <p>No bookings for today.</p> : todays.map(renderBooking)}
