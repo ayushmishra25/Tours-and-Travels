@@ -157,6 +157,7 @@ const MonthlyDriver = () => {
       now.getSeconds()).padStart(2, '0')}`;
 
     const bookingData = {
+      zone: location,
       booking_type: "Monthly",
       trip_type: "M",
       source_location: pickupLocation,
