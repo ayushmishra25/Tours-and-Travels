@@ -29,47 +29,46 @@ const DriverRides = () => {
     return "notStarted";
   };
 
+  // 🟢 Extracted fetchRides function
+  const fetchRides = async () => {
+    try {
+      const resp = await axios.get(`${baseURL}/api/driver/rides`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      useEffect(() => {
-      let intervalId;
+      const rideData = resp.data.rides || [];
+      setRides(rideData);
 
-      const fetchRides = async () => {
-        try {
-          const resp = await axios.get(`${baseURL}/api/driver/rides`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+      const statusMap = {};
+      rideData.forEach((ride) => {
+        statusMap[ride.id] = getStatusFromRide(ride);
+      });
 
-          const rideData = resp.data.rides || [];
-          setRides(rideData);
+      setRideStatus(statusMap);
+    } catch (err) {
+      console.error("Error fetching rides:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-          const statusMap = {};
-          rideData.forEach((ride) => {
-            statusMap[ride.id] = getStatusFromRide(ride);
-          });
+  useEffect(() => {
+    let intervalId;
 
-          setRideStatus(statusMap);
-        } catch (err) {
-          console.error("Error fetching rides:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
+    if (token) {
+      fetchRides(); // initial fetch
 
-      if (token) {
-        fetchRides(); // initial fetch
+      intervalId = setInterval(() => {
+        fetchRides();
+      }, 60000);
+    } else {
+      setLoading(false);
+    }
 
-        intervalId = setInterval(() => {
-          fetchRides();
-        }, 60000); // fetch every 60 seconds
-      } else {
-        setLoading(false);
-      }
-
-      return () => {
-        if (intervalId) clearInterval(intervalId); // clean up on unmount
-      };
-    }, [token, baseURL]);
-
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [token, baseURL]);
 
   const updateRideMeter = (rideId, field, value) => {
     setRides((prev) =>
@@ -92,7 +91,7 @@ const DriverRides = () => {
       };
 
       if (ride.type?.toLowerCase() === "hourly") {
-        payload.start_ride = null;
+        payload.start_ride = null; // backend should set current time
       }
 
       if (ride.type?.toLowerCase() === "on demand") {
@@ -103,7 +102,7 @@ const DriverRides = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setRideStatus((prev) => ({ ...prev, [rideId]: "started" }));
+      await fetchRides(); // ⬅ Refresh data immediately
     } catch (err) {
       console.error("Failed to start ride:", err.response?.data || err);
     }
@@ -117,7 +116,7 @@ const DriverRides = () => {
       const payload = {};
 
       if (ride.type?.toLowerCase() === "hourly") {
-        payload.end_ride = null;
+        payload.end_ride = null; // backend should set current time
       }
 
       if (ride.type?.toLowerCase() === "on demand") {
@@ -128,7 +127,7 @@ const DriverRides = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setRideStatus((prev) => ({ ...prev, [rideId]: "ended" }));
+      await fetchRides(); // ⬅ Refresh data immediately
     } catch (err) {
       console.error("Failed to end ride:", err.response?.data || err);
     }
@@ -148,7 +147,7 @@ const DriverRides = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setRideStatus((prev) => ({ ...prev, [rideId]: "completed" }));
+      await fetchRides(); // ⬅ Refresh data immediately
     } catch (err) {
       console.error("Failed to finalize payment:", err.response?.data || err);
     }

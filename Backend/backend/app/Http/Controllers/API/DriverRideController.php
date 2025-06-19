@@ -65,7 +65,7 @@ class DriverRideController extends Controller
 
         $ride->save();
 
-        // ------- Payment Calculation -------
+// ------- Payment Calculation -------
         $updatedPayment = $booking->payment;
 
         // Case 1: Hourly Booking
@@ -76,19 +76,22 @@ class DriverRideController extends Controller
             if ($duration < 1) $duration = 1;
             if ($duration > 12) $duration = 12;
 
-            $locationKey = strtolower(str_replace(' ', '_', $booking->source_location));
-            $hourlyPricing = [
-                'delhi' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-                'gurugram' => [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
-                'faridabad' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-                'ghaziabad' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-                'noida' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-                'greater_noida' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
-            ];
+            // Only update payment if duration exceeds booked hours
+            if ($duration > $booking->hours) {
+                $locationKey = strtolower(str_replace(' ', '_', $booking->source_location));
+                $hourlyPricing = [
+                    'delhi' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                    'gurugram' => [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
+                    'faridabad' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                    'ghaziabad' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                    'noida' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                    'greater_noida' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
+                ];
 
-            $newFare = $hourlyPricing[$locationKey][$duration - 1] ?? 0;
-            if ($newFare > $booking->payment) {
-                $updatedPayment = $newFare;
+                $newFare = $hourlyPricing[$locationKey][$duration - 1] ?? 0;
+                if ($newFare > $booking->payment) {
+                    $updatedPayment = $newFare;
+                }
             }
         }
 
