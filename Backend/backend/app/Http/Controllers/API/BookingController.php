@@ -33,6 +33,7 @@ class BookingController extends Controller
             'start_meter' => 'nullable|integer',
             'end_meter' => 'nullable|integer',
             'distance' => 'nullable|numeric',
+            'is_selected' => 'nullable|boolean'
         ]);
 
         $payment = $this->calculateFare($request);
@@ -52,6 +53,7 @@ class BookingController extends Controller
             'payment' => $payment,
             'start_date' => $request->start_date,
             'booking_datetime' => $request->booking_datetime,
+            'is_selected' => $request-> is_selected,
         ]);
 
         return response()->json([
@@ -261,6 +263,7 @@ class BookingController extends Controller
                 'end_meter' => $booking->end_meter ?? 'N/A',
                 'created_at' => $booking->created_at->toDateTimeString(),
                 'deleted_by_customer' => $booking->deleted_at ? true : false,
+                'is_selected'=> $booking->is_selected ? true : false,
             ];
         });
 
@@ -487,6 +490,7 @@ class BookingController extends Controller
                 'hours' => 'nullable|integer',
                 'working_days' => 'nullable|integer',
                 'working_hours_per_day' => 'nullable|integer',
+                'is_selected' => 'nullable|boolean'
             ]);
 
             // Find the booking
@@ -513,6 +517,9 @@ class BookingController extends Controller
             }
             if ($request->has('booking_datetime')) {
                 $booking->booking_datetime = $request->booking_datetime;
+            }
+            if ($request->has('is_selected')) {
+                $booking->is_selected = $request->is_selected;
             }
             if ($request->has('driver_contact')) {
                 $booking->driver_contact = $request->driver_contact;
