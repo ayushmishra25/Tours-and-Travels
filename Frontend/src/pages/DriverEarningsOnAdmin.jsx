@@ -1,8 +1,8 @@
 // File: src/pages/DriverEarningOnAdmin.jsx
 import React, { useEffect, useState } from "react";
-import DashboardNavbar from "../components/DashboardNavbar";
 import { Helmet } from "react-helmet";
 import axios from "axios";
+import AdminNavbar from "../admin/components/AdminNavbar";
 
 const DriverEarningOnAdmin = () => {
   const [earningsList, setEarningsList] = useState([]);
@@ -29,6 +29,7 @@ const DriverEarningOnAdmin = () => {
 
   return (
     <>
+      <AdminNavbar />
       <Helmet>
         <title>Driver Earnings Summary</title>
       </Helmet>
