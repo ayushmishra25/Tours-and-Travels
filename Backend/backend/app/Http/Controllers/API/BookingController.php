@@ -20,7 +20,7 @@ class BookingController extends Controller
         $validated = $request->validate([
             'booking_type' => 'required|in:Hourly,Weekly,Monthly,On demand',
             'source_location' => 'required|string',
-            'zone' => 'required|string',
+            'zone' => 'nullable|string',
             'source_pincode' => 'required|digits:6',
             'destination_location' => 'nullable|string',
             'vehicle_details' => 'nullable|string',
@@ -28,10 +28,11 @@ class BookingController extends Controller
             'working_days' => 'nullable|integer',
             'working_hours_per_day' => 'nullable|integer',
             'start_date' => 'nullable|date',
-            'booking_datetime' => 'nullable|date_format:Y-m-d H:i:s',
+            'booking_datetime' => 'nullable|date_format:Y-m-d g:i A',
             'trip_type' => 'nullable|string',
             'start_meter' => 'nullable|integer',
             'end_meter' => 'nullable|integer',
+            'distance' => 'nullable|numeric',
         ]);
 
         $payment = $this->calculateFare($request);
@@ -52,9 +53,6 @@ class BookingController extends Controller
             'start_date' => $request->start_date,
             'booking_datetime' => $request->booking_datetime,
         ]);
-        if ($request->booking_type === 'Monthly') {
-            $bookingData['is_selected'] = true;
-        }
 
         return response()->json([
             'message' => 'Booking successful',
@@ -65,9 +63,13 @@ class BookingController extends Controller
     public function calculateFare(Request $request)
     {
         $type = $request->booking_type;
-        $location = strtolower(str_replace(' ', '_', $request->source_location));
 
         if ($type === 'Hourly') {
+            // ✅ Try zone, fallback to city extraction
+            $location = $request->zone
+                ? strtolower(str_replace(' ', '_', $request->zone))
+                : $this->extractCity($request->source_location);
+
             $hourlyPricing = [
                 'delhi' => [225, 295, 370, 450, 535, 625, 720, 815, 910, 1005, 1100, 1195],
                 'gurugram' => [270, 340, 410, 480, 560, 625, 720, 815, 910, 1005, 1100, 1195],
@@ -78,48 +80,70 @@ class BookingController extends Controller
             ];
 
             $hours = $request->hours;
-            if (!$hours || $hours < 1 || $hours > 12) return 0;
+            if (!$location || !$hours || $hours < 1 || $hours > 12) return 0;
 
             return $hourlyPricing[$location][$hours - 1] ?? 0;
+        }
 
-        } elseif ($type === 'Weekly') {
+        elseif ($type === 'Weekly') {
             $days = (int) $request->working_days;
             $hoursPerDay = (int) $request->working_hours_per_day;
+
+            if (!$days || !$hoursPerDay) return 0;
+
             $ratePerHour = 1250 / 12;
-
             return round($ratePerHour * $hoursPerDay * $days);
+        }
 
-        } elseif ($type === 'Monthly') {
+        elseif ($type === 'Monthly') {
             $monthlyPricing = $this->getMonthlyPricing();
-            $area = $request->source_location;
+            $area = $request->zone;
             $days = (string) $request->working_days;
             $hours = (string) $request->working_hours_per_day;
 
-            return $monthlyPricing[$area][$days][$hours] ?? 0;
+            if (!$area || !$days || !$hours) return 0;
 
-        } elseif ($type === 'On demand') {
+            return $monthlyPricing[$area][$days][$hours] ?? 0;
+        }
+
+        elseif ($type === 'On demand') {
             $pricing = [
                 50 => 606, 100 => 1115, 150 => 1206, 200 => 1443, 250 => 1670,
                 300 => 1860, 350 => 2349, 400 => 2570, 450 => 2800, 500 => 3050,
                 600 => 3529, 700 => 4008, 800 => 4480, 900 => 4962, 1000 => 5435, 1200 => 6400
             ];
 
-            // Case 1: Distance is explicitly provided
+            $distance = null;
+
             if ($request->has('distance')) {
-                $rounded = $this->roundToNearestKey($pricing, (float) $request->distance);
+                $distance = (float) $request->distance;
+            } elseif ($request->has('start_meter') && $request->has('end_meter')) {
+                $distance = ($request->end_meter - $request->start_meter) / 1000;
+            }
+
+            if ($distance !== null) {
+                $rounded = $this->roundToNearestKey($pricing, $distance);
                 return $pricing[$rounded] ?? 0;
             }
 
-            // Case 2: Fallback to start_meter and end_meter
-            if ($request->has('start_meter') && $request->has('end_meter')) {
-                $distanceKm = ($request->end_meter - $request->start_meter) / 1000;
-                $rounded = $this->roundToNearestKey($pricing, $distanceKm);
-                return $pricing[$rounded] ?? 0;
-            }
-
-            // Default if no valid inputs
             return 0;
         }
+
+        return 0;
+    }
+
+    public function extractCity($address)
+    {
+        $address = strtolower($address);
+        $cities = ['delhi', 'gurugram', 'faridabad', 'ghaziabad', 'noida', 'greater noida'];
+
+        foreach ($cities as $city) {
+            if (strpos($address, strtolower($city)) !== false) {
+                return str_replace(' ', '_', $city);
+            }
+        }
+
+        return null;
     }
 
     public function roundToNearestKey(array $pricing, float $distance)
@@ -302,7 +326,7 @@ class BookingController extends Controller
             $base = [
                 'id'          => $ride->id,
                 'date'        => $ride->booking_datetime ? date('Y-m-d', strtotime($ride->booking_datetime)) : null,
-                'time'        => $ride->booking_datetime? date('H:i', strtotime($ride->booking_datetime)): null,
+                'time' => $ride->booking_datetime ? date('h:i A', strtotime($ride->booking_datetime)) : null,
                 'pickup'      => $ride->source_location,
                 'destination' => $ride->destination_location,
                 'type'        => $ride->booking_type,

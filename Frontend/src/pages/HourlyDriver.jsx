@@ -133,7 +133,13 @@ const HourlyDriver = () => {
       return;
     }
 
-    const booking_datetime = `${date} ${time}:00`;
+    const [hourStr, minute] = time.split(":");
+    let hour = parseInt(hourStr, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12;
+    const formattedTime = `${hour}:${minute} ${ampm}`;
+
+    const booking_datetime = `${date} ${formattedTime}`;
 
     const payload = {
       user_id: parseInt(localStorage.getItem("userId")),
@@ -177,7 +183,7 @@ const HourlyDriver = () => {
           bookingType: booking.booking_type,
           tripType: booking.trip_type,
           bookingDatetime: booking.booking_datetime,
-          totalAmount: booking.payment,
+          totalAmount,
           user,
         },
       });

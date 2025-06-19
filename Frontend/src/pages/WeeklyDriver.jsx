@@ -122,7 +122,13 @@ const WeeklyDriver = () => {
     }
 
     setFieldError("");
-    const bookingDatetime = `${date} ${time}:00`;
+    const [hourStr, minute] = time.split(":");
+    let hour = parseInt(hourStr, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12;
+    const formattedTime = `${hour}:${minute} ${ampm}`;
+
+    const bookingDatetime = `${date} ${formattedTime}`;
 
     const bookingData = {
       user_id: parseInt(localStorage.getItem("userId")),

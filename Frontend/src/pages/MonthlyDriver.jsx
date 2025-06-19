@@ -151,10 +151,11 @@ const MonthlyDriver = () => {
     setFieldError("");
 
     const now = new Date();
-    const formattedDatetime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
-      now.getDate()
-    ).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(
-      now.getSeconds()).padStart(2, '0')}`;
+    const hours24 = now.getHours();
+    const hours12 = hours24 % 12 || 12;
+    const ampm = hours24 >= 12 ? 'PM' : 'AM';
+
+    const formattedDatetime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${hours12}:${String(now.getMinutes()).padStart(2, '0')} ${ampm}`;
 
     const bookingData = {
       zone: location,
@@ -168,7 +169,6 @@ const MonthlyDriver = () => {
       working_hours_per_day: parseInt(workingHours),
       start_date: date,
       booking_datetime: formattedDatetime,
-      payment: totalAmount
     };
 
     try {
@@ -188,7 +188,7 @@ const MonthlyDriver = () => {
           bookingType: booking.booking_type,
           tripType: booking.trip_type,
           bookingDatetime: booking.booking_datetime,
-          totalAmount: booking.payment,
+          totalAmount,
           user
         }
       });

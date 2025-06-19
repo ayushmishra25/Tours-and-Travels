@@ -98,69 +98,78 @@ const OndemandDriver = () => {
   };
 
   const handleBookNow = async () => {
-    if (!token) {
-      setAuthError("Please register and login first to book a driver.");
-      setFieldError("");
-      return;
-    }
-    setAuthError("");
-
-    if (!pickupLocation.trim()) {
-      setFieldError("Pickup address is required");
-      return;
-    }
-    if (!destination.trim()) {
-      setFieldError("Destination address is required");
-      return;
-    }
-    if (!distance) {
-      setFieldError("Distance is required");
-      return;
-    }
-    if (!date) {
-      setFieldError("Date is required");
-      return;
-    }
-    if (!time) {
-      setFieldError("Time is required");
-      return;
-    }
+  if (!token) {
+    setAuthError("Please register and login first to book a driver.");
     setFieldError("");
+    return;
+  }
+  setAuthError("");
 
-    const bookingDatetime = `${date} ${time}:00`;
-    const payload = {
-      booking_type: "On demand",
-      trip_type: "one-way",
-      source_location: pickupLocation,
-      source_pincode: pickupPincode,
-      destination_location: destination,
-      distance: parseFloat(distance),
-      booking_datetime: bookingDatetime,
-    };
+  if (!pickupLocation.trim()) {
+    setFieldError("Pickup address is required");
+    return;
+  }
+  if (!destination.trim()) {
+    setFieldError("Destination address is required");
+    return;
+  }
+  if (!distance) {
+    setFieldError("Distance is required");
+    return;
+  }
+  if (!date) {
+    setFieldError("Date is required");
+    return;
+  }
+  if (!time) {
+    setFieldError("Time is required");
+    return;
+  }
+  setFieldError("");
 
-    try {
-      const resp = await axios.post(`${baseURL}/api/bookings`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  // Convert time to 12-hour with AM/PM
+  const [hourStr, minute] = time.split(":");
+  let hour = parseInt(hourStr, 10);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+  const formattedTime = `${hour}:${minute} ${ampm}`;
 
-      const { booking } = resp.data;
-      navigate("/post-booking", {
-        state: {
-          bookingId: booking.id,
-          pickupLocation: booking.source_location,
-          destinationLocation: booking.destination_location,
-          bookingType: booking.booking_type,
-          tripType: booking.trip_type,
-          bookingDatetime: booking.booking_datetime,
-          totalAmount: booking.payment,
-          user,
-        },
-      });
-    } catch (err) {
-      console.error("Booking error:", err);
-      setAuthError("Booking failed. Please try again.");
-    }
+  const bookingDatetime = `${date} ${formattedTime}`;
+
+  const payload = {
+    booking_type: "On demand",
+    trip_type: "one-way",
+    source_location: pickupLocation,
+    source_pincode: pickupPincode,
+    destination_location: destination,
+    distance: parseFloat(distance),
+    booking_datetime: bookingDatetime,
   };
+
+  try {
+    const resp = await axios.post(`${baseURL}/api/bookings`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const { booking } = resp.data;
+    navigate("/post-booking", {
+      state: {
+        bookingId: booking.id,
+        pickupLocation: booking.source_location,
+        destinationLocation: booking.destination_location,
+        bookingType: booking.booking_type,
+        tripType: booking.trip_type,
+        bookingDatetime: booking.booking_datetime,
+        totalAmount: booking.payment,
+        user,
+      },
+    });
+  } catch (err) {
+    console.error("Booking error:", err);
+    setAuthError("Booking failed. Please try again.");
+  }
+};
+
 
   return (
     <>

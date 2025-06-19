@@ -12,7 +12,6 @@ const DriverRides = () => {
 
   const getStatusFromRide = (ride) => {
     const type = ride.type?.toLowerCase();
-
     const isValid = (value) =>
       value !== undefined && value !== null && value !== "N/A" && value !== "";
 
@@ -29,7 +28,6 @@ const DriverRides = () => {
     return "notStarted";
   };
 
-  // 🟢 Extracted fetchRides function
   const fetchRides = async () => {
     try {
       const resp = await axios.get(`${baseURL}/api/driver/rides`, {
@@ -56,11 +54,8 @@ const DriverRides = () => {
     let intervalId;
 
     if (token) {
-      fetchRides(); // initial fetch
-
-      intervalId = setInterval(() => {
-        fetchRides();
-      }, 60000);
+      fetchRides();
+      intervalId = setInterval(fetchRides, 60000);
     } else {
       setLoading(false);
     }
@@ -78,6 +73,37 @@ const DriverRides = () => {
     );
   };
 
+  const canStartRideNow = (rideDate, rideTime) => {
+    if (!rideDate || !rideTime) return false;
+
+    try {
+      const [timePart, meridian] = rideTime.trim().split(" ");
+      let [hours, minutes] = timePart.split(":").map(Number);
+
+      if (meridian.toUpperCase() === "PM" && hours !== 12) hours += 12;
+      if (meridian.toUpperCase() === "AM" && hours === 12) hours = 0;
+
+      const [year, month, day] = rideDate.split("-").map(Number);
+      const rideDateTime = new Date(year, month - 1, day, hours, minutes);
+
+      const now = new Date();
+      const allowedStartTime = new Date(rideDateTime.getTime() - 15 * 60 * 1000);
+
+      return now >= allowedStartTime;
+    } catch (error) {
+      console.error("Invalid date/time parsing:", error);
+      return false;
+    }
+  };
+
+  const canStartOnDemandRide = (ride) => {
+    return (
+      ride.start_meter &&
+      ride.start_meter !== "N/A" &&
+      canStartRideNow(ride.date, ride.time)
+    );
+  };
+
   const handleStartRide = async (rideId) => {
     const ride = rides.find((r) => r.id === rideId);
     if (!ride) return;
@@ -91,7 +117,7 @@ const DriverRides = () => {
       };
 
       if (ride.type?.toLowerCase() === "hourly") {
-        payload.start_ride = null; // backend should set current time
+        payload.start_ride = null;
       }
 
       if (ride.type?.toLowerCase() === "on demand") {
@@ -102,7 +128,7 @@ const DriverRides = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      await fetchRides(); // ⬅ Refresh data immediately
+      await fetchRides();
     } catch (err) {
       console.error("Failed to start ride:", err.response?.data || err);
     }
@@ -116,7 +142,7 @@ const DriverRides = () => {
       const payload = {};
 
       if (ride.type?.toLowerCase() === "hourly") {
-        payload.end_ride = null; // backend should set current time
+        payload.end_ride = null;
       }
 
       if (ride.type?.toLowerCase() === "on demand") {
@@ -127,7 +153,7 @@ const DriverRides = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      await fetchRides(); // ⬅ Refresh data immediately
+      await fetchRides();
     } catch (err) {
       console.error("Failed to end ride:", err.response?.data || err);
     }
@@ -147,7 +173,7 @@ const DriverRides = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      await fetchRides(); // ⬅ Refresh data immediately
+      await fetchRides();
     } catch (err) {
       console.error("Failed to finalize payment:", err.response?.data || err);
     }
@@ -173,6 +199,7 @@ const DriverRides = () => {
             {rides.map((ride) => {
               const status = rideStatus[ride.id] || "notStarted";
               const rideType = ride.type?.toLowerCase();
+              const isAllowedToStart = canStartRideNow(ride.date, ride.time);
 
               return (
                 <div key={ride.id} className="ride-card">
@@ -190,8 +217,19 @@ const DriverRides = () => {
                       <>
                         {status === "notStarted" && (
                           <>
-                            <button className="start-ride" onClick={() => handleStartRide(ride.id)}>Start Ride</button>
+                            <button
+                              className="start-ride"
+                              onClick={() => handleStartRide(ride.id)}
+                              disabled={!isAllowedToStart}
+                            >
+                              Start Ride
+                            </button>
                             <button className="end-ride" disabled>End Ride</button>
+                            {!isAllowedToStart && (
+                              <p className="gentle-msg warning-msg">
+                                You can only start this ride within 15 minutes of the scheduled time.
+                              </p>
+                            )}
                           </>
                         )}
                         {status === "started" && (
@@ -244,13 +282,20 @@ const DriverRides = () => {
                         </div>
 
                         {status === "notStarted" && (
-                          <button
-                            className="start-ride"
-                            onClick={() => handleStartRide(ride.id)}
-                            disabled={!ride.start_meter || ride.start_meter === "N/A"}
-                          >
-                            Confirm Start Meter
-                          </button>
+                          <>
+                            <button
+                              className="start-ride"
+                              onClick={() => handleStartRide(ride.id)}
+                              disabled={!canStartOnDemandRide(ride)}
+                            >
+                              Confirm Start Meter
+                            </button>
+                            {!isAllowedToStart && (
+                              <p className="gentle-msg warning-msg">
+                                You can only confirm start meter 15 minutes before the scheduled time.
+                              </p>
+                            )}
+                          </>
                         )}
 
                         {status === "started" && (

@@ -56,7 +56,7 @@ const BookingConfirmation = () => {
           <ul className="booking-summary">
             <li><strong>Booking Type:</strong> {bookingType}</li>
             <li><strong>Pickup:</strong> {pickupLocation}</li>
-            <li><strong>Date &amp; Time:</strong> {bookingDatetime}</li>
+            <li><strong>Date & amp; Time:</strong> {bookingDatetime}</li>
           </ul>
           <p className="total-amount">Total Fare: ₹ {totalAmount}</p>
           <p>
