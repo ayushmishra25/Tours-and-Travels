@@ -46,7 +46,7 @@ const MainContent = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
   // Paths where we want to hide navbar/footer
-  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice','/final-tnc','/assigned-driver','/admin/dashboard'];
+  const noShellPaths = ['/driverjobdetails', '/driver-details-upload', '/invoice', '/final-tnc', '/assigned-driver', '/admin/dashboard'];
   const hideShell = noShellPaths.some(path => location.pathname.startsWith(path));
 
   return (
@@ -68,7 +68,7 @@ const MainContent = () => {
         <Route
           path="/login"
           element={
-              <Login />
+            <Login />
           }
         />
 
@@ -87,53 +87,55 @@ const MainContent = () => {
         <Route
           path="/driverjobdetails"
           element={
-              <DriverJobDetails />
+            <DriverJobDetails />
           }
         />
 
-        <Route 
-          path="/driver-details-upload-editable/:driverId" 
+        <Route path="/driver-details-upload" element={<DriverDetailsUpload />} />
+
+        <Route
+          path="/driver-details-upload-editable/:driverId"
           element={
             <DriverDetailUploadEditable />
-            } 
+          }
         />
 
 
         <Route
           path="/driver-details-upload-editable"
           element={
-              <DriverDetailUploadEditable />
+            <DriverDetailUploadEditable />
           }
         />
 
         <Route
           path="/driver-dashboard"
           element={
-              <DriverDashboard />
+            <DriverDashboard />
           }
         />
-        
-        <Route path="/earnings" element={<Earnings /> } />
+
+        <Route path="/earnings" element={<Earnings />} />
         {/* My Rides page */}
-       <Route
+        <Route
           path="/trip-history"
           element={
-             <DriverRides />
-            }
+            <DriverRides />
+          }
         />
-        
+
         {/* My Rides page */}
-       <Route
+        <Route
           path="/support"
           element={
-             <Support />
-            }
+            <Support />
+          }
         />
 
         <Route
           path="/driver-profile"
           element={
-              <DriverProfile />
+            <DriverProfile />
           }
         />
         <Route path="/post-booking" element={<PostBooking />} />
@@ -142,7 +144,7 @@ const MainContent = () => {
         <Route path="/assigned-driver/:booking_id" element={<AssignedDriver />} />
         <Route path="/driver-earnings" element={<Earnings />} />
 
-        
+
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />
