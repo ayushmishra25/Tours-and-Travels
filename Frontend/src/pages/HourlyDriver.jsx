@@ -133,13 +133,16 @@ const HourlyDriver = () => {
       return;
     }
 
-    const [hourStr, minute] = time.split(":");
-    let hour = parseInt(hourStr, 10);
+    const formatTimeTo12Hour = (timeStr) => {
+    const [hourStr, minute] = timeStr.split(":");
+    const hour = parseInt(hourStr, 10);
     const ampm = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12 || 12;
-    const formattedTime = `${hour}:${minute} ${ampm}`;
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minute} ${ampm}`; // No padStart!
+  };
 
-    const booking_datetime = `${date} ${formattedTime}`;
+    const formattedTime = formatTimeTo12Hour(time); // time = "14:30"
+    const booking_datetime = `${date} ${formattedTime}`; // "2025-06-20 2:30 PM"
 
     const payload = {
       user_id: parseInt(localStorage.getItem("userId")),
