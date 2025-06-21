@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
+use App\Helpers\SnsHelper;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpMail;
+
+
 
 class AuthController extends Controller
 {
@@ -170,6 +177,43 @@ class AuthController extends Controller
             'message' => 'User profile updated successfully.',
             'user' => $user
         ]);
+    }
+
+    public function sendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $otp = rand(100000, 999999);
+        $cacheKey = 'otp_' . $request->email;
+
+        Cache::put($cacheKey, $otp, now()->addMinutes(5)); // Store OTP for 5 minutes
+
+        // Send the OTP to the user's email
+        Mail::to($request->email)->send(new OtpMail($otp));
+
+        return response()->json(['message' => 'OTP sent to email.']);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required|digits:6',
+        ]);
+
+        $cacheKey = 'otp_' . $request->email;
+        $storedOtp = Cache::get($cacheKey);
+
+        if (!$storedOtp || $storedOtp != $request->otp) {
+            return response()->json(['message' => 'Invalid or expired OTP'], 400);
+        }
+
+        // OTP is valid — remove it from cache
+        Cache::forget($cacheKey);
+
+        return response()->json(['message' => 'OTP verified successfully']);
     }
 
 }
