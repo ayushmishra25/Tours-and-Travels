@@ -118,6 +118,7 @@ const Login = () => {
           </div>
 
           <button type="submit" className="login-btn">Login</button>
+          <a href="/forgot-password" style={{ textDecoration: 'none', color:'red' }}>Forgot Password?</a>
         </form>
       </div>
     </div>
