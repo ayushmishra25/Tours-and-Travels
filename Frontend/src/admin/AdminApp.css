@@ -317,109 +317,138 @@
   /* ManageDrivers.css - Manage Drivers Page Styles */
 
 /* ManageDrivers.css */
-
 .manage-drivers-container {
-  padding-top: 60px;
-  padding-bottom: 20px;
-  max-width: 1000px;
-  margin-left: 140px;
-  margin-right: 100px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.heading {
-  font-size: 24px;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  text-align: center;
+.manage-drivers-container .heading {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #333;
 }
 
-.search-bar {
+.manage-drivers-container input[type="text"] {
   width: 100%;
-  max-width: 500px;
-  padding: 10px;
-  margin: 0 auto 20px;
-  display: block;
-  font-size: 16px;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
-  outline: none;
-  transition: border 0.3s;
+  box-sizing: border-box;
 }
 
-.search-bar:focus {
-  border-color: #2980b9;
-}
-
-.status-text {
-  text-align: center;
-  font-size: 18px;
-  margin-top: 20px;
-}
-
-.status-text.error {
-  color: red;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
+/* Table styling */
 .drivers-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.drivers-table thead tr {
+  background-color: #2c2c71;
+  color: white;
 }
 
 .drivers-table th,
 .drivers-table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  text-align: left;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid #e0e0e0;
+  vertical-align: middle;
 }
 
 .drivers-table th {
-  background-color: var(--primary-color);
+  text-align: left;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.drivers-table td {
+  color: #444;
+}
+
+/* Buttons */
+.drivers-table button {
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.drivers-table button:hover {
+  opacity: 0.9;
+}
+
+/* Specific button colors */
+.drivers-table button[onClick*="copyToClipboard"] {
+  background-color: #007bff;
   color: #fff;
+  border: 1px solid #007bff;
 }
 
-.drivers-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.drivers-table button[onClick*="handleEditClick"] {
+  background-color: #28a745;
+  color: #fff;
+  border: 1px solid #28a745;
 }
 
-.drivers-table tr:hover {
-  background-color: #eaeaea;
+.drivers-table button[onClick*="handleTripClick"],
+.drivers-table button[onClick*="handleEarningClick"] {
+  background-color: #28a745;
+  color: #fff;
+  border: 1px solid #28a745;
 }
 
-.drivers-table a {
-  color: #2980b9;
-  text-decoration: none;
+/* Status text */
+.status-text {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 1rem;
 }
 
-.drivers-table a:hover {
-  text-decoration: underline;
+.status-text.error {
+  color: #d9534f;
 }
 
-/* Responsive */
+/* Responsive rules */
 @media (max-width: 768px) {
-  .search-bar {
-    max-width: 100%;
+  .manage-drivers-container {
+    padding: 0.5rem;
   }
 
+  /* Make table horizontally scrollable */
+  .drivers-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Align all table content to right */
   .drivers-table th,
   .drivers-table td {
-    padding: 10px;
-    font-size: 14px;
+    text-align: center;
   }
 
-  .heading {
-    font-size: 20px;
+  /* Reduce padding for mobile */
+  .drivers-table th,
+  .drivers-table td {
+    padding: 0.5rem 0.5rem;
+  }
+
+  /* Ensure input full width */
+  .manage-drivers-container input[type="text"] {
+    width: 100%;
+    margin-bottom: 1rem;
   }
 }
 
-/* BookingManagement.css - Booking Management Page Styles */
 
 /* src/admin/pages/BookingManagement.css */
 

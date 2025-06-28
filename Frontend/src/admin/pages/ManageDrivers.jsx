@@ -114,7 +114,7 @@ const ManageDrivers = () => {
           }}
         >
           <thead>
-            <tr style={{ background: "#f2f2f2", textAlign: "left" }}>
+            <tr style={{ background: "#002855", textAlign: "left", color:"white" }}>
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
