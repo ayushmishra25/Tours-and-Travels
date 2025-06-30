@@ -19,6 +19,8 @@ Route::get('/listUsers', [AuthController::class, 'listUsers']);
 Route::get('/geocode', [BookingController::class, 'geocode']);
 Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
 
 
 // 🔐 Protected Routes

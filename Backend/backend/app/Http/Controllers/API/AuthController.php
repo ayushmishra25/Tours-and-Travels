@@ -213,7 +213,37 @@ class AuthController extends Controller
         // OTP is valid — remove it from cache
         Cache::forget($cacheKey);
 
+        // ✅ Set verification flag for password reset
+        Cache::put('otp_verified_' . $request->email, true, now()->addMinutes(10)); // Optional TTL
+
         return response()->json(['message' => 'OTP verified successfully']);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Check OTP verified flag
+        if (!Cache::get('otp_verified_' . $request->email)) {
+            return response()->json(['message' => 'OTP not verified or session expired'], 403);
+        }
+
+        // Reset the user's password
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Clear OTP flag to prevent reuse
+        Cache::forget('otp_verified_' . $request->email);
+
+        return response()->json(['message' => 'Password reset successful']);
     }
 
 }
