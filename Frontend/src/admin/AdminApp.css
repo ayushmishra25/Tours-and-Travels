@@ -217,6 +217,7 @@
     padding: 20px;
     max-width: 1200px;
     background-color: var(--background-color);
+    box-sizing: border-box;
   }
   
   .manage-users-container h2 {
@@ -239,6 +240,8 @@
     padding: 12px 16px;
     text-align: left;
     border-bottom: 1px solid #eee;
+    vertical-align: middle;
+    border: 1px solid #e0e0e0;
   }
   
   .users-table th {
@@ -324,6 +327,7 @@
   padding: 1rem;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
+  margin-right: 180px;
 }
 
 .manage-drivers-container .heading {
@@ -421,6 +425,8 @@
 @media (max-width: 768px) {
   .manage-drivers-container {
     padding: 0.5rem;
+    margin-right: 10px;
+    margin-left: 30px;
   }
 
   /* Make table horizontally scrollable */
@@ -616,22 +622,23 @@
 /* src/admin/pages/PaymentManagement.css */
 
 .payment-management-container {
-  padding-top: 50px;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-bottom: 2rem;
-  background: #f5f7fa;
-  min-height: 100vh;
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
 .payment-management-container h2 {
-  color: #003366;
+  font-size: 1.75rem;
   margin-bottom: 1rem;
+  color: #333;
 }
 
 .payments-table-wrapper {
   overflow-x: auto;
-  background: #e0e0e0;
+  background: #ffffff;
   border-radius: 0.5rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
@@ -644,10 +651,9 @@
 
 .payments-table th,
 .payments-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  text-align: left;
-  white-space: nowrap;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid #e0e0e0;
+  vertical-align: middle;
 }
 .payments-table td, 
 .payments-table th {
@@ -655,8 +661,8 @@
 }
 
 .payments-table th {
-  background-color: #e6f4ea;
-  color: #003366;
+  background-color:  #003366;
+  color:white;
   font-weight: 600;
 }
 
