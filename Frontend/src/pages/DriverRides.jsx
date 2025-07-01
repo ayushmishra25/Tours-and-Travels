@@ -16,11 +16,11 @@ const DriverRides = () => {
       value !== undefined && value !== null && value !== "N/A" && value !== "";
 
     if (type === "on demand") {
-      if (ride.payment_received && isValid(ride.end_meter)) return "completed";
+      if (ride.payment_status && isValid(ride.end_meter)) return "completed";
       if (isValid(ride.end_meter)) return "ended";
       if (isValid(ride.start_meter)) return "started";
     } else {
-      if (ride.payment_received && isValid(ride.end_ride)) return "completed";
+      if (ride.payment_status && isValid(ride.end_ride)) return "completed";
       if (isValid(ride.end_ride)) return "ended";
       if (isValid(ride.start_ride)) return "started";
     }
@@ -111,9 +111,6 @@ const DriverRides = () => {
     try {
       const payload = {
         booking_id: rideId,
-        payment_type: "cash",
-        payment_received: false,
-        payment_status: false,
       };
 
       if (ride.type?.toLowerCase() === "hourly") {
@@ -163,7 +160,7 @@ const DriverRides = () => {
     try {
       await axios.put(
         `${baseURL}/api/driver-rides/${rideId}`,
-        { payment_received: true, payment_status: true },
+        { payment_status: true },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

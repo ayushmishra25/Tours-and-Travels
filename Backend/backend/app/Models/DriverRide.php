@@ -17,7 +17,6 @@ class DriverRide extends Model
         'start_meter',
         'end_meter',
         'payment_type',
-        'payment_received',
         'payment_status',
     ];
 
@@ -33,7 +32,6 @@ class DriverRide extends Model
     }
 
     protected $casts = [
-        'payment_received' => 'boolean',
         'payment_status' => 'boolean',
     ];
 }

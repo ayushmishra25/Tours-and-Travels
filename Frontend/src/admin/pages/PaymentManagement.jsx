@@ -23,34 +23,6 @@ const PaymentManagement = () => {
     fetchPayments();
   }, [baseURL]);
 
-  const togglePaymentToDriver = async (bookingId, currentStatus, paymentType) => {
-    if (paymentType === "upi" && !currentStatus) {
-      try {
-        const response = await fetch(
-          `${baseURL}/api/driver-rides/${bookingId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ payment_received: true }),
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to confirm payment");
-
-        setPayments((prev) =>
-          prev.map((p) =>
-            p.id === bookingId ? { ...p, payment_received: true } : p
-          )
-        );
-      } catch (error) {
-        console.error("Error confirming payment:", error);
-      }
-    }
-  };
-
   const filteredPayments = payments.filter((p) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -100,39 +72,24 @@ const PaymentManagement = () => {
                 <th>Booking Type</th>
                 <th>Payment Type</th>
                 <th>Payment Status</th>
-                <th>Confirm Payment (UPI)</th>
               </tr>
             </thead>
             <tbody>
-              {filteredPayments.map((p) => {
-                const isCash = p.payment_type === "cash";
-                const isUpiPaid =
-                  p.payment_type === "upi" && p.payment_status && p.payment_received;
-
-                return (
-                  <tr key={p.id} style={{ backgroundColor: isUpiPaid ? "#e6ffe6" : "transparent" }}>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.id}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.userName || "N/A"}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.driverContact}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.from}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.to}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.date}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.booking_type}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.payment_type}</td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>
-                      {p.payment_status && p.payment_received ? "✅" : "❌"}
-                    </td>
-                    <td style={{ padding: "0.5rem", border: "1px solid #ddd", textAlign: "center" }}>
-                      <input
-                        type="checkbox"
-                        checked={isUpiPaid}
-                        disabled={isCash || isUpiPaid}
-                        onChange={() => togglePaymentToDriver(p.id, isUpiPaid, p.payment_type)}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
+              {filteredPayments.map((p) => (
+                <tr key={p.id}>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.id}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.userName || "N/A"}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.driverContact}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.from}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.to}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.date}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.booking_type}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.payment_type}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>
+                    {p.payment_status && p.payment_status !== "N/A" ? "✅" : "❌"}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -17,7 +17,7 @@ class EarningController extends Controller
         $ride = DriverRide::where('booking_id', $booking_id)->firstOrFail();
 
         // Ensure payment is marked as completed and received
-        if (!$ride->payment_status || !$ride->payment_received) {
+        if (!$ride->payment_status) {
             return response()->json([
                 'message' => 'Payment is not completed or not received yet.',
             ], 400);

@@ -3,82 +3,120 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const FinalTnC = () => {
-  const navigate     = useNavigate();
+  const navigate = useNavigate();
   const { booking_id } = useParams();
   const [selectedMethod, setSelectedMethod] = useState("");
-  const [isPaid, setIsPaid]               = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
   const [payableAmount, setPayableAmount] = useState(0);
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
-  const RAZOR_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID;
-  const token      = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-  // 1) Fetch how much to pay
+  // On page load: check payment status from /driver-rides
   useEffect(() => {
     if (!booking_id) return;
+
+    // 1. Get payment amount
     axios
       .get(`${BASE_URL}/api/booking/${booking_id}/payment`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => setPayableAmount(res.data.payment))
       .catch(err => console.error("Error fetching payment:", err));
+
+    // 2. Get ride info to determine if already paid
+    axios
+      .get(`${BASE_URL}/api/driver-rides/${booking_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        const ride = res.data.ride;
+        if (ride.payment_status === true) {
+          setIsPaid(true); // hide buttons
+        }
+      })
+      .catch(err => console.error("Error fetching ride info:", err));
   }, [booking_id]);
 
-  // 2) Confirm on your backend once payment is done (for both cash and online)
+  // Confirm on server after cash/upi payment
   const confirmOnServer = async (paymentType, paymentReceived = false) => {
-    await axios.put(
-      `${BASE_URL}/api/driver-rides/${booking_id}`,
-      {
-        booking_id,
-        payment_type: paymentType,
-        payment_received: paymentReceived,
-        payment_status: true
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setIsPaid(true);
-    navigate("/dashboard/bookings");
+    try {
+      await axios.put(
+        `${BASE_URL}/api/driver-rides/${booking_id}`,
+        {
+          booking_id,
+          payment_type: paymentType,
+          payment_status: paymentReceived
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setIsPaid(true);
+      navigate("/dashboard/bookings");
+    } catch (error) {
+      console.error("Error confirming payment on server:", error);
+      alert("Error updating payment status. Please try again.");
+    }
   };
 
-  // 3) Create Razorpay order + open Checkout
+  // Razorpay flow
   const openRazorpay = async () => {
     try {
-      // Create order on your backend
-      const { data: order } = await axios.post(
-        `${BASE_URL}/api/create-order`,
-        { amount: payableAmount }, // your backend multiplies by 100
+      // Step 1: Indicate intent to pay
+      await axios.put(
+        `${BASE_URL}/api/driver-rides/${booking_id}`,
+        {
+          booking_id,
+          payment_type: "upi",
+          payment_status: false
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Step 2: Create order
+      const { data: order } = await axios.post(
+        `${BASE_URL}/api/create-order`,
+        { amount: payableAmount },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Step 3: Configure Razorpay
       const options = {
-        key: RAZOR_KEY,
         amount: order.amount,
         currency: order.currency,
         name: "Sahyog Force",
         description: `Booking #${booking_id}`,
         order_id: order.order_id,
         handler: async (response) => {
-          // 4) Verify & confirm on your server
-          const verifyRes = await axios.post(
-            `${BASE_URL}/api/verify-payment`,
-            {
-              order_id: response.razorpay_order_id,
-              payment_id: response.razorpay_payment_id,
-              signature: response.razorpay_signature
-            },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+          try {
+            const verifyRes = await axios.post(
+              `${BASE_URL}/api/verify-payment`,
+              {
+                order_id: response.razorpay_order_id,
+                payment_id: response.razorpay_payment_id,
+                signature: response.razorpay_signature
+              },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-          if (verifyRes.data.success) {
-            await confirmOnServer("online", true);
-            alert("Payment successful!");
-          } else {
+            if (verifyRes.data.status === "success") {
+              await confirmOnServer("upi", true);
+              await axios.post(`${BASE_URL}/api/finalize-payment/${booking_id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+
+              setIsPaid(true);
+              alert("Payment successful!");
+            } else {
+              alert("Payment verification failed.");
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
             alert("Payment verification failed.");
           }
         },
         prefill: {
-          email: "",    // you can prefill from user profile
-          contact: ""   // prefill phone if you have it
+          email: "",
+          contact: ""
         },
         theme: { color: "#28a745" }
       };
@@ -106,41 +144,48 @@ const FinalTnC = () => {
         <hr />
       </div>
 
-      <div className="proceed-btn-container">
-        <button
-          className="proceed-btn-cash"
-          onClick={() => setSelectedMethod("cash")}
-        >
-          I Agree & Proceed to Cash Payment
-        </button>
-        <button
-          className="proceed-btn-upi"
-          onClick={() => setSelectedMethod("online")}
-        >
-          I Agree & Proceed to Online Payment
-        </button>
-      </div>
+      {!isPaid && (
+        <>
+          <div className="proceed-btn-container">
+            <button
+              className="proceed-btn-cash"
+              onClick={() => setSelectedMethod("cash")}
+            >
+              I Agree & Proceed to Cash Payment
+            </button>
+            <button
+              className="proceed-btn-upi"
+              onClick={() => setSelectedMethod("online")}
+            >
+              I Agree & Proceed to Online Payment
+            </button>
+          </div>
 
-      {selectedMethod === "cash" && !isPaid && (
-        <div className="payment-info">
-          <p className="payment-msg">
-            Please pay <strong>₹{payableAmount}</strong> to the driver in cash.
-          </p>
-          <button className="confirm-btn" onClick={() => confirmOnServer("cash", true)}>
-            Yes, Paid
-          </button>
-        </div>
-      )}
+          {selectedMethod === "cash" && (
+            <div className="payment-info">
+              <p className="payment-msg">
+                Please pay <strong>₹{payableAmount}</strong> to the driver in cash.
+              </p>
+              <button
+                className="confirm-btn"
+                onClick={() => confirmOnServer("cash", false)}
+              >
+                Yes, Paid
+              </button>
+            </div>
+          )}
 
-      {selectedMethod === "online" && !isPaid && (
-        <div className="payment-info">
-          <p className="payment-msg">
-            You will be charged <strong>₹{payableAmount}</strong> online.
-          </p>
-          <button className="confirm-btn" onClick={openRazorpay}>
-            Pay Now
-          </button>
-        </div>
+          {selectedMethod === "online" && (
+            <div className="payment-info">
+              <p className="payment-msg">
+                You will be charged <strong>₹{payableAmount}</strong> online.
+              </p>
+              <button className="confirm-btn" onClick={openRazorpay}>
+                Pay Now
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

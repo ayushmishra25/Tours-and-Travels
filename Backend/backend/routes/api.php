@@ -10,7 +10,7 @@ use App\Http\Controllers\API\DriverController;
 use App\Http\Controllers\API\InvoiceController;
 use App\Http\Controllers\API\DriverRideController;
 use App\Http\Controllers\API\EarningController;
-
+use App\Http\Controllers\API\PaymentController;
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -25,7 +25,6 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
-
     // Auth-related
     Route::get('/profile/{id}', [AuthController::class, 'getUserProfile']);
     Route::put('/profile/{id}', [AuthController::class, 'updateProfile']);
@@ -40,8 +39,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/driver/rides', [BookingController::class, 'getRidesForDriver']);
     Route::get('/admin/driver-rides/{driverId}', [BookingController::class, 'getRidesForDriverById']);
 
-    
-
     // Support-related
     Route::apiResource('support', SupportRequestController::class);
     Route::put('/support-requests/{id}/resolve', [SupportRequestController::class, 'markResolved']);
@@ -55,14 +52,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/invoice/{booking_id}', [InvoiceController::class, 'getInvoice']);
     Route::get('/booking/{booking_id}/payment', [InvoiceController::class, 'getPayment']);
 
-
     // Driver Rides
     Route::apiResource('driver-rides', DriverRideController::class);
 
     // Driver Earning
     Route::post('/finalize-payment/{booking_id}', [EarningController::class, 'finalizePayment']);
     Route::get('/driver-earnings/{user_id}', [EarningController::class, 'getDriverEarnings']);
-
 
     // Driver-related Routes
     Route::prefix('drivers/{id}')->group(function () {
@@ -71,4 +66,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/add-slot', [DriverController::class, 'addTimeSlot']);
         Route::get('/slots', [DriverController::class, 'getTimeSlots']);
     });
+
+    // Payment Related 
+    Route::post('/create-order', [PaymentController::class, 'createOrder']);
+    Route::post('/verify-payment', [PaymentController::class, 'verifyPayment']);
+
 });

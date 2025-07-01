@@ -22,7 +22,6 @@ class DriverRideController extends Controller
             'start_meter' => 'nullable|numeric',
             'end_meter' => 'nullable|numeric',
             'payment_type' => 'nullable|in:cash,upi',
-            'payment_received' => 'nullable|boolean',
             'payment_status' => 'nullable|boolean',
         ]);
 
@@ -32,7 +31,6 @@ class DriverRideController extends Controller
         // If new ride, set default values
         if (!$ride->exists) {
             $ride->payment_type = $validated['payment_type'] ?? 'cash';
-            $ride->payment_received = $validated['payment_received'] ?? false;
             $ride->payment_status = $validated['payment_status'] ?? false;
         }
 
@@ -57,7 +55,7 @@ class DriverRideController extends Controller
             $ride->end_meter = $validated['end_meter'];
         }
 
-        foreach (['payment_type', 'payment_received', 'payment_status'] as $field) {
+        foreach (['payment_type', 'payment_status'] as $field) {
             if (array_key_exists($field, $validated)) {
                 $ride->$field = $validated[$field];
             }
@@ -65,7 +63,7 @@ class DriverRideController extends Controller
 
         $ride->save();
 
-// ------- Payment Calculation -------
+        // ------- Payment Calculation -------
         $updatedPayment = $booking->payment;
 
         // Case 1: Hourly Booking

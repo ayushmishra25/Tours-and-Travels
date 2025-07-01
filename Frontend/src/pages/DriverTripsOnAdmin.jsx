@@ -55,7 +55,7 @@ const DriverTripsOnAdmin = () => {
                 <p><strong>Destination:</strong> {trip.destination}</p>
                 <p><strong>Type:</strong> {trip.type}</p>
                 <p><strong>Fare:</strong> ₹{trip.fare}</p>
-                <p><strong>Payment Received:</strong> {trip.payment_received === true ? "Done" : "Not done"}</p>
+                <p><strong>Payment status:</strong> {trip.payment_status === true ? "Done" : "Not done"}</p>
               </div>
             ))}
           </div>

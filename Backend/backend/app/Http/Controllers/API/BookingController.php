@@ -229,7 +229,6 @@ class BookingController extends Controller
                 'bookings.*',
                 'driver_rides.payment_type',
                 'driver_rides.payment_status',
-                'driver_rides.payment_received',
                 'driver_rides.end_ride',
                 'driver_rides.start_ride',
                 'driver_rides.start_meter',
@@ -256,7 +255,6 @@ class BookingController extends Controller
                 'driverContact' => $booking->driver_contact ?? null,
                 'payment_type' => $booking->payment_type ?? 'N/A',
                 'payment_status' => $booking->payment_status ?? 'N/A',
-                'payment_received' => $booking->payment_received ?? 'N/A',
                 'start_ride' => $booking->start_ride ?? 'N/A',
                 'end_ride' => $booking->end_ride ?? 'N/A',
                 'start_meter' => $booking->start_meter ?? 'N/A',
@@ -322,7 +320,8 @@ class BookingController extends Controller
                 'driver_rides.end_ride',
                 'driver_rides.start_meter',
                 'driver_rides.end_meter',
-                'driver_rides.payment_received',
+                'driver_rides.payment_status',
+                'driver_rides.payment_type'
             )
             ->orderBy('bookings.booking_datetime', 'desc')
             ->get();
@@ -336,7 +335,8 @@ class BookingController extends Controller
                 'destination' => $ride->destination_location,
                 'type'        => $ride->booking_type,
                 'fare'        => $ride->payment ?? 'N/A',
-                'payment_received' => $ride->payment_received ?? 'N/A'
+                'payment_status' => $ride->payment_status ?? 'N/A',
+                'payment_type' => $ride->payment_type ?? 'N/A'
             ];
 
             $type = strtolower($ride->booking_type);
@@ -379,7 +379,7 @@ class BookingController extends Controller
                 'driver_rides.end_ride',
                 'driver_rides.start_meter',
                 'driver_rides.end_meter',
-                'driver_rides.payment_received'
+                'driver_rides.payment_status'
             )
             ->orderBy('bookings.booking_datetime', 'desc')
             ->get()
@@ -392,7 +392,7 @@ class BookingController extends Controller
                     'destination' => $ride->destination_location,
                     'type' => $ride->booking_type,
                     'fare' => $ride->payment ?? 'N/A',
-                    'payment_received' => $ride->payment_received ?? 'N/A',
+                    'payment_status' => $ride->payment_status ?? 'N/A',
                 ];
 
                 if (strtolower($ride->booking_type) === 'on demand') {

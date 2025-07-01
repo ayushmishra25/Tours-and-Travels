@@ -57,7 +57,7 @@ const Bookings = () => {
 
       const ride = response.data.ride;
 
-      if (ride && ride.payment_received) {
+      if (ride && ride.payment_status) {
         navigate(`/invoice/${bookingId}`);
       } else {
         alert("Please complete the payment to view the bill.");
