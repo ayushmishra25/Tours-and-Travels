@@ -8,37 +8,45 @@ const FinalTnC = () => {
   const [selectedMethod, setSelectedMethod] = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const [payableAmount, setPayableAmount] = useState(0);
+  const [bookingType, setBookingType] = useState("");
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const token = localStorage.getItem("token");
 
-  // On page load: check payment status from /driver-rides
+  // Fetch booking and payment status
   useEffect(() => {
     if (!booking_id) return;
 
-    // 1. Get payment amount
-    axios
-      .get(`${BASE_URL}/api/booking/${booking_id}/payment`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => setPayableAmount(res.data.payment))
-      .catch(err => console.error("Error fetching payment:", err));
+    const fetchData = async () => {
+      try {
+        const bookingRes = await axios.get(`${BASE_URL}/api/booking/${booking_id}/payment`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setPayableAmount(bookingRes.data.payment);
+        setBookingType(bookingRes.data.booking_type);
 
-    // 2. Get ride info to determine if already paid
-    axios
-      .get(`${BASE_URL}/api/driver-rides/${booking_id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        const ride = res.data.ride;
-        if (ride.payment_status === true) {
-          setIsPaid(true); // hide buttons
+        const rideRes = await axios.get(`${BASE_URL}/api/driver-rides/${booking_id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (rideRes.data.ride?.payment_status === true) {
+          setIsPaid(true);
         }
-      })
-      .catch(err => console.error("Error fetching ride info:", err));
+      } catch (error) {
+        console.error("Error fetching booking or ride info:", error);
+      }
+    };
+
+    fetchData();
   }, [booking_id]);
 
-  // Confirm on server after cash/upi payment
+  // Auto-select online payment for Monthly booking
+  useEffect(() => {
+    if (bookingType === "Monthly") {
+      setSelectedMethod("online");
+    }
+  }, [bookingType]);
+
   const confirmOnServer = async (paymentType, paymentReceived = false) => {
     try {
       await axios.put(
@@ -58,10 +66,9 @@ const FinalTnC = () => {
     }
   };
 
-  // Razorpay flow
   const openRazorpay = async () => {
     try {
-      // Step 1: Indicate intent to pay
+      // Set payment type and status before starting Razorpay flow
       await axios.put(
         `${BASE_URL}/api/driver-rides/${booking_id}`,
         {
@@ -72,14 +79,12 @@ const FinalTnC = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Step 2: Create order
       const { data: order } = await axios.post(
         `${BASE_URL}/api/create-order`,
         { amount: payableAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Step 3: Configure Razorpay
       const options = {
         amount: order.amount,
         currency: order.currency,
@@ -99,13 +104,9 @@ const FinalTnC = () => {
             );
 
             if (verifyRes.data.status === "success") {
-              await confirmOnServer("upi", true);
-              await axios.post(`${BASE_URL}/api/finalize-payment/${booking_id}`, {}, {
-                headers: { Authorization: `Bearer ${token}` },
-              });
-
               setIsPaid(true);
               alert("Payment successful!");
+              navigate("/dashboard/bookings");
             } else {
               alert("Payment verification failed.");
             }
@@ -147,12 +148,14 @@ const FinalTnC = () => {
       {!isPaid && (
         <>
           <div className="proceed-btn-container">
-            <button
-              className="proceed-btn-cash"
-              onClick={() => setSelectedMethod("cash")}
-            >
-              I Agree & Proceed to Cash Payment
-            </button>
+            {bookingType !== "Monthly" && (
+              <button
+                className="proceed-btn-cash"
+                onClick={() => setSelectedMethod("cash")}
+              >
+                I Agree & Proceed to Cash Payment
+              </button>
+            )}
             <button
               className="proceed-btn-upi"
               onClick={() => setSelectedMethod("online")}

@@ -10,17 +10,20 @@ const DriverRides = () => {
   const token = localStorage.getItem("token");
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
+  const isValid = (value) =>
+    value !== undefined && value !== null && value !== "N/A" && value !== "";
+
   const getStatusFromRide = (ride) => {
     const type = ride.type?.toLowerCase();
-    const isValid = (value) =>
-      value !== undefined && value !== null && value !== "N/A" && value !== "";
 
     if (type === "on demand") {
-      if (ride.payment_status && isValid(ride.end_meter)) return "completed";
+      if (ride.payment_status && isValid(ride.end_meter))
+        return "completed";
       if (isValid(ride.end_meter)) return "ended";
       if (isValid(ride.start_meter)) return "started";
     } else {
-      if (ride.payment_status && isValid(ride.end_ride)) return "completed";
+      if (ride.payment_status && isValid(ride.end_ride))
+        return "completed";
       if (isValid(ride.end_ride)) return "ended";
       if (isValid(ride.start_ride)) return "started";
     }
@@ -109,17 +112,10 @@ const DriverRides = () => {
     if (!ride) return;
 
     try {
-      const payload = {
-        booking_id: rideId,
-      };
+      const payload = { booking_id: rideId };
 
-      if (ride.type?.toLowerCase() === "hourly") {
-        payload.start_ride = null;
-      }
-
-      if (ride.type?.toLowerCase() === "on demand") {
-        payload.start_meter = ride.start_meter;
-      }
+      if (ride.type?.toLowerCase() === "hourly") payload.start_ride = null;
+      if (ride.type?.toLowerCase() === "on demand") payload.start_meter = ride.start_meter;
 
       await axios.put(`${baseURL}/api/driver-rides/${rideId}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
@@ -138,21 +134,20 @@ const DriverRides = () => {
     try {
       const payload = {};
 
-      if (ride.type?.toLowerCase() === "hourly") {
-        payload.end_ride = null;
-      }
-
-      if (ride.type?.toLowerCase() === "on demand") {
-        payload.end_meter = ride.end_meter;
-      }
+      if (ride.type?.toLowerCase() === "hourly") payload.end_ride = null;
+      if (ride.type?.toLowerCase() === "on demand") payload.end_meter = ride.end_meter;
 
       await axios.put(`${baseURL}/api/driver-rides/${rideId}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      if (ride.payment_type !== "cash") {
+        await handlePaymentReceived(rideId);
+      }
+
       await fetchRides();
     } catch (err) {
-      console.error("Failed to end ride:", err.response?.data || err);
+      console.error("Failed to end ride or finalize payment:", err.response?.data || err);
     }
   };
 
@@ -170,7 +165,7 @@ const DriverRides = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      await fetchRides();
+      await fetchRides(); // Refresh to update rideStatus and hide button
     } catch (err) {
       console.error("Failed to finalize payment:", err.response?.data || err);
     }
@@ -207,6 +202,7 @@ const DriverRides = () => {
                     <span><strong>To:</strong> {ride.destination}</span>
                     <span><strong>Type:</strong> {ride.type}</span>
                     <span><strong>Fare:</strong> ₹{ride.fare}</span>
+                    <span><strong>Payment Type:</strong> {ride.payment_type}</span>
                   </div>
 
                   <div className="ride-actions">
@@ -325,9 +321,11 @@ const DriverRides = () => {
                         <p className="gentle-msg end-msg">
                           Please collect ₹{ride.fare} from the customer.
                         </p>
-                        <button className="payment-received" onClick={() => handlePaymentReceived(ride.id)}>
-                          Payment Received
-                        </button>
+                        {ride.payment_type === "cash" && !ride.payment_status && (
+                          <button className="payment-received" onClick={() => handlePaymentReceived(ride.id)}>
+                            Payment Received
+                          </button>
+                        )}
                       </>
                     )}
 

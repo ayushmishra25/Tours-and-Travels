@@ -92,6 +92,7 @@ const InvoicePage = () => {
             <p>Uttam Nagar, New Delhi-110059</p>
             <p>Email: support@sahyogforce.com</p>
             <p>Phone: +91-9220922268</p>
+            <p>GSTIN: 07CGJPG4232R1ZZ</p>
           </div>
 
           <div className="logo-title">
@@ -130,14 +131,14 @@ const InvoicePage = () => {
             </tr>
           </thead>
           <tbody>
-            {/* <tr>
+            <tr>
               <td>Subtotal</td>
               <td>₹{subtotal}</td>
             </tr>
             <tr>
               <td>GST (5%)</td>
               <td>₹{GST}</td>
-            </tr> */}
+            </tr>
             <tr className="total-row">
               <td><strong>Total</strong></td>
               <td><strong>₹{total_amount}</strong></td>

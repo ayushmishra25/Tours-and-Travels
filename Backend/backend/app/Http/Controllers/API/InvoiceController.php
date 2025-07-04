@@ -50,7 +50,8 @@ class InvoiceController extends Controller
         }
 
         return response()->json([
-            'payment' => $booking->payment
+            'payment' => $booking->payment,
+            'booking_type' => $booking->booking_type
         ]);
     }
 }
