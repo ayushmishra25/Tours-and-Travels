@@ -9,34 +9,9 @@ const Support = () => {
   const [message, setMessage] = useState('');
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
-  const [myComplaints, setMyComplaints] = useState([]);
+  const [history, setHistory] = useState([]);
 
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
-
-  useEffect(() => {
-    const fetchMyComplaints = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${baseURL}/api/support`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Accept': 'application/json',
-          },
-        });
-
-        let data = response.data;
-        if (Array.isArray(data[0])) data = data[0];
-
-        const userId = localStorage.getItem('userId');
-        const filtered = data.filter(c => `${c.driver_id}` === `${userId}`);
-        setMyComplaints(filtered);
-      } catch (err) {
-        console.error("Error fetching complaints:", err);
-      }
-    };
-
-    fetchMyComplaints();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,6 +40,7 @@ const Support = () => {
         setFeedback('Your request has been submitted. For the response please check the same page after sometime.');
         setSubject('');
         setMessage('');
+        fetchSupportHistory(); // Refresh history after submission
       }
     } catch (err) {
       console.error(err);
@@ -72,11 +48,30 @@ const Support = () => {
     }
   };
 
+  const fetchSupportHistory = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/api/support`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      let data = response.data;
+      if (Array.isArray(data[0])) data = data[0];
+
+      setHistory(data);
+    } catch (err) {
+      console.error('Error fetching support history:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSupportHistory();
+  }, []);
+
   return (
     <>
-      <Helmet>
-        <title>Support | Driver Panel</title>
-      </Helmet>
       <DriverNavbar />
       <div className="support-container">
         <h1>Driver Support</h1>
@@ -107,13 +102,11 @@ const Support = () => {
           <button type="submit" className="submit-btn">Send Request</button>
         </form>
 
-        {/* Resolution Section */}
-        <div className="resolution-section">
-          <h2>Previous Complaints & Resolutions</h2>
-          {myComplaints.length === 0 ? (
-            <p className="no-complaint-msg">No previous complaints found.</p>
-          ) : (
-            <table className="resolution-table">
+        {/* Support History Section */}
+        {history.length > 0 && (
+          <div className="support-history">
+            <h2>Previous Complaints & Resolutions</h2>
+            <table className="history-table">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -122,17 +115,17 @@ const Support = () => {
                 </tr>
               </thead>
               <tbody>
-                {myComplaints.map((c) => (
-                  <tr key={c.id}>
-                    <td>{c.id}</td>
-                    <td>{c.problem || c.message || '-'}</td>
-                    <td>{c.resolution || 'Pending'}</td>
+                {history.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.problem || item.message || "N/A"}</td>
+                    <td>{item.resolution || "Pending..."}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );
