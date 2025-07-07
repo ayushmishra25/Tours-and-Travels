@@ -6,46 +6,48 @@ const SupportComplaints = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const [responses, setResponses] = useState({}); // for resolution text inputs
+  const [responses, setResponses] = useState({}); // For resolution text inputs
 
   const token = localStorage.getItem("token");
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
+  // ✅ Extracted function so we can reuse it
+  const fetchComplaints = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${baseURL}/api/support`, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : undefined,
+          Accept: "application/json",
+        },
+      });
+
+      let items = response.data;
+      if (Array.isArray(items[0])) items = items[0];
+
+      const normalized = items.map((c) => ({
+        id: c.id,
+        role: c.role === 1 ? "Driver" : "User",
+        name: c.name,
+        email: c.email,
+        contact: c.contact || "",
+        problem: c.problem,
+        date: c.date,
+        resolved: c.resolved,
+        resolution: c.resolution || "",
+        disabled: c.resolved,
+      }));
+
+      setComplaints(normalized);
+    } catch (error) {
+      console.error("Error fetching complaints:", error);
+      setErrorMsg("Failed to load complaints. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchComplaints = async () => {
-      try {
-        const response = await axios.get(`${baseURL}/api/support`, {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : undefined,
-            Accept: "application/json",
-          },
-        });
-
-        let items = response.data;
-        if (Array.isArray(items[0])) items = items[0];
-
-        const normalized = items.map((c) => ({
-          id: c.id,
-          role: c.role === 1 ? "Driver" : "User",
-          name: c.name,
-          email: c.email,
-          contact: c.contact || "",
-          problem: c.problem,
-          date: c.date,
-          resolved: c.resolved,
-          resolution: c.resolution || "",
-          disabled: c.resolved,
-        }));
-
-        setComplaints(normalized);
-      } catch (error) {
-        console.error("Error fetching complaints:", error);
-        setErrorMsg("Failed to load complaints. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchComplaints();
   }, [token]);
 
@@ -65,10 +67,7 @@ const SupportComplaints = () => {
         }
       );
 
-      const updatedComplaints = complaints.map((c) =>
-        c.id === id ? { ...c, resolved: true, disabled: true } : c
-      );
-      setComplaints(updatedComplaints);
+      await fetchComplaints(); // ✅ Refresh data
     } catch (error) {
       console.error("Error updating resolved status:", error);
       setErrorMsg("Failed to update complaint status. Please try again.");
@@ -88,8 +87,8 @@ const SupportComplaints = () => {
 
     try {
       await axios.put(
-        `${baseURL}/api/support`,
-        { id: id, resolution: message },
+        `${baseURL}/api/support/${id}`,
+        { resolution: message },
         {
           headers: {
             Authorization: token ? `Bearer ${token}` : undefined,
@@ -98,11 +97,8 @@ const SupportComplaints = () => {
         }
       );
 
-      const updated = complaints.map((c) =>
-        c.id === id ? { ...c, resolution: message } : c
-      );
-      setComplaints(updated);
       alert("Resolution sent successfully.");
+      await fetchComplaints(); // ✅ Refresh data after PUT
     } catch (error) {
       console.error("Error sending resolution:", error);
       alert("Failed to send resolution. Try again.");
@@ -145,7 +141,7 @@ const SupportComplaints = () => {
                 <td>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <textarea
-                      value={responses[complaint.id] || complaint.resolution || ""}
+                      value={responses[complaint.id] ?? complaint.resolution}
                       onChange={(e) =>
                         handleResponseChange(complaint.id, e.target.value)
                       }

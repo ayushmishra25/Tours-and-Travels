@@ -16,6 +16,7 @@ class CreateSupportRequestsTable extends Migration
             $table->string('subject');
             $table->text('message');
             $table->boolean('is_resolved')->default(false);
+            $table->string('resoultion')->nullable();
             $table->timestamps();
         });
     }

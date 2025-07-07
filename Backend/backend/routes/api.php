@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Support-related
     Route::apiResource('support', SupportRequestController::class);
+    Route::get('/supportdriver', [SupportRequestController::class, 'getSupportDriver']);
     Route::put('/support-requests/{id}/resolve', [SupportRequestController::class, 'markResolved']);
 
     // Driver Details

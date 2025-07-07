@@ -51,7 +51,7 @@ const Support = () => {
   const fetchSupportHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${baseURL}/api/support`, {
+      const response = await axios.get(`${baseURL}/api/supportdriver`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +119,7 @@ const Support = () => {
                   <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.problem || item.message || "N/A"}</td>
-                    <td>{item.resolution || "Pending..."}</td>
+                    <td>{item.resolution || "Admin will update this soon..."}</td>
                   </tr>
                 ))}
               </tbody>

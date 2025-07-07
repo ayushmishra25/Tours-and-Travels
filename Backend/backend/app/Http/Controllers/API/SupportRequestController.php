@@ -36,7 +36,7 @@ class SupportRequestController extends Controller
         $requests = SupportRequest::all();
     
         $data = $requests->map(function ($item) {
-            $user = $item->user; // Automatically fetches user via relationship
+            $user = $item->user; 
     
             return [
                 'id' => $item->id,
@@ -67,6 +67,49 @@ class SupportRequestController extends Controller
 
         return response()->json(['message' => 'Support request updated successfully']);
     }
-    
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'resolution' => 'required|string',
+        ]);
+
+        $supportRequest = SupportRequest::find($id);
+
+        if (!$supportRequest) {
+            return response()->json(['message' => 'Support request not found'], 404);
+        }
+
+        $supportRequest->resolution = $request->input('resolution');
+        $supportRequest->is_resolved = true; 
+        $supportRequest->save();
+
+        return response()->json([
+            'message' => 'Resolution updated successfully.',
+            'data' => $supportRequest,
+        ]);
+    }
+
+    public function getSupportDriver()
+    {
+        $userId = Auth::id();
+
+        // Get only support requests that belong to this user
+        $requests = SupportRequest::where('user_id', $userId)->get();
+
+        $data = $requests->map(function ($item) {
+            $user = $item->user;
+
+            return [
+                'id' => $item->id,
+                'problem' => $item->subject . ' - ' . $item->message,
+                'resolved' => $item->is_resolved,
+                'resolution' => $item->resolution,
+            ];
+        });
+
+        return response()->json($data);
+    }
+
 }
 
