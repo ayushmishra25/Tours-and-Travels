@@ -2314,6 +2314,64 @@ fieldset.account-details legend {
   background: #002244;
 }
 
+.resolution-section {
+  margin-top: 2rem;
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
+}
+
+.resolution-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.resolution-table th,
+.resolution-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+.resolution-table th {
+  background-color: #f2f2f2;
+}
+
+.no-complaint-msg {
+  font-style: italic;
+  color: #888;
+}
+
+@media (max-width: 600px) {
+  .resolution-table,
+  .resolution-table thead,
+  .resolution-table tbody,
+  .resolution-table th,
+  .resolution-table td,
+  .resolution-table tr {
+    display: block;
+  }
+
+  .resolution-table tr {
+    margin-bottom: 1rem;
+  }
+
+  .resolution-table td {
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .resolution-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: bold;
+  }
+}
+
 @media (max-width: 768px) {
   .support-container {
     margin: 1rem;
