@@ -11,6 +11,8 @@ use App\Http\Controllers\API\InvoiceController;
 use App\Http\Controllers\API\DriverRideController;
 use App\Http\Controllers\API\EarningController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\MessageController;
+
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -55,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Driver Rides
     Route::apiResource('driver-rides', DriverRideController::class);
+
+    // Messages
+    Route::apiResource('messages', MessageController::class);
 
     // Driver Earning
     Route::post('/finalize-payment/{booking_id}', [EarningController::class, 'finalizePayment']);

@@ -10,11 +10,13 @@ const DriverDashboard = () => {
   const [isAvailable, setIsAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [messageError, setMessageError] = useState(false);
 
   const headers = {
     Authorization: `Bearer ${token}`,
     Accept: "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   };
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -27,16 +29,30 @@ const DriverDashboard = () => {
         return;
       }
 
+      // ✅ Fetch availability status
       try {
-        // ✅ Get current availability status
-        const availabilityRes = await axios.get(`${BASE_URL}/api/drivers/${driverId}/toggle-availability`, { headers });
+        const availabilityRes = await axios.get(
+          `${BASE_URL}/api/drivers/${driverId}/toggle-availability`,
+          { headers }
+        );
         setIsAvailable(availabilityRes.data.available === "Active");
       } catch (error) {
-        console.error("Error loading dashboard data:", error);
-        setErrorMsg("Failed to load dashboard data. Please try again.");
-      } finally {
-        setIsLoading(false);
+        console.error("Error fetching availability:", error);
+        setErrorMsg("Failed to load availability status. Please try again.");
       }
+
+      // ✅ Fetch admin messages (non-blocking)
+      try {
+        const messagesRes = await axios.get(`${BASE_URL}/api/messages`, {
+          headers,
+        });
+        setMessages(messagesRes.data.messages || []);
+      } catch (error) {
+        console.warn("Failed to load admin messages:", error);
+        setMessageError(true); // Show warning later in the UI
+      }
+
+      setIsLoading(false);
     };
 
     fetchDashboardData();
@@ -51,8 +67,7 @@ const DriverDashboard = () => {
 
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
+          const { latitude, longitude } = position.coords;
 
           try {
             const locationRes = await fetch(
@@ -75,7 +90,9 @@ const DriverDashboard = () => {
         },
         (error) => {
           console.error("Geolocation error:", error);
-          setErrorMsg("Please turn on your location, refresh the page, and try again.");
+          setErrorMsg(
+            "Please turn on your location, refresh the page, and try again."
+          );
         }
       );
     } else {
@@ -110,15 +127,19 @@ const DriverDashboard = () => {
           <p>Loading...</p>
         ) : (
           <>
+            {/* Availability */}
             <section className="availability-section">
               <h2>Availability</h2>
               <button onClick={toggleAvailability} className="availability-btn">
                 {isAvailable ? "Set Unavailable" : "Set Available"}
               </button>
-              <p>Status: <strong>{isAvailable ? "Available" : "Unavailable"}</strong></p>
+              <p>
+                Status:{" "}
+                <strong>{isAvailable ? "Available" : "Unavailable"}</strong>
+              </p>
             </section>
 
-            {/* 🔗 Quick Links Section */}
+            {/* Quick Links */}
             <section className="dashboard-section">
               <h2>Quick Links</h2>
               <div className="cards-grid">
@@ -139,6 +160,36 @@ const DriverDashboard = () => {
                   <p>Reach out for help or resolve issues quickly.</p>
                 </a>
               </div>
+            </section>
+
+            {/* Admin Messages */}
+            <section className="dashboard-section">
+              <h2>Admin Messages</h2>
+              {messageError ? (
+                <p style={{ color: "orange" }}>
+                  Could not load messages. Please try again later.
+                </p>
+              ) : messages.length === 0 ? (
+                <p>No messages at this time.</p>
+              ) : (
+                <ul className="message-list">
+                  {messages.map((msg) => (
+                    <li key={msg.id} className="message-card">
+                      <h4>{msg.title}</h4>
+                      <p>{msg.body}</p>
+                      {msg.location && (
+                        <p className="meta">
+                          <strong>Location:</strong> {msg.location}
+                        </p>
+                      )}
+                      <p className="meta">
+                        <strong>Posted on:</strong>{" "}
+                        {new Date(msg.created_at).toLocaleDateString()}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           </>
         )}

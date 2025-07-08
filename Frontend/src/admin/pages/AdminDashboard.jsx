@@ -2,10 +2,51 @@ import React, { useState } from "react";
 
 const AdminDashboard = () => {
   const [expandedCard, setExpandedCard] = useState(null);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [location, setLocation] = useState("");
+  const [role, setRole] = useState("1");
 
   const toggleCard = (cardTitle) => {
     setExpandedCard(prev => (prev === cardTitle ? null : cardTitle));
   };
+    
+  const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${baseURL}/api/messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title,
+          body,
+          location,
+          role: parseInt(role),
+        }),
+      });
+
+      if (res.ok) {
+        alert("Message sent successfully.");
+        setTitle("");
+        setBody("");
+        setLocation("");
+        setRole("1");
+      } else {
+        const data = await res.json();
+        alert(data.message || "Failed to send message.");
+      }
+    } catch (err) {
+      alert("Error sending message.");
+      console.error(err);
+    }
+  };
+
 
   const tipsData = [
     {
@@ -78,6 +119,40 @@ const AdminDashboard = () => {
             <strong>June 1, 2025:</strong> New build will be up.
           </li>
         </ul>
+      </section>
+
+      {/* ✅ Added Message Form Section Below */}
+      <section className="dashboard-section">
+        <h2>Send Message</h2>
+        <form onSubmit={handleSendMessage} style={{ maxWidth: "400px", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <input
+            type="text"
+            placeholder="Message Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Message Body"
+            value={body}
+            rows={4}
+            onChange={(e) => setBody(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Target Location (e.g., West Delhi)"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="0">Users</option>
+            <option value="1">Drivers</option>
+          </select>
+          <button type="submit" style={{ padding: "10px", background: "#007bff", color: "#fff", border: "none", borderRadius: "5px" }}>
+            Send Message
+          </button>
+        </form>
       </section>
 
       <section className="dashboard-section">
