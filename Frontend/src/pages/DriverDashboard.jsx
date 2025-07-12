@@ -137,6 +137,7 @@ const DriverDashboard = () => {
                 Status:{" "}
                 <strong>{isAvailable ? "Available" : "Unavailable"}</strong>
               </p>
+              <p>Driver Support: +91 9310055869 </p>
             </section>
 
             {/* Quick Links */}

@@ -76,6 +76,8 @@ const Support = () => {
       <div className="support-container">
         <h1>Driver Support</h1>
         <p>If you have any questions or issues, please fill out the form below and our support team will get back to you shortly.</p>
+        <h4>OR</h4>
+        <p style= {{color: '#004B8D'}}> Connect us for any driver support: +91 9310055869 </p>
         {feedback && <p className="feedback-message">{feedback}</p>}
         {error && <p className="error-message">{error}</p>}
         <form className="support-form" onSubmit={handleSubmit}>
