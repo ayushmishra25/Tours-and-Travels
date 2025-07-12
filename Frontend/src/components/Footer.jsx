@@ -9,7 +9,8 @@ function Footer() {
           <h2>Contact Us</h2>
           <p>No.25 block b EXTN, near by dwarka mod metro station,</p>
           <p>uttam Nagar, New Delhi-110059</p>
-          <p>Phone: +91 9220922268</p>
+          <p>Driver Support: +91 9310055869 </p>
+          <p>Cusomer Support: +91 9220922268 </p>
         </div>
         <div className="footer-section">
           <h2>Follow Us</h2>
