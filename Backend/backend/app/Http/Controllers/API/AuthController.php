@@ -89,7 +89,7 @@ class AuthController extends Controller
         };
 
         $detailsUploaded = false;
-        if ($user->role == 1) { // driver role
+        if ($user->role == 1) { 
             $detailsUploaded = DriverDetailsUpload::where('user_id', $user->id)->exists();
         }
 
