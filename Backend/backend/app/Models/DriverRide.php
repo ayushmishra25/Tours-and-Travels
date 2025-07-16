@@ -18,6 +18,7 @@ class DriverRide extends Model
         'end_meter',
         'payment_type',
         'payment_status',
+        'night_charge_applied'
     ];
 
     // Relationships

@@ -30,7 +30,8 @@ class Booking extends Model
         'driver_name',
         'driver_contact',
         'driver_location',
-        'is_selected'
+        'is_selected',
+        'night_charge_applied'
     ];
 
     /**

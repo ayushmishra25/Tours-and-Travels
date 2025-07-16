@@ -32,6 +32,7 @@ class InvoiceController extends Controller
             'service_type' => $booking->booking_type,
             'booking_datetime' => $booking->booking_datetime,
             'payment_date' => $booking->payment_date,
+            'night_charge_applied' => $booking->night_charge_applied,
             'payment' => $totalAmount,
             'subtotal' => $subtotal,
             'GST' => $taxAmount,

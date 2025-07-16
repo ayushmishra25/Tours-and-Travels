@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('payment'); 
             $table->date('start_date')->nullable(); 
             $table->dateTime('booking_datetime')->nullable();
+            $table->boolean('night_charge_applied')->nullable();
             $table->string('driver_name')->nullable();
             $table->string('driver_contact')->nullable();
             $table->string('driver_location')->nullable(); 

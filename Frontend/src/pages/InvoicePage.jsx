@@ -60,13 +60,12 @@ const InvoicePage = () => {
     invoiceNumber,
     invoiceDate,
     paymentMethod,
-    transactionId,
     subtotal,
     GST,
     total_amount,
+    night_charge_applied,
   } = invoiceData;
 
-  // Calculate end date for "Monthly" and "Weekly" service types
   const bookingDateObj = new Date(booking_datetime);
   let endDateObj = null;
 
@@ -139,6 +138,12 @@ const InvoicePage = () => {
               <td>GST (5%)</td>
               <td>₹{GST}</td>
             </tr>
+            {night_charge_applied && (
+              <tr>
+                <td>Night Charges</td>
+                <td>₹200</td>
+              </tr>
+            )}
             <tr className="total-row">
               <td><strong>Total</strong></td>
               <td><strong>₹{total_amount}</strong></td>
