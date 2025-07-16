@@ -1,37 +1,85 @@
 import React from "react";
+import { FaShieldAlt, FaUserTie, FaMoneyBillWave, FaMobileAlt, FaHeadset, FaSlidersH, FaSmile } from "react-icons/fa";
 
-const HowToUse = () => {
+const WhyChoose = () => {
   return (
-    <section className="how-to-use">
-      <h2>How to Use Sahyog Force</h2>
-      <ol>
+    <section className="why-choose">
+      <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
+        <FaShieldAlt size={28} color="#0c3c78" />
+        Why Choose Sahyog Force?
+      </h2>
+
+      <p>
+        In a market saturated with options, Sahyog Force stands out as the definitive choice for discerning individuals and businesses in Delhi NCR. Our commitment to excellence is woven into every aspect of our service. We don't just provide a driver; we deliver profound peace of mind.
+      </p>
+      
+      <ul className="why-list">
         <li>
-          <strong>Create Your Account:</strong> Register on the website by providing your basic information.
+          <FaShieldAlt size={30} color="#002855" />
+          <div>
+            <strong>Ironclad Trust & Verification</strong>
+            <p>
+              Every Sahyog Force driver undergoes a rigorous, multi-stage verification process — including deep background checks, police verification, address validation, and document scrutiny. Your safety is our top priority.
+            </p>
+          </div>
         </li>
         <li>
-          <strong>Log In:</strong> Use your registered email and password to access your account.
+          <FaUserTie size={30} color="#002855" />
+          <div>
+            <strong>Unwavering Professionalism</strong>
+            <p>
+              Our drivers are trained chauffeurs who follow strict codes of conduct. They are courteous, well-groomed, punctual, and possess deep route knowledge across Delhi NCR.
+            </p>
+          </div>
         </li>
         <li>
-          <strong>Explore Our Services:</strong> Browse the variety of services available (e.g., Hourly Driver, Weekly Driver, Ondemand/Daily Driver, Monthly Driver ).
+          <FaMoneyBillWave size={30} color="#002855" />
+          <div>
+            <strong>Absolute Transparency in Pricing</strong>
+            <p>
+              No hidden fees or surge pricing. Our quotes include everything upfront — even driver allowances — ensuring complete financial clarity and predictability.
+            </p>
+          </div>
         </li>
         <li>
-          <strong>Book a Service:</strong> Choose a service and fill in all the necessary details such as location, timing, and requirements.
+          <FaMobileAlt size={30} color="#002855" />
+          <div>
+            <strong>Seamless Digital Experience</strong>
+            <p>
+              Book drivers easily via our mobile app or website. Enjoy real-time tracking, instant confirmations, and smooth payments at your fingertips.
+            </p>
+          </div>
         </li>
         <li>
-          <strong>Track Your Booking:</strong> Visit your dashboard to view your booking status and updates.
+          <FaHeadset size={30} color="#002855" />
+          <div>
+            <strong>24/7 Dedicated Support</strong>
+            <p>
+              Our support team is available around the clock to help you with bookings, emergencies, or any questions you have — anytime, any day.
+            </p>
+          </div>
         </li>
         <li>
-          <strong>Make a Payment:</strong> After booking, you'll be directed to our secure payment gateway for transparency. However, as per our policy, payment is to be made only after the ride.
+          <FaSlidersH size={30} color="#002855" />
+          <div>
+            <strong>Tailored Solutions for Every Need</strong>
+            <p>
+              Whether it’s hourly, daily, weekly, monthly, or outstation needs — we offer flexible, personalized driver solutions for individuals and businesses alike.
+            </p>
+          </div>
         </li>
         <li>
-          <strong>Contact Support:</strong> If you need help or have any queries, reach out to our customer support team.
+          <FaSmile size={30} color="#002855" />
+          <div>
+            <strong>Driver Welfare & Motivation</strong>
+            <p>
+              Happy drivers mean better service. We treat our drivers with fairness, respect, and timely compensation — leading to a loyal, motivated workforce.
+            </p>
+          </div>
         </li>
-        <li>
-          <strong>Provide Feedback:</strong> After service completion, rate your experience to help us improve our offerings.
-        </li>
-      </ol>
+      </ul>
     </section>
   );
 };
 
-export default HowToUse;
+export default WhyChoose;

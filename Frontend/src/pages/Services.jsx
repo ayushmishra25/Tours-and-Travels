@@ -1,36 +1,54 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet";
+import { FaCar, FaClock, FaCalendarWeek, FaRoute, FaGlassCheers } from 'react-icons/fa';
+
+const driverServices = [
+  {
+    icon: <FaCar size={40} color="#002855" />,
+    title: "Permanent / Monthly Driver",
+    description: `Experience the ultimate convenience with a dedicated, professional chauffeur at your service for an entire month or longer. Ideal for busy executives, families, or individuals seeking consistent, reliable transport. Eliminates HR hassles, and we handle driver replacements.`,
+  },
+  {
+    icon: <FaCalendarWeek size={40} color="#002855" />,
+    title: "Weekly Driver",
+    description: `Need consistent support on specific days? Our weekly driver service provides flexibility between hourly and monthly commitments. Ideal for fixed commutes and regular appointments.`,
+  },
+  {
+    icon: <FaClock size={40} color="#002855" />,
+    title: "Hourly Driver",
+    description: `Hire a professional driver for a few hours. Perfect for errands, quick trips, or spontaneous outings. Pay only for the time you need.`,
+  },
+  {
+    icon: <FaRoute size={40} color="#002855" />,
+    title: "Outstation Driver",
+    description: `Planning a trip outside Delhi NCR? Our expert drivers ensure a smooth, safe, and transparent journey in your own vehicle.`,
+  },
+  {
+    icon: <FaGlassCheers size={40} color="#002855" />,
+    title: "Event Driver",
+    description: `Hire a discreet and punctual chauffeur for weddings, parties, or corporate events. Arrive in style and leave the driving to us.`,
+  },
+];
 
 function Services() {
-  const navigate = useNavigate();
-
-  const handleDriverServiceClick = () => {
-    navigate('/dashboard');
-    };
-
   return (
-    
-      <section className="services">
-        <h1>Our Services</h1>
-        <h2>Book Now Pay Later</h2>
-        <div className="service-cards">
-          <div className="service-card" onClick={handleDriverServiceClick} style={{ cursor: 'pointer' }}>
-            <img src="taxi_image.jpg" alt="Driver Services" />
-            <h2>Driver Services</h2>
-            <p>Hire professional drivers on a weekly, hourly, monthly, or daily basis.</p>
+    <section className="services">
+      <Helmet>
+        <title>Driver Services - Sahyog Force</title>
+      </Helmet>
+
+      <h1>Our Driver Services</h1>
+      <div className="service-cards">
+        {driverServices.map((service, index) => (
+          <div key={index} className="service-card">
+            <div>{service.icon}</div>
+            <h2>{service.title}</h2>
+            <p className="description">{service.description}</p>
           </div>
-          <div className="service-card">
-            <img src="cook_image.jpg" alt="Maid Services" />
-            <h2>Maid & Cook Services</h2>
-            <h3>Coming Soon...</h3>
-            <p>Find trusted maids and cooks to assist with household chores and meals.</p>
-          </div>
-        </div>
-      </section>
-    
+        ))}
+      </div>
+    </section>
   );
 }
 
 export default Services;
-

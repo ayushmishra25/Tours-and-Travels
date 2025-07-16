@@ -550,6 +550,20 @@ a[href^="mailto:"]:hover {
       max-width: 90%;
   }
 }
+
+.service-card .description {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.service-card:hover .description {
+  max-height: 500px; /* enough height to show all text */
+  opacity: 1;
+}
+
 /* Register Page CSS */
 
 .register-container {
@@ -2127,6 +2141,125 @@ fieldset.account-details legend {
   font-weight: bold;
 }
 
+.why-choose {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  text-align: left;
+}
+
+.why-choose h2 {
+  color: #002855;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.why-choose p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.why-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.why-list li {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 40, 85, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.why-list li:hover {
+  transform: translateY(-5px);
+}
+
+.why-list li strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #002855;
+}
+
+.why-list li p {
+  margin: 0;
+  color: #555;
+}
+
+/* testimonils */
+.testimonials {
+  background: linear-gradient(to right, #414b58, #f8f9fa);
+  padding: 80px 30px;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.testimonials h2 {
+  font-size: 40px;
+  color: #2c4862;
+  margin-bottom: 50px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.testimonial-card {
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 40, 85, 0.1);
+  position: relative;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e3e8f0;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 40, 85, 0.2);
+}
+
+.testimonial-card .quote {
+  font-size: 17px;
+  color: #444;
+  margin: 20px 0;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 30px;
+}
+
+.testimonial-card .quote::before {
+  content: "“";
+  font-size: 30px;
+  color: #0c3c78;
+  position: absolute;
+  left: 0;
+  top: -5px;
+  font-family: Georgia, serif;
+}
+
+.testimonial-card .author {
+  font-weight: 600;
+  color: #364c66;
+  font-size: 15px;
+  margin-top: 15px;
+  border-top: 1px solid #e0e6ed;
+  padding-top: 10px;
+}
+
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .how-to-use {
@@ -3049,6 +3182,8 @@ fieldset.account-details legend {
     font-size: 0.9rem;
   }
 }
+
+
 /* css for the Invoice page */
 .invoice-wrapper {
   max-width: 800px;

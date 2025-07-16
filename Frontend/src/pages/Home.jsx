@@ -1,6 +1,7 @@
 import React from 'react';
 import Services from './Services';
 import HowToUse from '../components/HowToUse';
+import CustomerReview from './CustomerReview'; // adjust path if needed
 import { Helmet } from "react-helmet";
 
 function Home() {
@@ -35,36 +36,38 @@ function Home() {
 
       {/* Fullscreen Hero Section */}
       <section className="hero-section">
-  <div className="hero-content">
-    <div className="hero-text">
-      <h1>Reliable Drivers at Your Service</h1>
-      <p>Book hourly, daily, or monthly drivers easily with Sahyog Force.</p>
-    </div>
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1>Reliable Drivers at Your Service</h1>
+            <p>Book hourly, daily, or monthly drivers easily with Sahyog Force.</p>
+          </div>
 
-    <form className="booking-form-home">
-      <select name="serviceType" required>
-        <option value="">Select Service</option>
-        <option value="hourly">Hourly</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-        <option value="ondemand">On Demand</option>
-        <option value="event">Event</option>
-      </select>
-      <input type="text" placeholder="From" required />
-      <input type="text" placeholder="To" required />
-      <input type="date" placeholder="Date"required />
-      <input type="time" placeholder="Time"required />
-      <button type="submit">Book Now</button>
-    </form>
-  </div>
-</section>
-
+          <form className="booking-form-home">
+            <select name="serviceType" required>
+              <option value="">Select Service</option>
+              <option value="hourly">Hourly</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="ondemand">On Demand</option>
+              <option value="event">Event</option>
+            </select>
+            <input type="text" placeholder="From" required />
+            <input type="text" placeholder="To" required />
+            <input type="date" placeholder="Date" required />
+            <input type="time" placeholder="Time" required />
+            <button type="submit">Book Now</button>
+          </form>
+        </div>
+      </section>
 
       {/* Services Section */}
       <Services />
 
       {/* How to Use Section */}
       <HowToUse />
+
+      {/* Customer Reviews Section */}
+      <CustomerReview />
     </>
   );
 }
