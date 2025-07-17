@@ -1,11 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Services from './Services';
 import HowToUse from '../components/HowToUse';
 import CustomerReview from './CustomerReview'; // adjust path if needed
-import { Helmet } from "react-helmet";
 import RatingsAndFaqs from './RatingsAndFaqs';
+import { Helmet } from "react-helmet";
 
 function Home() {
+  const navigate = useNavigate();
+  const [serviceType, setServiceType] = useState('');
+
+  const handleBooking = (e) => {
+    e.preventDefault();
+    if (!serviceType) {
+      alert("Please select a service type.");
+      return;
+    }
+
+    let path = '/';
+    switch (serviceType) {
+      case 'hourly':
+        path = '/hourly-driver';
+        break;
+      case 'weekly':
+        path = '/weekly-driver';
+        break;
+      case 'monthly':
+        path = '/monthly-driver';
+        break;
+      case 'ondemand':
+        path = '/ondemand-driver';
+        break;
+      case 'event':
+        path = '/hourly-driver'; // event treated same as hourly
+        break;
+      default:
+        path = '/';
+    }
+
+    navigate(path);
+  };
+
   return (
     <>
       {/* SEO Meta Tags */}
@@ -43,8 +78,14 @@ function Home() {
             <p>Book hourly, daily, or monthly drivers easily with Sahyog Force.</p>
           </div>
 
-          <form className="booking-form-home">
-            <select name="serviceType" required>
+          <form className="booking-form-home" onSubmit={handleBooking}>
+            <h2>Book a Driver</h2>
+            <select
+              name="serviceType"
+              value={serviceType}
+              onChange={(e) => setServiceType(e.target.value)}
+              required
+            >
               <option value="">Select Service</option>
               <option value="hourly">Hourly</option>
               <option value="weekly">Weekly</option>
@@ -52,10 +93,6 @@ function Home() {
               <option value="ondemand">On Demand</option>
               <option value="event">Event</option>
             </select>
-            <input type="text" placeholder="From" required />
-            <input type="text" placeholder="To" required />
-            <input type="date" placeholder="Date" required />
-            <input type="time" placeholder="Time" required />
             <button type="submit">Book Now</button>
           </form>
         </div>
