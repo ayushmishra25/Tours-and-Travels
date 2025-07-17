@@ -3,6 +3,7 @@ import Services from './Services';
 import HowToUse from '../components/HowToUse';
 import CustomerReview from './CustomerReview'; // adjust path if needed
 import { Helmet } from "react-helmet";
+import RatingsAndFaqs from './RatingsAndFaqs';
 
 function Home() {
   return (
@@ -68,6 +69,8 @@ function Home() {
 
       {/* Customer Reviews Section */}
       <CustomerReview />
+
+      <RatingsAndFaqs />
     </>
   );
 }

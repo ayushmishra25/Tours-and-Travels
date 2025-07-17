@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaQuoteLeft } from "react-icons/fa";
 
 const testimonials = [
@@ -51,13 +51,17 @@ const testimonials = [
 ];
 
 const CustomerReviews = () => {
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleTestimonials = showAll ? testimonials : testimonials.slice(0, 3);
+
   return (
     <section className="testimonials">
       <h2>Hear From Our Valued Clients</h2>
       <div className="testimonial-grid">
-        {testimonials.map((t, idx) => (
+        {visibleTestimonials.map((t, idx) => (
           <div key={idx} className="testimonial-card">
-            <FaQuoteLeft size={20} color="#002855" />
+            <FaQuoteLeft size={18} color="#002855" />
             <p className="quote">"{t.quote}"</p>
             <p className="author">
               — {t.name}
@@ -66,6 +70,11 @@ const CustomerReviews = () => {
             </p>
           </div>
         ))}
+      </div>
+      <div className="show-more-wrapper">
+        <button className="show-more-btn" onClick={() => setShowAll(!showAll)}>
+          {showAll ? "Show Less" : "See More"}
+        </button>
       </div>
     </section>
   );

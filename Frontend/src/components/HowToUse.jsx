@@ -4,6 +4,7 @@ import { FaShieldAlt, FaUserTie, FaMoneyBillWave, FaMobileAlt, FaHeadset, FaSlid
 const WhyChoose = () => {
   return (
     <section className="why-choose">
+      
       <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
         <FaShieldAlt size={28} color="#0c3c78" />
         Why Choose Sahyog Force?

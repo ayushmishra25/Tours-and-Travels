@@ -83,7 +83,7 @@ const DriverJobDetails = () => {
           <li><strong>On-Demand Bookings</strong>: Round trips for 1 to 12 hours or one-way trips of 1 to 80 KM.</li>
         </ul>
         <p>
-          The company commission on local and outstation bookings is 15% commission + 5% GST . Overtime is also charged, and a night charge of Rs 300 is applied for driving at night.
+          The company commission on local and outstation bookings is 15% commission + 5% GST. Overtime is also charged, and a night charge of Rs 300 is applied for driving at night.
         </p>
       </section>
 
@@ -95,6 +95,58 @@ const DriverJobDetails = () => {
         <p>
           Customer feedback is collected after every booking. Poor feedback may result in temporary or permanent deactivation of your driver ID. Additionally, if a majority of your accepted bookings are canceled, you may experience delays of up to 15 minutes for subsequent bookings.
         </p>
+      </section>
+
+      <section className="driver-journey">
+        <h2>The Sahyog Force Driver Journey: Cultivating Professionalism</h2>
+        <p>
+          At Sahyog Force, we don't just hire drivers; we cultivate professional chauffeurs. Our comprehensive timeline ensures that every driver is not only skilled but also embodies the values of trust, safety, and exceptional service that define our brand.
+        </p>
+        <ol>
+          <li><strong>Initial Application & Screening (Day 1-3):</strong>
+            <ul>
+              <li><strong>Process:</strong> Prospective drivers submit their detailed applications online or in person. Our HR team conducts an initial review of qualifications, driving experience, and basic documentation.</li>
+              <li><strong>Goal:</strong> To identify candidates who meet our fundamental criteria and possess a foundational driving background.</li>
+            </ul>
+          </li>
+          <li><strong>Rigorous Vetting & Verification (Day 4-10):</strong>
+            <ul>
+              <li><strong>Process:</strong> This critical phase involves comprehensive background checks (criminal records, police verification), thorough validation of all submitted documents (driving license, Aadhaar, PAN, address proof), and professional reference checks.</li>
+              <li><strong>Goal:</strong> To establish absolute trust and ensure the integrity and safety of every potential Sahyog Force driver.</li>
+            </ul>
+          </li>
+          <li><strong>Advanced Driving & Skill Assessment (Day 11-15):</strong>
+            <ul>
+              <li><strong>Process:</strong> Candidates undergo a practical driving test conducted by certified instructors, evaluating defensive driving techniques, adherence to traffic laws, navigation proficiency in Delhi NCR's complex road network, and vehicle handling across various conditions.</li>
+              <li><strong>Goal:</strong> To confirm superior driving skills and adaptability, ensuring safe and efficient journeys for clients.</li>
+            </ul>
+          </li>
+          <li><strong>Comprehensive Professional Training (Day 16-20):</strong>
+            <ul>
+              <li><strong>Process:</strong> Selected drivers participate in mandatory training modules covering:
+                <ul>
+                  <li>Client Etiquette & Communication: Mastering respectful interaction, professional greetings, and effective communication.</li>
+                  <li>Route Mastery & Efficiency: In-depth knowledge of Delhi NCR routes, traffic patterns, and optimal routing strategies.</li>
+                  <li>Safety & Emergency Protocols: First aid basics, vehicle inspection, and handling unforeseen situations calmly.</li>
+                  <li>Discretion & Confidentiality: Understanding client privacy and maintaining professional boundaries.</li>
+                </ul>
+              </li>
+              <li><strong>Goal:</strong> To instill the Sahyog Force standards of professionalism, customer service, and safety beyond basic driving.</li>
+            </ul>
+          </li>
+          <li><strong>Onboarding & First Assignment (Day 21-25):</strong>
+            <ul>
+              <li><strong>Process:</strong> Successful candidates are formally onboarded into the Sahyog Force system. They receive their unique driver ID, platform training, and are then assigned their first client interactions under supervision.</li>
+              <li><strong>Goal:</strong> To integrate drivers smoothly into our operational flow and provide them with real-world experience under guidance.</li>
+            </ul>
+          </li>
+          <li><strong>Continuous Professional Development & Feedback (Ongoing):</strong>
+            <ul>
+              <li><strong>Process:</strong> The journey doesn't end. Drivers receive ongoing training refreshers, performance evaluations based on client feedback, and opportunities for specialized training (e.g., luxury vehicle handling, multi-lingual skills).</li>
+              <li><strong>Goal:</strong> To ensure continuous improvement, maintain high service standards, and foster a culture of excellence and growth within the Sahyog Force driver community.</li>
+            </ul>
+          </li>
+        </ol>
       </section>
 
       <div className="agreement-buttons">

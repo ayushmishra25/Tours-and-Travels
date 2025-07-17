@@ -6,7 +6,7 @@ const driverServices = [
   {
     icon: <FaCar size={40} color="#002855" />,
     title: "Permanent / Monthly Driver",
-    description: `Experience the ultimate convenience with a dedicated, professional chauffeur at your service for an entire month or longer. Ideal for busy executives, families, or individuals seeking consistent, reliable transport. Eliminates HR hassles, and we handle driver replacements.`,
+    description: `Experience the ultimate convenience with a dedicated, professional chauffeur at your service for an entire month or longer. Ideal for busy executives, families, or individuals. `,
   },
   {
     icon: <FaCalendarWeek size={40} color="#002855" />,
