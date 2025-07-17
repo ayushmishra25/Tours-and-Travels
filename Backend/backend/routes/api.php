@@ -64,6 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Driver Earning
     Route::post('/finalize-payment/{booking_id}', [EarningController::class, 'finalizePayment']);
     Route::get('/driver-earnings/{user_id}', [EarningController::class, 'getDriverEarnings']);
+    Route::post('/admin-confirm-driver-payment/{earning_id}', [EarningController::class, 'adminConfirmDriverPayment']);
+    Route::post('/driver-settle-request', [EarningController::class, 'driverSettleRequest']);
+    Route::get('/driver-earning-records/{user_id}', [EarningController::class, 'getDriverEarningRecords']);
 
     // Driver-related Routes
     Route::prefix('drivers/{id}')->group(function () {

@@ -14,27 +14,22 @@ class EarningController extends Controller
     // POST /finalize-payment/{booking_id}
     public function finalizePayment(Request $request, $booking_id)
     {
-        // Step 1: Find the ride (or fail)
         $ride = DriverRide::where('booking_id', $booking_id)->first();
 
         if (!$ride) {
-            // No driver_rides record? Assume cash flow
             return $this->handleCashFlow($booking_id);
         }
 
-        // Step 2: Check if payment completed
         if (!$ride->payment_status) {
             return response()->json([
                 'message' => 'Payment is not completed or not received yet.',
             ], 400);
         }
 
-        // Step 3: If UPI and payment done => only UPI logic
         if ($ride->payment_type === 'upi') {
             return $this->handleUPIFlow($booking_id, $ride);
         }
 
-        // Step 4: If anything else (e.g., cash), fallback to cash flow
         return $this->handleCashFlow($booking_id, $ride);
     }
 
@@ -64,6 +59,9 @@ class EarningController extends Controller
             'company_share' => 0,
             'comapny_earning' => $companyEarning,
             'driver_share' => $driverShare,
+            'company_settled' => true,
+            'company_settled_at' => now(),
+            'admin_approved' => true,
         ]);
 
         return response()->json([
@@ -103,10 +101,13 @@ class EarningController extends Controller
             'company_share' => $companyShare,
             'comapny_earning' => 0,
             'driver_share' => 0,
+            'driver_paid' => false,
+            'admin_approved' => false,
+            'driver_settled' => false,
         ]);
 
         return response()->json([
-            'message' => 'Earnings finalized via Cash.',
+            'message' => 'Earnings finalized via Cash. Awaiting driver settlement.',
             'user_id' => $driver->id,
             'payment_type' => 'cash',
             'driver_earning' => $driverEarning,
@@ -135,6 +136,64 @@ class EarningController extends Controller
             'total_company_earning' => round($totals->total_company_earning, 2),
             'total_driver_share' => round($totals->total_driver_share, 2),
         ]);
+    }
+
+    // POST /driver-settle-request
+    public function driverSettleRequest(Request $request)
+    {
+        $request->validate([
+            'earning_id' => 'required|exists:driver_earnings,id',
+        ]);
+
+        $earning = Earning::findOrFail($request->earning_id);
+
+        if ($earning->driver_paid) {
+            return response()->json(['message' => 'Already marked as paid by driver.'], 400);
+        }
+
+        $earning->driver_paid = true;
+        $earning->driver_paid_at = now();
+        $earning->save();
+
+        return response()->json(['message' => 'Marked as paid. Pending admin approval.']);
+    }
+
+    // admin-confirm-driver-payment
+    public function adminConfirmDriverPayment(Request $request)
+    {
+        $request->validate([
+            'earning_id' => 'required|exists:driver_earnings,id',
+        ]);
+
+        $earning = Earning::findOrFail($request->earning_id);
+
+        // 🛠 Only require driver_paid for CASH payments
+        if ($earning->payment_type === 'cash' && !$earning->driver_paid) {
+            return response()->json(['message' => 'Driver has not marked as paid yet.'], 400);
+        }
+
+        if ($earning->admin_approved) {
+            return response()->json(['message' => 'Already approved by admin.'], 400);
+        }
+
+        $earning->admin_approved = true;
+        $earning->admin_approved_at = now();
+        $earning->driver_settled = true;
+        $earning->driver_settled_at = now();
+        $earning->save();
+
+        return response()->json(['message' => 'Driver payment confirmed and settled.']);
+    }
+
+    // Earning Records
+    public function getDriverEarningRecords($user_id)
+    {
+        $records = Earning::where('user_id', $user_id)
+            ->select('id', 'booking_id', 'payment_type', 'driver_earning', 'company_share', 'comapny_earning', 'driver_share', 'driver_paid', 'admin_approved', 'driver_settled', 'company_settled')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json(['records' => $records]);
     }
 
 }

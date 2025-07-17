@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -15,21 +14,14 @@ const DriverEarningOnAdmin = () => {
   useEffect(() => {
     const fetchEarnings = async () => {
       try {
-        const res = await axios.get(`${baseURL}/api/driver-earnings/${driverId}`, {
+        const res = await axios.get(`${baseURL}/api/driver-earning-records/${driverId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const data = res.data;
-        // Convert single-object response to array
-        const earningsArray = Array.isArray(data)
-          ? data
-          : data
-          ? [data]
-          : [];
-
-        setEarningsList(earningsArray);
+        const records = res.data?.records || [];
+        setEarningsList(records);
       } catch (err) {
-        console.error("Error fetching drivers' earnings:", err);
+        console.error("Error fetching driver's earnings:", err);
       } finally {
         setLoading(false);
       }
@@ -37,6 +29,27 @@ const DriverEarningOnAdmin = () => {
 
     if (token && driverId) fetchEarnings();
   }, [token, driverId, baseURL]);
+
+  const confirmDriverPayment = async (earningId) => {
+    try {
+      const res = await axios.post(
+        `${baseURL}/api/admin-confirm-driver-payment/${earningId}`,
+        { earning_id: earningId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert(res.data.message || "Driver payment confirmed.");
+      // Refresh the list
+      const updatedList = earningsList.map((e) =>
+        e.id === earningId ? { ...e, admin_approved: true, driver_settled: true } : e
+      );
+      setEarningsList(updatedList);
+    } catch (err) {
+      console.error("Admin confirm error:", err);
+      alert(err.response?.data?.message || "Failed to confirm payment.");
+    }
+  };
 
   return (
     <>
@@ -56,21 +69,38 @@ const DriverEarningOnAdmin = () => {
             <table className="earnings-table">
               <thead>
                 <tr>
-                  <th>Driver ID</th>
+                  <th>ID</th>
+                  <th>Booking ID</th>
+                  <th>Type</th>
                   <th>Cash to Driver</th>
                   <th>UPI to Company</th>
-                  <th>Company Share (20%)</th>
-                  <th>Driver Share (80%)</th>
+                  <th>Company Share</th>
+                  <th>Driver Share</th>
+                  <th>Driver Paid?</th>
+                  <th>Admin Approved?</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {earningsList.map((d, idx) => (
-                  <tr key={d.user_id || idx}>
-                    <td>{d.driver_name || d.user_id}</td>
-                    <td>₹{(d.total_driver_earning ?? 0).toFixed(2)}</td>
-                    <td>₹{(d.total_company_earning ?? 0).toFixed(2)}</td>
-                    <td>₹{(d.total_company_share ?? 0).toFixed(2)}</td>
-                    <td>₹{(d.total_driver_share ?? 0).toFixed(2)}</td>
+                {earningsList.map((e) => (
+                  <tr key={e.id}>
+                    <td>{e.id}</td>
+                    <td>{e.booking_id}</td>
+                    <td>{e.payment_type}</td>
+                    <td>₹{Number(e.driver_earning ?? 0).toFixed(2)}</td>
+                    <td>₹{Number(e.comapny_earning ?? 0).toFixed(2)}</td> {/* typo kept as-is */}
+                    <td>₹{Number(e.company_share ?? 0).toFixed(2)}</td>
+                    <td>₹{Number(e.driver_share ?? 0).toFixed(2)}</td>
+                    <td>{e.driver_paid ? "✅" : "❌"}</td>
+                    <td>{e.admin_approved ? "✅" : "❌"}</td>
+                    <td>
+                      {((e.payment_type === "cash" && e.driver_paid && !e.admin_approved) ||
+                        (e.payment_type === "upi" && !e.admin_approved)) && (
+                        <button onClick={() => confirmDriverPayment(e.id)}>
+                          {e.payment_type === "upi" ? "Approve UPI" : "Confirm Payment"}
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

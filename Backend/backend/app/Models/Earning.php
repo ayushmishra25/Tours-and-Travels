@@ -19,8 +19,16 @@ class Earning extends Model
         'payment_type',
         'driver_earning',
         'company_share',
-        'comapny_earning', // Note: There's a typo in the column name — see note below
+        'comapny_earning',
         'driver_share',
+        'driver_paid',
+        'driver_paid_at',
+        'admin_approved',
+        'admin_approved_at',
+        'driver_settled',
+        'driver_settled_at',
+        'company_settled',
+        'company_settled_at',
     ];
 
     // Relationships

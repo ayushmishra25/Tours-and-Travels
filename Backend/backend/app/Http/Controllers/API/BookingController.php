@@ -217,6 +217,7 @@ class BookingController extends Controller
                 'time' => $booking->booking_datetime ? date('H:i', strtotime($booking->booking_datetime)) : null,
                 'booking_type' => $booking->booking_type,
                 'from' => $booking->source_location,
+                'payment' => $booking->payment,
                 'vehicle_details' => $booking->vehicle_details,
                 'to' => $booking->destination_location,
                 'hours' => $booking->hours ?? null,

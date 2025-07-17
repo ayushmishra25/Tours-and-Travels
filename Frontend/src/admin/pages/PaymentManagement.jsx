@@ -33,6 +33,7 @@ const PaymentManagement = () => {
       (p.to || "").toLowerCase().includes(term) ||
       (p.date || "").toLowerCase().includes(term) ||
       (p.booking_type || "").toLowerCase().includes(term) ||
+      (p.payment || "").toLowerCase().includes(term) ||
       (p.payment_type || "").toLowerCase().includes(term) ||
       String(p.payment_status).toLowerCase().includes(term)
     );
@@ -70,6 +71,7 @@ const PaymentManagement = () => {
                 <th>Destination</th>
                 <th>Date</th>
                 <th>Booking Type</th>
+                <th>Payment</th>
                 <th>Payment Type</th>
                 <th>Payment Status</th>
               </tr>
@@ -84,6 +86,7 @@ const PaymentManagement = () => {
                   <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.to}</td>
                   <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.date}</td>
                   <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.booking_type}</td>
+                  <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.payment}</td>
                   <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>{p.payment_type}</td>
                   <td style={{ padding: "0.5rem", border: "1px solid #ddd" }}>
                     {p.payment_status && p.payment_status !== "N/A" ? "✅" : "❌"}
