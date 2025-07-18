@@ -74,12 +74,12 @@ function Home() {
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
-            <h1>Reliable Drivers at Your Service</h1>
-            <p>Book hourly, daily, or monthly drivers easily with Sahyog Force.</p>
+            <h2>“Let Our Driver take the wheel, Just Sit, Relax, and Enjoy your own car.”</h2>
+            <p>Book Hourly, Daily, or Monthly drivers easily with Sahyog Force.</p>
           </div>
 
           <form className="booking-form-home" onSubmit={handleBooking}>
-            <h2>Book a Driver</h2>
+            <h2>Book Now Pay Later </h2>
             <select
               name="serviceType"
               value={serviceType}
