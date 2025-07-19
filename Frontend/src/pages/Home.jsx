@@ -74,7 +74,7 @@ function Home() {
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
-            <h1>"Driven by trust powered by professionalism."</h1>
+            <h1>"Driven by trust powered by professionals."</h1>
             <p>Book Hourly, Daily, or Monthly drivers easily with Sahyog Force.</p>
           </div>
 

@@ -120,7 +120,6 @@ function About() {
           <p className="about-text-about">Your safety is our top priority. Every Sahyog Force driver undergoes a 6-step selection:</p>
           <ol className="verification-list-about">
             <li><strong>Documents Review:</strong> IDs, license, vehicle, address proof.</li>
-            <li><strong>Background Check:</strong> Verified via police/criminal screening.</li>
             <li><strong>Driving Test:</strong> Practical assessments.</li>
             <li><strong>Psychometric Test:</strong> Behavior, patience, and mindset checks.</li>
             <li><strong>Training:</strong> Etiquette, navigation, emergency handling.</li>

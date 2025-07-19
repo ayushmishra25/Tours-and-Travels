@@ -111,7 +111,7 @@ const DriverJobDetails = () => {
           </li>
           <li><strong>Rigorous Vetting & Verification (Day 4-10):</strong>
             <ul>
-              <li><strong>Process:</strong> This critical phase involves comprehensive background checks (criminal records, police verification), thorough validation of all submitted documents (driving license, Aadhaar, PAN, address proof), and professional reference checks.</li>
+              <li><strong>Process:</strong> This critical phase involves comprehensive background checks, thorough validation of all submitted documents (driving license, Aadhaar, PAN, address proof), and professional reference checks.</li>
               <li><strong>Goal:</strong> To establish absolute trust and ensure the integrity and safety of every potential Sahyog Force driver.</li>
             </ul>
           </li>
