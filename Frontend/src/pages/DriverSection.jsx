@@ -51,7 +51,7 @@ const DriverSection = () => {
 
         <div className="driver-card p-4 border rounded-lg shadow hover:shadow-lg transition">
           <FaCarSide className="text-3xl text-orange-500 mb-2" />
-          <h2 className="text-xl font-semibold">Ondemand Driver</h2>
+          <h2 className="text-xl font-semibold">One-Way Driver</h2>
           <p className="mb-4">Book a driver as per your need.</p>
           <button
             className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"

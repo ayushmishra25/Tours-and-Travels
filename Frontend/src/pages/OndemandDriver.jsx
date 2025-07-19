@@ -176,10 +176,10 @@ const OndemandDriver = () => {
       <DashboardNavbar />
       <div className="ondemand-driver-container">
         <Helmet>
-          <title>On-Demand Driver Service</title>
+          <title>One-Way Driver Service</title>
         </Helmet>
 
-        <h1>On-Demand Driver Service</h1>
+        <h1>One-Way Driver Service</h1>
         <div className="booking-form">
           <div className="left-section">
             <label>
@@ -269,7 +269,7 @@ const OndemandDriver = () => {
             </button>
 
             <p className="price-note">
-              Please note: On-demand services may have surge pricing during peak
+              Please note: One-way services may have surge pricing during peak
               hours. Extra charges for food, accommodation, and night stays may
               apply. An additional service charge of ₹120 per hour will apply
               for extended hours. For services provided after 10:00 PM, a night

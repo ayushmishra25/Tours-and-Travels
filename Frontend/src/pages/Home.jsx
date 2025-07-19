@@ -52,7 +52,7 @@ function Home() {
         />
         <meta
           name="keywords"
-          content="driver hire India, hourly driver booking, monthly drivers, on-demand drivers, Sahyog Force, professional drivers, driver services, book drivers online, driver with GST bill"
+          content="driver hire India, hourly driver booking, monthly drivers, on-demand drivers, Sahyog Force, professional drivers, driver services, book drivers online, driver with GST bill,permanent driver Delhi, monthly driver Delhi, dedicated driver service NCR, personal chauffeur Delhi, long-term driver hire, weekly driver Delhi, part-time driver NCR, consistent driver service, scheduled driver hire,  hourly driver Delhi, driver on call Delhi NCR, on-demand driver service, quick driver hire, outstation driver Delhi, long-distance driver NCR, reliable outstation travel, safe highway driver,  event driver Delhi, wedding driver NCR, party chauffeur service, special occasion transport."
         />
         <meta name="author" content="Sahyog Force Team" />
 
@@ -90,7 +90,7 @@ function Home() {
               <option value="hourly">Hourly</option>
               <option value="weekly">Weekly</option>
               <option value="monthly">Monthly</option>
-              <option value="ondemand">On Demand</option>
+              <option value="ondemand">One-Way</option>
               <option value="event">Event</option>
             </select>
             <button type="submit">Book Now</button>

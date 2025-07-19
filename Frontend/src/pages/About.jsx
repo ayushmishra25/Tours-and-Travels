@@ -92,7 +92,7 @@ function About() {
                 <li><em>Hourly:</em> 12 hrs / 80 km. ₹120/hr overtime, ₹200 night charge.</li>
                 <li><em>Weekly:</em> Regular daily needs.</li>
                 <li><em>Monthly:</em> Long-term contracts.</li>
-                <li><em>Outstation:</em> Transparent city-to-city pricing.</li>
+                <li><em>One-Way:</em> Transparent city-to-city pricing.</li>
               </ul>
             </div>
 

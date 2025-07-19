@@ -24,7 +24,7 @@ const driverServices = [
   },
   {
     icon: <FaRoute size={40} color="#ffd700" />,
-    title: "Outstation Driver",
+    title: "One-Way Driver",
     description: `Planning a trip outside Delhi NCR? Our expert drivers ensure a smooth, safe, and transparent journey in your own vehicle.`,
     path: "/ondemand-driver",
   },
