@@ -9,7 +9,7 @@ import {
 const faqData = [
    {
     q: "How does Sahyog Force ensure driver safety and reliability?",
-    a: `We prioritize your peace of mind by implementing a robust, multi-layered verification system for all our drivers. This includes comprehensive background checks, rigorous police verification, in-depth evaluations of driving proficiency, and ongoing performance monitoring to consistently uphold our high standards. All our drivers are professionally trained in defensive driving and customer etiquette.`,
+    a: `We prioritize your peace of mind by implementing a robust, multi-layered verification system for all our drivers. This includes comprehensive background checking, in-depth evaluations of driving proficiency, and ongoing performance monitoring to consistently uphold our high standards. All our drivers are professionally trained in defensive driving and customer etiquette.`,
   },
   {
     q: "What is the difference between your Hourly and Monthly driver services?",
@@ -22,7 +22,7 @@ Monthly Driver: Provides you with a dedicated driver for an entire month or long
   },
   {
     q: "How do I book a driver with Sahyog Force?",
-    a: `You can easily book a driver through our user-friendly mobile application (available on Android and iOS) or directly via our website. Simply select your service type, date, time, and location, and we'll confirm your booking instantly.`,
+    a: `You can easily book a driver through directly our website. Simply select your service type, date, time, and location, and we'll confirm your booking instantly.`,
   },
   {
     q: "Can I request the same driver for repeat bookings?",

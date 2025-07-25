@@ -48,7 +48,7 @@ function Footer() {
             <li><Link to="/weekly-driver">Weekly Driver</Link></li>
             <li><Link to="/monthly-driver">Monthly Driver</Link></li>
             <li><Link to="/ondemand-driver">On-Demand Driver</Link></li>
-            <li><Link to="/hourly-driver">Event Driver Driver</Link></li>
+            <li><Link to="/hourly-driver">Event Driver</Link></li>
           </ul>
         </div>
 
