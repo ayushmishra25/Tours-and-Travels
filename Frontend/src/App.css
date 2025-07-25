@@ -5159,3 +5159,32 @@ h3 {
     font-size: 13px;
   }
 }
+
+/* Privacy And Policy Page */
+.privacy-policy-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.privacy-policy-container h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.privacy-policy-container h2 {
+  margin-top: 1.5rem;
+  color: #002855;
+}
+
+.privacy-policy-container ul {
+  margin-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.privacy-policy-container p {
+  margin: 0.5rem 0;
+}

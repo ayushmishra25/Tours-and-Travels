@@ -69,6 +69,7 @@ function Footer() {
       <div className="footer-bottom">
         <p>© 2025 Sahyog Force. All rights reserved.</p>
         <p><Link to="/terms-and-conditions" className="terms-link">Terms & Conditions</Link></p>
+        <p><Link to="/privacy-and-policy" className="terms-link">Privacy & Policy</Link></p>
       </div>
     </footer>
   );

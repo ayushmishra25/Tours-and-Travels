@@ -33,6 +33,7 @@ import UserRidesOnAdmin from './pages/UserRidesOnAdmin';
 import DriverTripsOnAdmin from './pages/DriverTripsOnAdmin';
 import DriverEarningOnAdmin from './pages/DriverEarningsOnAdmin';
 import ForgotPassword from './pages/ForgotPassword';
+import PrivacyAndPolicy from './pages/PrivacyAndPolicy';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -148,6 +149,7 @@ const MainContent = () => {
         <Route path="/driver-trips-on-admin/:driverId" element={<DriverTripsOnAdmin />} />
         <Route path="/driver-earning-on-admin/:driverId" element={<DriverEarningOnAdmin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/privacy-and-policy" element={<PrivacyAndPolicy /> } />
 
 
         {/* Any unmatched goes home */}
