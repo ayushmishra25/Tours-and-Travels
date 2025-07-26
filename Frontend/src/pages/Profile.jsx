@@ -37,7 +37,7 @@ const Profile = () => {
     if (userId && token) {
       fetchProfile();
     } else {
-      setErrorMsg("User not authenticated.");
+      setErrorMsg("Please Register and Login first to see your profile.");
     }
   }, [userId, token]);
 
