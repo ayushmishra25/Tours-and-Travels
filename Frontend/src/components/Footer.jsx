@@ -38,6 +38,7 @@ function Footer() {
             <li><Link to="/about">About Us</Link></li>
             <li><Link to="/contact">Contact</Link></li>
             <li><Link to="/dashboard">Book Now</Link></li>
+            <li><Link to="/DriveTheDifference">Drive the Difference</Link></li>
           </ul>
         </div>
 

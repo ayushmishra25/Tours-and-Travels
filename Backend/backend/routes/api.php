@@ -12,18 +12,17 @@ use App\Http\Controllers\API\DriverRideController;
 use App\Http\Controllers\API\EarningController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\MessageController;
-
+use App\Http\Controllers\API\LandingController;
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::apiResource('landing', LandingController::class);
 Route::get('/listUsers', [AuthController::class, 'listUsers']);
 Route::get('/geocode', [BookingController::class, 'geocode']);
 Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-
-
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
