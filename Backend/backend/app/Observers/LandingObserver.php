@@ -24,7 +24,7 @@ class LandingObserver
 
     protected function syncExcel()
     {
-        $filePath = storage_path('app/public/landings.xlsx');
+        $filePath = storage_path('app/public/landings.csv');
 
         $writer = SimpleExcelWriter::create($filePath);
 
