@@ -5,16 +5,17 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Landing;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LandingDownloadController extends Controller
 {
     public function export()
     {
         $csvData = [];
+        
+        // Header row for CSV
         $csvData[] = ['Name', 'Mobile Number', 'City Location', 'Service Type'];
 
+        // Populate with data
         foreach (Landing::all() as $landing) {
             $csvData[] = [
                 $landing->name,
@@ -24,20 +25,26 @@ class LandingDownloadController extends Controller
             ];
         }
 
-        // Convert array to CSV string
+        // Write to temporary memory
         $handle = fopen('php://temp', 'r+');
+
+        // Add UTF-8 BOM for Excel compatibility
+        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+
         foreach ($csvData as $row) {
             fputcsv($handle, $row);
         }
+
         rewind($handle);
         $csv = stream_get_contents($handle);
         fclose($handle);
 
-        // Save file to public disk
+        // Save to storage/app/public/landing_data.csv
         Storage::disk('public')->put('landing_data.csv', $csv);
 
         return response()->json([
             'message' => 'CSV file saved to public storage.',
+            'file_path' => 'storage/landing_data.csv',
             'download_url' => asset('storage/landing_data.csv'),
         ]);
     }
