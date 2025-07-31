@@ -13,6 +13,8 @@ use App\Http\Controllers\API\EarningController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\LandingController;
+use App\Http\Controllers\API\LandingDownloadController;
+
 
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -23,6 +25,7 @@ Route::get('/geocode', [BookingController::class, 'geocode']);
 Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::get('/landing-export', [LandingDownloadController::class, 'export']);
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
