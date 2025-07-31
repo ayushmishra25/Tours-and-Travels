@@ -12,7 +12,7 @@ class LandingController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'mobile_number' => 'required|string|max:15',
+            'mobile_number' => 'required|string|max:10',
             'city_location' => 'required|string|max:255',
             'service_type' => 'required|in:Hourly,Weekly,Monthly,One-Way,Event',
         ]);
