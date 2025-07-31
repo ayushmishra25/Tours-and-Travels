@@ -41,6 +41,8 @@ class LandingDownloadController extends Controller
 
         // Save to storage/app/public/landing_data.csv
         Storage::disk('public')->put('landing_data.csv', $csv);
+         
+         \Log::info('CSV generated', ['csv' => $csv]);
 
         return response()->json([
             'message' => 'CSV file saved to public storage.',
