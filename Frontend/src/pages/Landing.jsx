@@ -28,11 +28,9 @@ const Landing = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to submit form');
-      }
+      if (!res.ok) throw new Error('Failed to submit form');
 
-      const data = await res.json();
+      await res.json();
       alert('Thank you for visiting our page.\nOur team will contact you soon.');
     } catch (error) {
       console.error('Submission error', error);
@@ -48,9 +46,10 @@ const Landing = () => {
         display: 'flex',
         gap: '2rem',
         alignItems: 'flex-start',
+        flexWrap: 'wrap',
       }}>
         {/* Content Section */}
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: '300px' }}>
           <h1 style={{ fontSize: '3rem', color: '#2c3e50', marginBottom: '1rem' }}>Sahyog Force</h1>
           <p style={{ fontStyle: 'italic', color: '#7f8c8d', fontSize: '1.1rem' }}>Your Trusted Journey Companion</p>
           <p>
@@ -73,7 +72,7 @@ const Landing = () => {
 
         {/* Form Section */}
         <div style={{
-          width: '400px',
+          width: '320px',
           backgroundColor: '#fff',
           padding: '2rem',
           borderRadius: '12px',
@@ -144,7 +143,7 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* More Content Below Full Width */}
+      {/* Additional Content */}
       <div style={{ maxWidth: '1100px', margin: '3rem auto' }}>
         <section style={{ marginBottom: '3rem' }}>
           <h2>About Sahyog Force</h2>
