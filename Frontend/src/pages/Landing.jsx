@@ -53,20 +53,10 @@ const Landing = () => {
           <h1 style={{ fontSize: '3rem', color: '#2c3e50', marginBottom: '1rem' }}>Sahyog Force</h1>
           <p style={{ fontStyle: 'italic', color: '#7f8c8d', fontSize: '1.1rem' }}>Your Trusted Journey Companion</p>
           <p>
-            At Sahyog Force, we believe life’s grand narratives aren’t just built on monumental leaps,
-            but on the countless smooth transitions in between. Our journey began not in a sterile boardroom,
-            but perhaps during a particularly exasperating Delhi traffic jam — a moment of chaotic frustration
-            where a simple, yet impactful idea took root:
-          </p>
-          <p><em>What if travel wasn’t a chore to be endured, but a seamless, stress‑free chapter in your day?</em></p>
-          <p>
-            Our philosophy is beautifully simple: we handle the logistical complexities, so you can focus
-            on what truly matters. We are the silent conductor of your daily commute, the guardian of your
-            punctuality, and a provider of pristine, predictable paths.
+            At Sahyog Force, we turn travel from a stressful chore into a seamless experience. Born out of Delhi’s chaotic commutes, our mission is simple: you focus on life — we handle the logistics.
           </p>
           <p>
-            <strong>'Sahyog' (सहयोग):</strong> Collaboration and shared purpose — you’re never alone.<br />
-            <strong>'Force':</strong> The discipline and power to ensure consistently excellent service.
+            <strong>'Sahyog' (सहयोग):</strong> Collaboration and shared purpose. <strong>'Force':</strong> Discipline and excellence in service.
           </p>
         </div>
 
