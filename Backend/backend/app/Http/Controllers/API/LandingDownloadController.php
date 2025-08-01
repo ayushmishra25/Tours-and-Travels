@@ -53,16 +53,13 @@ class LandingDownloadController extends Controller
 
     public function download()
     {
+        $this->export();
         $file = storage_path('app/public/landing_data.csv');
-
         if (!file_exists($file)) {
             return response()->json(['message' => 'File not found.'], 404);
         }
-
         return response()->download($file, 'landing_data.csv', [
             'Content-Type' => 'text/csv',
         ]);
     }
-
-
 }
