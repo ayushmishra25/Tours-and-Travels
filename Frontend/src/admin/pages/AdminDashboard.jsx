@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const AdminDashboard = () => {
   const [expandedCard, setExpandedCard] = useState(null);
@@ -7,10 +8,14 @@ const AdminDashboard = () => {
   const [location, setLocation] = useState("");
   const [role, setRole] = useState("1");
 
+  const [blogTitle, setBlogTitle] = useState("");
+  const [blogContent, setBlogContent] = useState("");
+  const [blogImage, setBlogImage] = useState(null);
+
   const toggleCard = (cardTitle) => {
     setExpandedCard(prev => (prev === cardTitle ? null : cardTitle));
   };
-    
+
   const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   const handleSendMessage = async (e) => {
@@ -46,48 +51,73 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleBlogUpload = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("title", blogTitle);
+    formData.append("content", blogContent);
+    if (blogImage) formData.append("image", blogImage);
+
+    try {
+      await axios.post(`${baseURL}/api/blogs`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          // Do NOT set Content-Type manually for FormData
+        },
+      });
+
+      alert("Blog uploaded successfully!");
+      setBlogTitle("");
+      setBlogContent("");
+      setBlogImage(null);
+    } catch (err) {
+      alert("Failed to upload blog.");
+      console.error(err);
+    }
+  };
+
 
   const tipsData = [
     {
       title: "User Onboarding Guide",
       summary: "Step-by-step flow to help new users and drivers sign up smoothly.",
       details: `The onboarding process includes:
-      1. User Registration: Users can register using mobile number.
-      2. Profile Setup: Fill in contact details and location.
-      3. Driver Onboarding: Submit license, ID proof, and undergo a background check.
-      4. Approval Workflow: Admin verifies documents.
-      5. Support: 24x7 support is available via chat and helpline.`
+1. User Registration: Users can register using mobile number.
+2. Profile Setup: Fill in contact details and location.
+3. Driver Onboarding: Submit license, ID proof, and undergo a background check.
+4. Approval Workflow: Admin verifies documents.
+5. Support: 24x7 support is available via chat and helpline.`
     },
     {
       title: "Pricing Matrix",
       summary: "Reference table for hourly, one-way, and custom packages.",
       details: `Our dynamic pricing model includes:
-      - Hourly Rates: calculated based on cities.
-      - One-Way Trips: Calculated based on distance, base fare + per-km rate.
-      - Packages: Weekly and monthly packages available for regular customers.
-      - Driver Incentives: Calculated based on distance, hours, and ratings.
-      - Admin Adjustment: Prices can be manually overridden for special cases.`
+- Hourly Rates: calculated based on cities.
+- One-Way Trips: Calculated based on distance, base fare + per-km rate.
+- Packages: Weekly and monthly packages available for regular customers.
+- Driver Incentives: Calculated based on distance, hours, and ratings.
+- Admin Adjustment: Prices can be manually overridden for special cases.`
     },
     {
       title: "Security Best Practices",
       summary: "Recommendations on access control and password policies.",
       details: `Recommended practices:
-      - Use JWT with refresh token for session security.
-      - Role-based access control for all routes (admin, user, driver).
-      - Mandatory strong passwords with 2FA (coming soon).
-      - Audit Logs: Track login activity, data access, and admin actions.
-      - Data Encryption: All user data encrypted using AES-256.`
+- Use JWT with refresh token for session security.
+- Role-based access control for all routes (admin, user, driver).
+- Mandatory strong passwords with 2FA (coming soon).
+- Audit Logs: Track login activity, data access, and admin actions.
+- Data Encryption: All user data encrypted using AES-256.`
     },
     {
       title: "Support FAQs",
       summary: "Common questions from drivers and users, with canned responses.",
       details: `FAQs include:
-      - How to raise a complaint?
-        > Use Help & Support. Write issue type and submit.
-      - What is the payment cycle for drivers?
-        > Weekly payments processed every sunday to registered bank account.
-      - What if I cancel a ride?
-        > Cancellation charges may apply if driver is already in route.`
+- How to raise a complaint?
+  > Use Help & Support. Write issue type and submit.
+- What is the payment cycle for drivers?
+  > Weekly payments processed every Sunday to registered bank account.
+- What if I cancel a ride?
+  > Cancellation charges may apply if driver is already en route.`
     }
   ];
 
@@ -114,42 +144,35 @@ const AdminDashboard = () => {
       <section className="dashboard-section">
         <h2>Announcements & News</h2>
         <ul className="announcements">
-          <li>
-            <strong>June 1, 2025:</strong> New build will be up.
-          </li>
+          <li><strong>June 1, 2025:</strong> New build will be up.</li>
         </ul>
       </section>
 
-      {/* ✅ Added Message Form Section Below */}
       <section className="dashboard-section">
         <h2>Send Message</h2>
         <form onSubmit={handleSendMessage} style={{ maxWidth: "400px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <input
-            type="text"
-            placeholder="Message Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <textarea
-            placeholder="Message Body"
-            value={body}
-            rows={4}
-            onChange={(e) => setBody(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Target Location (e.g., West Delhi)"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
+          <input type="text" placeholder="Message Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <textarea placeholder="Message Body" value={body} rows={4} onChange={(e) => setBody(e.target.value)} required />
+          <input type="text" placeholder="Target Location (e.g., West Delhi)" value={location} onChange={(e) => setLocation(e.target.value)} />
           <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="0">Users</option>
             <option value="1">Drivers</option>
           </select>
           <button type="submit" style={{ padding: "10px", background: "#007bff", color: "#fff", border: "none", borderRadius: "5px" }}>
             Send Message
+          </button>
+        </form>
+      </section>
+
+      {/* ✅ Blog Upload Section */}
+      <section className="dashboard-section">
+        <h2>Upload Blog</h2>
+        <form onSubmit={handleBlogUpload} style={{ maxWidth: "400px", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <input type="text" placeholder="Blog Title" value={blogTitle} onChange={(e) => setBlogTitle(e.target.value)} required />
+          <textarea placeholder="Blog Content" value={blogContent} rows={4} onChange={(e) => setBlogContent(e.target.value)} required />
+          <input type="file" accept="image/*" onChange={(e) => setBlogImage(e.target.files[0])} />
+          <button type="submit" style={{ padding: "10px", background: "#28a745", color: "#fff", border: "none", borderRadius: "5px" }}>
+            Upload Blog
           </button>
         </form>
       </section>

@@ -35,6 +35,8 @@ import DriverEarningOnAdmin from './pages/DriverEarningsOnAdmin';
 import ForgotPassword from './pages/ForgotPassword';
 import PrivacyAndPolicy from './pages/PrivacyAndPolicy';
 import LandingPage from './pages/Landing';
+import Blog from './pages/Blog';
+
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -51,7 +53,7 @@ const MainContent = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
   // Paths where we want to hide navbar/footer
-  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice','/final-tnc','/assigned-driver','/admin/dashboard','/forgot-password', '/LandingPage'];
+  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice','/final-tnc','/assigned-driver','/admin/dashboard','/forgot-password', '/LandingPage', '/Blog'];
   const hideShell = noShellPaths.some(path => location.pathname.startsWith(path));
 
   return (
@@ -152,6 +154,8 @@ const MainContent = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/privacy-and-policy" element={<PrivacyAndPolicy /> } />
         <Route path="/LandingPage" element={<LandingPage /> } />
+        <Route path="/Blog" element={<Blog /> } />
+
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />

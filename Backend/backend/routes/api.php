@@ -14,6 +14,7 @@ use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\LandingController;
 use App\Http\Controllers\API\LandingDownloadController;
+use App\Http\Controllers\API\BlogController;
 
 
 // 🔓 Public Routes
@@ -27,7 +28,8 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/landing-export', [LandingDownloadController::class, 'export']);
 Route::get('/download/landing-data', [LandingDownloadController::class, 'download']);
-
+Route::get('/blogs', [BlogController::class, 'index']);
+Route::post('/blogs', [BlogController::class, 'store']);
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -83,5 +85,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Payment Related 
     Route::post('/create-order', [PaymentController::class, 'createOrder']);
     Route::post('/verify-payment', [PaymentController::class, 'verifyPayment']);
+
+    // Blogs
+    Route::post('/blogs', [BlogController::class, 'store']);
 
 });

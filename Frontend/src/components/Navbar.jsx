@@ -62,6 +62,15 @@ function Navbar() {
           </li>
           <li>
             <Link
+              to="/Blog"
+              onClick={toggleMenu}
+              className={isActive('/Blog') ? 'active-link' : ''}
+            >
+              Blog
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/register"
               onClick={toggleMenu}
               className={isActive('/register') ? 'active-link' : ''}
