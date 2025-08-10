@@ -36,6 +36,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import PrivacyAndPolicy from './pages/PrivacyAndPolicy';
 import LandingPage from './pages/Landing';
 import Blog from './pages/Blog';
+import TourAndTravel from "./pages/TourAndTravel";
+
 
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -155,6 +157,9 @@ const MainContent = () => {
         <Route path="/privacy-and-policy" element={<PrivacyAndPolicy /> } />
         <Route path="/LandingPage" element={<LandingPage /> } />
         <Route path="/Blog" element={<Blog /> } />
+        <Route path="/tour-and-travel" element={<TourAndTravel />} />
+
+
 
 
         {/* Any unmatched goes home */}

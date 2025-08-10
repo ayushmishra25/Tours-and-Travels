@@ -5335,3 +5335,125 @@ h3 {
 
 
 
+/* Tour & Travel Section */
+.tour-travel-section {
+  background: linear-gradient(to right, #002855, #004080);
+  color: white;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.tour-travel-content {
+  max-width: 800px;
+}
+
+.tour-travel-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.tour-travel-content p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.tour-travel-content button {
+  background-color: #ffcc00;
+  color: #002855;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.tour-travel-content button:hover {
+  background-color: #e6b800;
+  transform: scale(1.05);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .tour-travel-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .tour-travel-content p {
+    font-size: 1rem;
+  }
+  
+  .tour-travel-content button {
+    font-size: 0.95rem;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tour-travel-section {
+    padding: 40px 15px;
+  }
+  
+  .tour-travel-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .tour-travel-content p {
+    font-size: 0.9rem;
+  }
+  
+  .tour-travel-content button {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+.tour-travel-page {
+  padding: 40px;
+  text-align: center;
+}
+
+.tour-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.tour-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+
+.tour-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.tour-card h3 {
+  margin: 10px 0;
+}
+
+.book-btn {
+  background: #002855;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.book-btn:hover {
+  background: #004080;
+}
+

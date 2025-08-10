@@ -100,6 +100,17 @@ function Home() {
 
       {/* Services Section */}
       <Services />
+      {/* Tour & Travel Section */}
+<section className="tour-travel-section">
+  <div className="tour-travel-content">
+    <h2>Explore India with Us</h2>
+    <p>
+      We don’t just provide driver services — we also offer complete tour & travel packages to explore India’s most beautiful destinations.
+    </p>
+    <button onClick={() => navigate("/tour-and-travel")}>Discover Tours</button>
+  </div>
+</section>
+
 
       {/* How to Use Section */}
       <HowToUse />
