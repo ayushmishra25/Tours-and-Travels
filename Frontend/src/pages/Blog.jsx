@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Ensure you're using react-router
+import { Link } from 'react-router-dom';
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,17 +11,28 @@ const BlogList = () => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(`${baseURL}/api/blogs`);
-        setBlogs(res.data);
+        console.log('API Response:', res.data);
+
+        // Ensure blogs is always an array
+        if (Array.isArray(res.data)) {
+          setBlogs(res.data);
+        } else if (res.data && Array.isArray(res.data.blogs)) {
+          setBlogs(res.data.blogs);
+        } else {
+          setBlogs([]);
+        }
       } catch (err) {
-        console.error("Error fetching blogs:", err);
+        console.error('Error fetching blogs:', err);
+        setBlogs([]); // keep safe
       }
     };
+
     fetchBlogs();
   }, [baseURL]);
 
   const filteredBlogs = blogs.filter(blog =>
-    blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.content.toLowerCase().includes(searchTerm.toLowerCase())
+    blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    blog.content?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -59,7 +70,7 @@ const BlogList = () => {
               <div className="content">
                 <h2>{blog.title}</h2>
                 <p>
-                  {blog.content.split(" ").slice(0, 50).join(" ")}...
+                  {blog.content?.split(' ').slice(0, 50).join(' ')}...
                   <Link to={`/blog/${blog.id}`} className="read-more"> Read More</Link>
                 </p>
               </div>
