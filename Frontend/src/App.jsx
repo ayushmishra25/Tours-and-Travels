@@ -35,10 +35,9 @@ import DriverEarningOnAdmin from './pages/DriverEarningsOnAdmin';
 import ForgotPassword from './pages/ForgotPassword';
 import PrivacyAndPolicy from './pages/PrivacyAndPolicy';
 import LandingPage from './pages/Landing';
-import Blog from './pages/Blog';
+import Blog from './pages/Blog'; // Blog list page
 import TourAndTravel from "./pages/TourAndTravel";
-
-
+import BlogDetails from "./pages/BlogDetails"; // Blog details page
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminApp from './admin/AdminApp';
@@ -54,13 +53,29 @@ function App() {
 const MainContent = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
-  // Paths where we want to hide navbar/footer
-  const noShellPaths = ['/driverjobdetails','/driver-details-upload','/invoice','/final-tnc','/assigned-driver','/admin/dashboard','/forgot-password', '/LandingPage', '/Blog'];
-  const hideShell = noShellPaths.some(path => location.pathname.startsWith(path));
+
+  // Paths where we want to hide navbar/footer (lowercase for consistency)
+  const noShellPaths = [
+    '/driverjobdetails',
+    '/driver-details-upload',
+    '/invoice',
+    '/final-tnc',
+    '/assigned-driver',
+    '/admin/dashboard',
+    '/forgot-password',
+    '/landingpage',
+    '/blog',
+    '/tour-and-travel'
+  ];
+
+  // Ensure lowercase matching
+  const hideShell = noShellPaths.some(path =>
+    location.pathname.toLowerCase().startsWith(path)
+  );
 
   return (
     <>
-      {/* Conditionally render navbars: hide on specific paths */}
+      {/* Conditionally render navbars */}
       {!hideShell && (!isDashboard ? <Navbar /> : <DashboardNavbar />)}
 
       <Routes>
@@ -72,79 +87,28 @@ const MainContent = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
-        {/* Login only after registration */}
-        <Route
-          path="/login"
-          element={
-              <Login />
-          }
-        />
-
-        {/* User dashboard (you can wrap similarly if needed) */}
+        {/* User dashboard */}
         <Route path="/dashboard/*" element={<UserDashboard />} />
 
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
-        {/* Booking pages (public) */}
+        {/* Booking pages */}
         <Route path="/hourly-driver" element={<HourlyDriver />} />
         <Route path="/weekly-driver" element={<WeeklyDriver />} />
         <Route path="/monthly-driver" element={<MonthlyDriver />} />
         <Route path="/ondemand-driver" element={<OndemandDriver />} />
 
         {/* Driver-only flow */}
-        <Route
-          path="/driverjobdetails"
-          element={
-              <DriverJobDetails />
-          }
-        />
-
-        <Route 
-          path="/driver-details-upload-editable/:driverId" 
-          element={
-            <DriverDetailUploadEditable />
-            } 
-        />
-
+        <Route path="/driverjobdetails" element={<DriverJobDetails />} />
+        <Route path="/driver-details-upload-editable/:driverId" element={<DriverDetailUploadEditable />} />
         <Route path="/driver-details-upload" element={<DriverDetailsUpload />} />
-
-
-        <Route
-          path="/driver-details-upload-editable"
-          element={
-              <DriverDetailUploadEditable />
-          }
-        />
-
-        <Route
-          path="/driver-dashboard"
-          element={
-              <DriverDashboard />
-          }
-        />
-        
-        <Route path="/earnings" element={<Earnings /> } />
-       <Route
-          path="/trip-history"
-          element={
-             <DriverRides />
-            }
-        />
-        
-       <Route
-          path="/support"
-          element={
-             <Support />
-            }
-        />
-
-        <Route
-          path="/driver-profile"
-          element={
-              <DriverProfile />
-          }
-        />
+        <Route path="/driver-dashboard" element={<DriverDashboard />} />
+        <Route path="/earnings" element={<Earnings />} />
+        <Route path="/trip-history" element={<DriverRides />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/driver-profile" element={<DriverProfile />} />
         <Route path="/post-booking" element={<PostBooking />} />
         <Route path="/invoice/:booking_id" element={<InvoicePage />} />
         <Route path="/final-tnc/:booking_id" element={<FinalTnC />} />
@@ -154,19 +118,20 @@ const MainContent = () => {
         <Route path="/driver-trips-on-admin/:driverId" element={<DriverTripsOnAdmin />} />
         <Route path="/driver-earning-on-admin/:driverId" element={<DriverEarningOnAdmin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/privacy-and-policy" element={<PrivacyAndPolicy /> } />
-        <Route path="/LandingPage" element={<LandingPage /> } />
-        <Route path="/Blog" element={<Blog /> } />
+        <Route path="/privacy-and-policy" element={<PrivacyAndPolicy />} />
+        <Route path="/landingpage" element={<LandingPage />} />
+
+        {/* Blog pages */}
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogDetails />} />
+
         <Route path="/tour-and-travel" element={<TourAndTravel />} />
-
-
-
 
         {/* Any unmatched goes home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* Conditionally render footer: hide on dashboard and specific paths */}
+      {/* Conditionally render footer */}
       {!hideShell && !isDashboard && <Footer />}
     </>
   );

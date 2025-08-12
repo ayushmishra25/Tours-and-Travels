@@ -28,8 +28,7 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/landing-export', [LandingDownloadController::class, 'export']);
 Route::get('/download/landing-data', [LandingDownloadController::class, 'download']);
-Route::get('/blogs', [BlogController::class, 'index']);
-Route::post('/blogs', [BlogController::class, 'store']);
+Route::apiResource('blogs', BlogController::class );
 
 // 🔐 Protected Routes
 Route::middleware('auth:sanctum')->group(function () {

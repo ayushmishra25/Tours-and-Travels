@@ -35,4 +35,14 @@ class BlogController extends Controller
 
         return response()->json($blog, 201);
     }
+
+    public function show($id)
+    {
+        $blog = Blog::find($id);
+        if (!$blog) {
+            return response()->json(['message' => 'Blog not found'], 404);
+        }
+        return response()->json($blog);
+    }
+
 }

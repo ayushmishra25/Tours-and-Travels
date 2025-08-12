@@ -5457,3 +5457,51 @@ h3 {
   background: #004080;
 }
 
+/* ===== Blog Details Page ===== */
+
+.blog-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.blog-details {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.blog-details-image {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.blog-details h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  line-height: 1.3;
+  color: #222;
+}
+
+.blog-details p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #555;
+  white-space: pre-line; /* preserves paragraph breaks */
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .blog-details h1 {
+    font-size: 1.5rem;
+  }
+  .blog-details-container {
+    padding: 15px;
+  }
+}
