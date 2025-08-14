@@ -35,7 +35,13 @@ class DriverRideController extends Controller
 
         foreach (['driver_id', 'start_ride', 'end_ride', 'start_meter', 'end_meter', 'payment_type', 'payment_status'] as $field) {
             if (array_key_exists($field, $validated)) {
-                $ride->$field = $validated[$field];
+                if ($field === 'start_ride') {
+                    $ride->start_ride = now();
+                } elseif ($field === 'end_ride') {
+                    $ride->end_ride = now();
+                } else {
+                    $ride->$field = $validated[$field];
+                }
             }
         }
 
@@ -56,6 +62,7 @@ class DriverRideController extends Controller
         ) {
             $ride->end_ride = now();
         }
+
 
         $ride->save();
 
