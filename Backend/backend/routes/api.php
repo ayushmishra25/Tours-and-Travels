@@ -16,7 +16,6 @@ use App\Http\Controllers\API\LandingController;
 use App\Http\Controllers\API\LandingDownloadController;
 use App\Http\Controllers\API\BlogController;
 
-
 // 🔓 Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
