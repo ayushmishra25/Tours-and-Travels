@@ -53,11 +53,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function driverDetailsUpload()
+    public function driverUploads()
     {
-        return $this->hasOne(DriverDetailsUpload::class, 'user_id');
+        return $this->hasMany(DriverDetailsUpload::class, 'user_id');
     }
-
-    
-
 }

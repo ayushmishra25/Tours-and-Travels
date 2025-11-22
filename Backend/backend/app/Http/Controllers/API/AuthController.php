@@ -135,17 +135,18 @@ class AuthController extends Controller
     {
         $role = $request->query('role');
 
-        if ($role == 0) {
-            $users = User::where('role', 0)->get();
-        } elseif ($role == 1) {
+        if ($role == 1) {
             $users = User::where('role', 1)
-                ->leftJoin('driver_details_uploads', 'users.id', '=', 'driver_details_uploads.user_id')
-                ->select(
-                    'users.*',
-                    'driver_details_uploads.exact_location as location',
-                    'users.location as current_location'
-                )
-                ->get();
+                ->with('driverUploads')  // gets uploads without multiplying rows
+                ->get()
+                ->map(function ($user) {
+                    // flatten single location
+                    $user->location = optional($user->driverUploads->first())->exact_location;
+                    $user->current_location = $user->location;
+                    return $user;
+                });
+        } else if ($role == 0) {
+            $users = User::where('role', 0)->get();
         } else {
             $users = User::all();
         }
@@ -154,7 +155,6 @@ class AuthController extends Controller
             'users' => $users
         ], 200);
     }
-
 
     public function updateProfile(Request $request, $id)
     {
